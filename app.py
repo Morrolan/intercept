@@ -201,8 +201,9 @@ def add_security_headers(response):
 
         target = urlsplit(response.headers.get("Location", ""))
         if not target.scheme and not target.netloc and target.path.startswith("/"):
-            query = dict(parse_qsl(target.query))
-            query["ami"] = "1"
+            # Keep every other parameter as it was (repeated and empty ones too); only ami is set
+            query = [(k, v) for k, v in parse_qsl(target.query, keep_blank_values=True) if k != "ami"]
+            query.append(("ami", "1"))
             response.headers["Location"] = urlunsplit(("", "", target.path, urlencode(query), target.fragment))
     # Enable XSS filter
     response.headers["X-XSS-Protection"] = "1; mode=block"

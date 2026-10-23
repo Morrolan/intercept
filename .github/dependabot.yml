@@ -1,0 +1,8 @@
+# The workflows' actions are pinned to commits (a tag can be moved to other code); Dependabot proposes
+# updates as pull requests, tested before they're merged
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

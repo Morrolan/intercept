@@ -150,6 +150,19 @@ def test_frame_allowlist_and_embed_redirect(anon_client, monkeypatch):
     assert response.headers["Content-Security-Policy"] == "frame-ancestors 'self'"
 
 
+
+def test_embed_redirect_keeps_other_query_parameters(app):
+    from flask import redirect
+
+    import app as app_module
+
+    with app.test_request_context("/somewhere?ami=1"):
+        response = app_module.add_security_headers(redirect("/login?next=%2Fadsb&tag=a&tag=b&empty=&ami=0#top"))
+    assert response.headers["Location"] == "/login?next=%2Fadsb&tag=a&tag=b&empty=&ami=1#top"
+    with app.test_request_context("/somewhere?ami=1"):
+        external = app_module.add_security_headers(redirect("https://elsewhere.example/x?a=1"))
+    assert external.headers["Location"] == "https://elsewhere.example/x?a=1"
+
 def test_every_document_loads_theme_once():
     templates = Path(__file__).resolve().parents[1] / "templates"
     for file in templates.rglob("*.html"):
