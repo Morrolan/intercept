@@ -1,4 +1,4 @@
-/* INTERCEPT Voice Alerts — Web Speech API queue with priority system */
+/* INTERCEPT voice queue: native standalone speech and delegated AMI speech. */
 const VoiceAlerts = (function () {
     'use strict';
 
@@ -44,7 +44,7 @@ const VoiceAlerts = (function () {
     }
 
     function _isSpeechSupported() {
-        return !!(window.speechSynthesis && typeof window.SpeechSynthesisUtterance !== 'undefined');
+        return !!window.InterceptAMI || !!(window.speechSynthesis && typeof window.SpeechSynthesisUtterance !== 'undefined');
     }
 
     function _showVoiceToast(title, message, type) {
@@ -97,10 +97,11 @@ const VoiceAlerts = (function () {
     function speak(text, priority) {
         if (priority === undefined) priority = PRIORITY.MEDIUM;
         if (!_enabled || _muted) return;
-        if (!window.speechSynthesis) return;
+        if (!window.speechSynthesis && !window.InterceptAMI) return;
         if (priority === PRIORITY.LOW && _speaking) return;
         if (priority === PRIORITY.HIGH && _speaking) {
-            window.speechSynthesis.cancel();
+            if (window.InterceptAMI) window.InterceptAMI.stop();
+            else window.speechSynthesis.cancel();
             _queue = [];
             _speaking = false;
         }
@@ -112,6 +113,10 @@ const VoiceAlerts = (function () {
         if (_queue.length === 0) { _speaking = false; return; }
         _speaking = true;
         const item = _queue.shift();
+        if (window.InterceptAMI) {
+            window.InterceptAMI.speak(item.text, () => { _speaking = false; _dequeue(); }, true);
+            return;
+        }
         const utt = _createUtterance(item.text);
         utt.onend = () => { _speaking = false; _dequeue(); };
         utt.onerror = () => { _speaking = false; _dequeue(); };
@@ -122,6 +127,7 @@ const VoiceAlerts = (function () {
         _muted = !_muted;
         localStorage.setItem(STORAGE_KEY, _muted ? 'true' : 'false');
         _updateMuteButton();
+        if (_muted && window.InterceptAMI) { window.InterceptAMI.stop(); _queue = []; _speaking = false; }
         if (_muted && window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
@@ -191,7 +197,7 @@ const VoiceAlerts = (function () {
     function init(options) {
         const opts = options || {};
         _loadConfig();
-        if (_isSpeechSupported()) {
+        if (_isSpeechSupported() && window.speechSynthesis) {
             // Prime voices list early so user-triggered test calls are less likely to be silent.
             speechSynthesis.getVoices();
         }
@@ -212,6 +218,7 @@ const VoiceAlerts = (function () {
         _enabled = val;
         if (!val) {
             _stopStreams();
+            if (window.InterceptAMI) { window.InterceptAMI.stop(); _queue = []; _speaking = false; }
             if (window.speechSynthesis) window.speechSynthesis.cancel();
         } else {
             _startStreams();
@@ -250,6 +257,13 @@ const VoiceAlerts = (function () {
     }
 
     function testVoice(text) {
+        if (window.InterceptAMI) {
+            window.InterceptAMI.stop();
+            _queue = [];
+            _speaking = false;
+            window.InterceptAMI.speak(text || 'Voice alert test. All systems nominal.');
+            return;
+        }
         if (!_isSpeechSupported()) {
             _showVoiceToast('Voice Unavailable', 'This browser does not support speech synthesis.', 'warning');
             return;

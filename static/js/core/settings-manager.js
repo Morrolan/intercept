@@ -966,7 +966,7 @@ function loadSettingsTools() {
             const summaryHtml = `
                 <div style="background: ${totalMissing > 0 ? 'rgba(255, 100, 0, 0.1)' : 'rgba(0, 255, 100, 0.1)'}; border: 1px solid ${totalMissing > 0 ? 'var(--accent-orange)' : 'var(--accent-green)'}; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
                     <div style="font-size: 13px; font-weight: bold; color: ${totalMissing > 0 ? 'var(--accent-orange)' : 'var(--accent-green)'};">
-                        ${totalMissing > 0 ? '⚠️ ' + totalMissing + ' tool(s) not found' : '✓ All tools installed'}
+                        ${totalMissing > 0 ? '' + totalMissing + ' tool(s) not found' : '✓ All tools installed'}
                     </div>
                     <div style="font-size: 11px; color: var(--text-dim); margin-top: 3px;">
                         OS: ${data.os} | Package Manager: ${data.pkg_manager}
@@ -1522,7 +1522,7 @@ function setThemePreference(value) {
 
     const btn = document.getElementById('themeToggle');
     if (btn) {
-        btn.textContent = value === 'light' ? '🌙' : '☀️';
+        btn.innerHTML = value === 'light' ? (typeof Icons === 'undefined' ? 'Dark' : Icons.moon()) : (typeof Icons === 'undefined' ? 'Light' : Icons.sun());
     }
 
     fetch('/settings', {

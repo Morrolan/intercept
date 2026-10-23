@@ -164,7 +164,7 @@ Each signal type has its own Flask blueprint:
 - **Mode Integration**: Each mode needs entries in `index.html` at ~12 points: CSS include, welcome card, partial include, visuals container, JS include, `validModes` set, `modeGroups` map, classList toggle, `modeNames`, visuals display toggle, titles, and init call in `switchMode()`
 
 ### Docker
-- `Dockerfile` - Single-stage build with all SDR tools compiled from source (dump1090, AIS-catcher, slowrx, SatDump, etc.). CMD runs `start.sh` (gunicorn + gevent)
+- `Dockerfile` - Multi-stage build: a Python 3.11 builder compiles SDR tools from source; the runtime copies their binaries/libraries (dump1090, AIS-catcher, slowrx, SatDump, etc.). CMD runs `start.sh` (gunicorn + gevent)
 - `docker-compose.yml` - Two profiles: `basic` (standalone) and `history` (with Postgres for ADS-B)
 - `build-multiarch.sh` - Multi-arch build script for amd64 + arm64 (RPi5)
 - Data persisted via `./data:/app/data` volume mount
@@ -176,3 +176,17 @@ Each signal type has its own Flask blueprint:
 ## Testing Notes
 
 Tests use pytest with extensive mocking of external tools. Key fixtures in `tests/conftest.py`. Mock subprocess calls when testing decoder integration.
+
+
+## AMI integration (fork-owned)
+
+- Read `/home/morrolan/Development/ami/docs/handoffs/README.md` and open notes before editing when that sibling checkout is available. Never commit another task's changes.
+- `routes/ami.py` and `utils/ami.py` implement the opt-in, admin-only read-only service module. `AMI_URL` must be an HTTP(S) origin; `INTERCEPT_AMI_TOKEN_SHA256` contains the service token's SHA-256 digest. Browser sessions never authorize MCP or events.
+- Receiver reads use the existing discovery cache; never probe or start a decoder from an AMI read tool. Tool data is explicitly allowlisted. No pager payloads, WiFi/Bluetooth identities, observer coordinates, serial numbers or network receiver addresses enter AMI read tools.
+- `instance/ami-events.sqlite` persists decoder-health transitions for 48 hours. Existing stopped processes generate a critical event after 60 seconds; idle modes do not. One WSGI worker owns Intercept's global decoder state. SSE supports `Last-Event-ID`.
+- `static/css/ami-theme.css` is a new fork-owned visual layer, loaded once by every document head. Preserve semantic spectrum/map colours and local/offline assets. Embed via `?ami=1`; allow framing only from the configured AMI origin and self. The UI still requires Intercept's own login.
+- See `docs/AMI.md` for setup, tests and deployment. No version bumps or live deployment without the owner's authorization; hardware mappings must be explicit. Never add agent attribution to commits.
+
+- Static asset URLs append `-ami1` to the upstream version as a cache key; the displayed release version is unchanged. Change the asset revision when future fork changes would otherwise reuse cached scripts.
+
+- Embedded speech uses `window.InterceptAMI` in ami-bridge.js and AMI’s `ami-speak`/`ami-speech` messages. VoiceAlerts keeps its queue/mute/source choices; automatic speech also requires AMI autoplay. Never synthesize locally inside AMI or expose separate voice/rate/pitch choices there. Standalone speech remains native.

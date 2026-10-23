@@ -12,6 +12,7 @@ def register_blueprints(app):
     from .adsb import adsb_bp
     from .ais import ais_bp
     from .alerts import alerts_bp
+    from .ami import ami_bp
     from .aprs import aprs_bp
     from .bluetooth import bluetooth_bp
     from .bluetooth_v2 import bluetooth_v2_bp
@@ -55,6 +56,7 @@ def register_blueprints(app):
     from .wifi import wifi_bp
     from .wifi_v2 import wifi_v2_bp
 
+    app.register_blueprint(ami_bp)
     app.register_blueprint(pager_bp)
     app.register_blueprint(sensor_bp)
     app.register_blueprint(rtlamr_bp)

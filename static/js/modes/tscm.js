@@ -139,7 +139,7 @@ async function refreshTscmDevices() {
         if (data.warnings && data.warnings.length > 0) {
             warningsDiv.innerHTML = data.warnings.map(w =>
                 `<div class="tscm-privilege-warning">
-                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-icon"><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
                     <div>
                         <strong>${escapeHtml(w.message)}</strong>
                         ${w.action ? `<div class="warning-action">${escapeHtml(w.action)}</div>` : ''}
@@ -3507,20 +3507,20 @@ async function tscmShowCapabilities() {
                 <div class="device-detail-section">
                     <h4>What This Sweep CAN Detect</h4>
                     <ul class="cap-can-list">
-                        ${canDetect.map(item => `<li>✅ ${escapeHtml(item)}</li>`).join('')}
+                        ${canDetect.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
                     </ul>
                 </div>
                 <div class="device-detail-section">
                     <h4>What This Sweep CANNOT Detect</h4>
                     <ul class="cap-cannot-list">
-                        ${cannotDetect.map(item => `<li>❌ ${escapeHtml(item)}</li>`).join('')}
+                        ${cannotDetect.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
                     </ul>
                 </div>
                 ${caps.all_limitations && caps.all_limitations.length > 0 ? `
                 <div class="device-detail-section">
                     <h4>Current Limitations</h4>
                     <ul class="cap-cannot-list">
-                        ${caps.all_limitations.map(item => `<li>⚠️ ${escapeHtml(item)}</li>`).join('')}
+                        ${caps.all_limitations.map(item => `<li><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(item)}</li>`).join('')}
                     </ul>
                 </div>
                 ` : ''}
@@ -3608,7 +3608,7 @@ async function tscmShowKnownDevices() {
         const devices = data.devices || [];
         content.innerHTML = `
             <div class="device-detail-header classification-green">
-                <h3>✅ Known/Approved Devices (${devices.length})</h3>
+                <h3>Known/Approved Devices (${devices.length})</h3>
             </div>
             <div class="device-detail-section">
                 <div style="margin-bottom: 12px;">

@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+@AGENTS.md
+
+AMI integration and cross-agent coordination rules live in AGENTS.md and docs/AMI.md.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
@@ -190,7 +194,7 @@ Each signal type has its own Flask blueprint:
   `tests/test_mode_registry.py` enforces registry/asset consistency.
 
 ### Docker
-- `Dockerfile` - Single-stage build with all SDR tools compiled from source (dump1090, AIS-catcher, slowrx, SatDump, etc.). CMD runs `start.sh` (gunicorn + gevent)
+- `Dockerfile` - Multi-stage build: a Python 3.11 builder compiles SDR tools from source; the runtime copies their binaries/libraries (dump1090, AIS-catcher, slowrx, SatDump, etc.). CMD runs `start.sh` (gunicorn + gevent)
 - `docker-compose.yml` - Two profiles: `basic` (standalone) and `history` (with Postgres for ADS-B)
 - `build-multiarch.sh` - Multi-arch build script for amd64 + arm64 (RPi5)
 - Data persisted via `./data:/app/data` volume mount

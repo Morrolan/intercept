@@ -1,3 +1,8 @@
 # Force LF line endings for files that must run on Linux (Docker)
 *.sh text eol=lf
 Dockerfile text eol=lf
+
+# Upstream Python and some templates use CRLF; do not flag their CR as whitespace.
+*.py whitespace=cr-at-eol
+*.html whitespace=cr-at-eol
+*.js whitespace=cr-at-eol

@@ -1,0 +1,140 @@
+/* Fork-owned AMI theme. Written from AMI's design tokens, not inherited VIGIL code.
+   Semantic map, signal, spectrum and warning colours intentionally stay distinct. */
+:root, :root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-primary: #020408;
+  --bg-secondary: #060e16;
+  --bg-tertiary: #0a1416;
+  --bg-card: rgba(6,14,22,.82);
+  --bg-elevated: #101f24;
+  --bg-overlay: rgba(2,4,8,.88);
+  --surface-glass: rgba(6,14,22,.82);
+  --surface-panel-gradient: linear-gradient(160deg,rgba(10,20,32,.82),rgba(6,14,22,.94));
+  --accent-cyan: #64f0c8;
+  --accent-cyan-rgb: 100,240,200;
+  --accent-cyan-hover: #a0ffe3;
+  --accent-cyan-dim: rgba(100,240,200,.1);
+  --accent-cyan-glow: rgba(100,240,200,.08);
+  --text-primary: #e8f4f0;
+  --text-secondary: #a6bdb6;
+  --text-dim: #89a59d;
+  --text-muted: #89a59d;
+  --border-color: rgba(100,240,200,.18);
+  --border-light: rgba(100,240,200,.3);
+  --border-glow: rgba(100,240,200,.3);
+  --font-mono: 'JetBrains Mono',ui-monospace,monospace;
+  --font-sans: Inter,system-ui,sans-serif;
+  --font-display: var(--font-mono);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+}
+/* Light mode keeps readable contrast while sharing geometry and typography. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --accent-cyan: #08775e;
+  --accent-cyan-rgb: 8,119,94;
+  --accent-cyan-hover: #055740;
+  --border-color: rgba(8,119,94,.24);
+  --border-light: rgba(8,119,94,.45);
+}
+body {
+  font-family: var(--font-sans);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%,rgba(100,240,200,.045),transparent 70%),var(--bg-primary);
+  color: var(--text-primary);
+}
+body > header, .app-header, .header, .mode-nav, .mode-nav-bar {
+  background: var(--surface-glass);
+  border-color: var(--border-color);
+  box-shadow: none;
+  backdrop-filter: blur(14px);
+}
+.panel, .card, .section, .settings-section, .modal-content, .login-box,
+.login-panel, .login-card, .welcome-content, .landing-content, .dash-panel, .sidebar, .app-sidebar {
+  border-radius: 0;
+  border-color: var(--border-color);
+  border-top: 1px solid rgba(var(--accent-cyan-rgb),.38);
+  background: var(--surface-glass);
+  box-shadow: 0 8px 28px rgba(0,0,0,.18);
+}
+h1, h2, h3, .panel-header, .section-header, .section-title, .card-title,
+.mode-nav-btn, .btn, .version-badge, .page-title, .logo-text, .welcome-title {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  text-shadow: none;
+}
+h1, .page-title { font-size: 1.1rem; }
+h2, .section-title, .panel-header { font-size: .8rem; }
+button, .btn, input, select, textarea, .modal-content,
+.mode-nav-btn, .status-badge, .badge, .signal-card {
+  border-radius: 0;
+}
+button:not(.leaflet-control button):not(.maplibregl-control-container button), .btn, .mode-nav-btn {
+  box-shadow: none;
+}
+.btn, .mode-nav-btn, button[type="submit"], .login-btn {
+  border: 1px solid var(--border-light);
+  color: var(--accent-cyan);
+  background: rgba(var(--accent-cyan-rgb),.07);
+  font-family: var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.btn:hover, .mode-nav-btn:hover, .login-btn:hover {
+  border-color: var(--accent-cyan);
+  background: rgba(var(--accent-cyan-rgb),.13);
+}
+.mode-nav-btn.active, .mode-nav-btn[aria-current="page"] {
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 3px; }
+.globe-background, .scanlines, .crt-overlay { display: none; }
+.logo svg, .app-logo svg { color: var(--accent-cyan); }
+/* Hide branding only; mode navigation and receiver controls remain reachable. */
+html.ami-embedded body > header .header-left > h1,
+html.ami-embedded body > header .logo,
+html.ami-embedded .app-header .app-logo,
+html.ami-embedded .header .logo,
+html.ami-embedded .header .header-title,
+html.ami-embedded .tagline,
+html.ami-embedded .version-badge { display: none; }
+html.ami-embedded body > header, html.ami-embedded .app-header, html.ami-embedded .header {
+  min-height: 0;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-overlay *, .welcome-overlay * { animation: none !important; transition: none !important; }
+}
+
+.landing-title, .landing-tagline, .landing-enter-btn { font-family: var(--font-mono); letter-spacing: .1em; text-shadow: none; }
+.landing-enter-btn { border: 1px solid var(--accent-cyan); color: var(--accent-cyan); background: rgba(var(--accent-cyan-rgb),.08); border-radius: 0; }
+.landing-scanline { display: none; }
+
+.icon svg { max-width: 100%; max-height: 100%; }
+
+/* Wider mono labels must wrap, rather than push the satellite header off a phone. */
+@media (max-width: 768px) {
+  body[data-mode="satellite"] .header > .status-bar { flex-wrap: wrap; min-width: 0; max-width: 100%; }
+}
+.btn-danger, .btn.danger, .btn-stop { color: var(--accent-red); border-color: var(--accent-red); background: var(--accent-red-dim); }
+
+/* Override mode rules that set radii with IDs or inline styles. */
+html body :is(button:not(.mode-nav-btn):not(.mode-nav-dropdown-btn), input:not([type="radio"]), select, textarea,
+  .btn, .panel, .card, .modal-content, .sb-status, .signal-card, .live-empty-state, .sidebar-section) {
+  border-radius: 0 !important;
+}
+html.ami-embedded .scanline { display: none; }
+
+.ami-voice-note { display: none; }
+html.ami-embedded [data-ami-voice-settings] { display: none; }
+html.ami-embedded .ami-voice-note { display: block; color: var(--text-secondary); margin: 10px 0; }
