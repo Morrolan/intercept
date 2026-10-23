@@ -29,6 +29,7 @@ def test_opt_in_and_public_metadata(anon_client, monkeypatch):
     manifest = anon_client.get("/.well-known/ami-module.json").get_json()
     assert manifest["auth"] == {"type": "token", "roles": ["admin"]}
     assert manifest["ui"]["entry"] == "/?ami=1"
+    assert manifest["ui"]["deepLinks"] == {"aircraft": "/adsb/dashboard?ami=1", "vessels": "/ais/dashboard?ami=1"}
     health = anon_client.get(manifest["health"]).get_json()
     assert set(health) == {"status", "module", "version", "checkedAt", "detail"}
     assert health["status"] == "ok"

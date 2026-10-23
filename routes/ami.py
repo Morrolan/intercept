@@ -27,7 +27,7 @@ def manifest():
                     "auth": {"type": "token", "roles": ["admin"]},
                     "scopes": [{"id": "intercept.read", "description": "Read decoder health and sanitized contacts"}],
                     "ui": {"entry": "/?ami=1", "embed": True, "deepLinks": {
-                        "aircraft": "/?ami=1&mode=adsb", "vessels": "/?ami=1&mode=ais"}},
+                        "aircraft": "/adsb/dashboard?ami=1", "vessels": "/ais/dashboard?ami=1"}},
                     "eventKinds": [{"id": "decoder-health", "label": "Decoder health", "adminOnly": True}]})
 
 
