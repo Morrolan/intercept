@@ -9,7 +9,7 @@ from config import VERSION
 
 def test_url_for_static_carries_version(app):
     with app.test_request_context():
-        assert url_for("static", filename="js/modes/gps.js").endswith(f"?v={VERSION}")
+        assert url_for("static", filename="js/modes/gps.js").endswith(f"?v={VERSION}-ami1")
 
 
 def test_pages_version_every_app_asset(client):

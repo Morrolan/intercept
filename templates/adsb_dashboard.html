@@ -42,6 +42,7 @@
     <script src="{{ url_for('static', filename='js/core/ui-feedback.js') }}" data-global-handlers="off"></script>
     <script defer src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/core/observer-location.js') }}"></script>
+{% include 'partials/ami_head.html' %}
 </head>
 <body data-mode="adsb">
     <div class="radar-bg"></div>
@@ -50,7 +51,7 @@
     <header class="header">
         <div class="logo">
             AIRCRAFT RADAR
-            <span>// <span class="brand-i"><svg viewBox="36 14 28 68" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="20" r="6" fill="#00ff88"/><rect x="44" y="33" width="12" height="45" rx="2" fill="#00d4ff"/><rect x="38" y="33" width="24" height="4" rx="1" fill="#00d4ff"/><rect x="38" y="74" width="24" height="4" rx="1" fill="#00d4ff"/></svg></span>NTERCEPT - See the Invisible</span>
+            <span>// INTERCEPT - See the Invisible</span>
         </div>
         <div class="status-bar">
             <!-- Agent Selector -->
@@ -1277,7 +1278,7 @@
             modal.innerHTML = `
                 <div class="report-content">
                     <div class="report-header">
-                        <h2>📊 Session Report</h2>
+                        <h2><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Session Report</h2>
                         <button class="report-close" onclick="this.closest('.report-modal').remove()">×</button>
                     </div>
                     <div class="report-body">
@@ -1326,7 +1327,7 @@
                                                 <td>${ac.icao}</td>
                                                 <td>${ac.callsign || '-'}</td>
                                                 <td>${ac.country}</td>
-                                                <td>${ac.military ? '🎖️ MIL' : 'CIV'}</td>
+                                                <td>${ac.military ? 'MIL' : 'CIV'}</td>
                                             </tr>
                                         `).join('')}
                                     </tbody>
@@ -1336,8 +1337,8 @@
                         </div>
                     </div>
                     <div class="report-footer">
-                        <button class="report-btn" onclick="downloadReport()">💾 Download JSON</button>
-                        <button class="report-btn" onclick="copyReportToClipboard()">📋 Copy Summary</button>
+                        <button class="report-btn" onclick="downloadReport()"><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download JSON</button>
+                        <button class="report-btn" onclick="copyReportToClipboard()"><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Summary</button>
                     </div>
                 </div>
             `;

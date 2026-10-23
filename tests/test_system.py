@@ -198,14 +198,17 @@ def test_location_falls_back_to_defaults(client):
 
 
 def test_weather_requires_location(client):
-    """Weather endpoint returns error when no location available."""
+    """Missing location is rejected before any external weather request."""
     _login(client)
-    # Without lat/lon params and no GPS state or config
-    resp = client.get("/system/weather")
-    assert resp.status_code == 200
-    data = resp.get_json()
-    # Either returns weather or error (depending on config)
-    assert "error" in data or "temp_c" in data
+    with (
+        patch("routes.system._weather_cache", {}),
+        patch("routes.system._get_observer_location", return_value={}),
+        patch("routes.system._requests") as http,
+    ):
+        resp = client.get("/system/weather")
+        http.get.assert_not_called()
+    assert resp.status_code == 400
+    assert resp.get_json() == {"status": "error", "message": "No location available"}
 
 
 def test_weather_with_mocked_response(client):

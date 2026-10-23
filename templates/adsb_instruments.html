@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/core/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/adsb_instruments.css') }}">
     <script>window.INSTRUMENT_ICAO = {{ icao | tojson }};</script>
+{% include 'partials/ami_head.html' %}
 </head>
 <body>
     <header class="pfd-header">

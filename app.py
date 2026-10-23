@@ -187,7 +187,24 @@ def add_security_headers(response):
     # Prevent MIME type sniffing
     response.headers["X-Content-Type-Options"] = "nosniff"
     # Prevent clickjacking
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    from utils.ami import ami_origin
+
+    origin = ami_origin()
+    if origin:
+        response.headers.pop("X-Frame-Options", None)
+        response.headers["Content-Security-Policy"] = f"frame-ancestors 'self' {origin}"
+    else:
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"
+    if origin and request.args.get("ami") == "1" and response.status_code in (301, 302, 303, 307, 308):
+        from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+        target = urlsplit(response.headers.get("Location", ""))
+        if not target.scheme and not target.netloc and target.path.startswith("/"):
+            # Keep every other parameter as it was (repeated and empty ones too); only ami is set
+            query = [(k, v) for k, v in parse_qsl(target.query, keep_blank_values=True) if k != "ami"]
+            query.append(("ami", "1"))
+            response.headers["Location"] = urlunsplit(("", "", target.path, urlencode(query), target.fragment))
     # Enable XSS filter
     response.headers["X-XSS-Protection"] = "1; mode=block"
     # Referrer policy
@@ -208,6 +225,13 @@ def add_security_headers(response):
 # ============================================
 
 
+@app.context_processor
+def ami_embed_context():
+    from utils.ami import ami_origin
+
+    return {"ami_embed_origin": ami_origin() or ""}
+
+
 @app.url_defaults
 def version_static_urls(endpoint: str, values: dict) -> None:
     """Every url_for('static', ...) carries ?v=<version>.
@@ -217,7 +241,8 @@ def version_static_urls(endpoint: str, values: dict) -> None:
     not a function" after an upgrade). A new version is a new URL.
     """
     if endpoint == "static" and "v" not in values:
-        values["v"] = VERSION
+        # Bust upstream caches for this fork's reskin without changing its release version.
+        values["v"] = f"{VERSION}-ami1"
 
 
 @app.context_processor
@@ -472,6 +497,10 @@ def get_sdr_device_status() -> dict[str, str]:
 
 @app.before_request
 def require_login():
+    # Native AMI endpoints enforce their own opt-in and bearer authentication.
+    if request.blueprint == "ami":
+        return None
+
     # Skip auth entirely when INTERCEPT_DISABLE_AUTH is set
     if os.environ.get("INTERCEPT_DISABLE_AUTH", "").lower() in ("1", "true", "yes"):
         session["logged_in"] = True

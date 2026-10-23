@@ -255,7 +255,7 @@ function toggleTheme() {
     // Update button text
     const btn = document.getElementById('themeToggle');
     if (btn) {
-        btn.textContent = newTheme === 'light' ? '🌙' : '☀️';
+        btn.innerHTML = newTheme === 'light' ? (typeof Icons === 'undefined' ? 'Dark' : Icons.moon()) : (typeof Icons === 'undefined' ? 'Light' : Icons.sun());
     }
 }
 
@@ -264,7 +264,7 @@ function loadTheme() {
     document.documentElement.setAttribute('data-theme', savedTheme);
     const btn = document.getElementById('themeToggle');
     if (btn) {
-        btn.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+        btn.innerHTML = savedTheme === 'light' ? (typeof Icons === 'undefined' ? 'Dark' : Icons.moon()) : (typeof Icons === 'undefined' ? 'Light' : Icons.sun());
     }
 }
 

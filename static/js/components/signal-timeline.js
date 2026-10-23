@@ -312,7 +312,7 @@ const SignalTimeline = (function() {
                 <div class="signal-timeline-axis" id="timelineAxis"></div>
                 <div class="signal-timeline-lanes" id="timelineLanes">
                     <div class="signal-timeline-empty">
-                        <div class="signal-timeline-empty-icon">📡</div>
+                        <div class="signal-timeline-empty-icon"><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c0-3 2-6 5-6s4 3 5 6c1 3 2 6 5 6s5-3 5-6"/></svg></div>
                         <div>No signal activity recorded</div>
                         <div style="margin-top: 4px; font-size: 9px;">Activity will appear here as signals are observed</div>
                     </div>
@@ -547,7 +547,7 @@ const SignalTimeline = (function() {
         if (signals.length === 0) {
             lanesContainer.innerHTML = `
                 <div class="signal-timeline-empty">
-                    <div class="signal-timeline-empty-icon">📡</div>
+                    <div class="signal-timeline-empty-icon"><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c0-3 2-6 5-6s4 3 5 6c1 3 2 6 5 6s5-3 5-6"/></svg></div>
                     <div>No signal activity recorded</div>
                     <div style="margin-top: 4px; font-size: 9px;">Activity will appear here as signals are observed</div>
                 </div>

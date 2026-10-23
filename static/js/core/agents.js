@@ -520,7 +520,7 @@ function showAgentModeWarnings(runningModes, modesDetail = {}) {
                 const deviceNum = detail.device !== undefined ? detail.device : '?';
                 return `<button onclick="stopAgentModeWithRefresh('${m}')" style="background:#ff6b6b;color:#fff;border:none;padding:2px 6px;border-radius:3px;font-size:9px;cursor:pointer;" title="Stop ${m} on agent (SDR ${deviceNum})">${m} (SDR ${deviceNum})</button>`;
             }).join(' ');
-            warning.innerHTML = `<span>⚠️ Running:</span> ${modeButtons} <button onclick="refreshAgentState()" style="background:#555;color:#fff;border:none;padding:2px 6px;border-radius:3px;font-size:9px;cursor:pointer;" title="Refresh agent state">↻</button>`;
+            warning.innerHTML = `<span>Running:</span> ${modeButtons} <button onclick="refreshAgentState()" style="background:#555;color:#fff;border:none;padding:2px 6px;border-radius:3px;font-size:9px;cursor:pointer;" title="Refresh agent state">↻</button>`;
             warning.style.display = 'flex';
         }
     } else if (warning) {
