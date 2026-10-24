@@ -39,6 +39,7 @@ from flask import (
     session,
     url_for,
 )
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash
 
 from config import (
@@ -91,8 +92,27 @@ import time as _time
 _app_start_time = _time.time()
 logger = logging.getLogger("intercept.database")
 
+
+def _configure_proxy(application):
+    """Trust forwarded headers only for an explicitly configured proxy chain."""
+    try:
+        hops = int(os.environ.get("INTERCEPT_TRUSTED_PROXIES", "0"))
+    except ValueError:
+        hops = 0
+    if hops > 0:
+        application.wsgi_app = ProxyFix(
+            application.wsgi_app,
+            x_for=hops,
+            x_proto=hops,
+            x_host=hops,
+            x_port=0,
+            x_prefix=0,
+        )
+
+
 # Create Flask app
 app = Flask(__name__)
+_configure_proxy(app)
 
 
 def _load_or_generate_secret_key():

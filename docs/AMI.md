@@ -18,6 +18,19 @@ Use an HTTPS hostname under the same parent domain as AMI (for example `intercep
 3. In **AMI → Modules**, add Intercept with its public HTTPS address. If it shares AMI's Docker network, use `http://intercept:5050` as the internal API address. Otherwise use an explicitly reachable private endpoint. Paste the bearer token. Only administrators may use the module by default; preserve that restriction because aircraft and vessel contacts are not per-user data.
 4. Its Overview panel appears automatically. Open Intercept from AMI's app navigation and sign in to Intercept. The existing login, forced password change and standalone URL continue working. Framing is permitted only from self and the configured AMI origin; no token is exposed to the browser bridge.
 
+## Reverse proxy client addresses
+
+Behind exactly one Caddy reverse proxy, set `INTERCEPT_TRUSTED_PROXIES=1` in
+Intercept's container environment and restart it. This trusts one (rightmost)
+value of `X-Forwarded-For`, `X-Forwarded-Proto` and `X-Forwarded-Host`, so sign-in
+logs, lockouts and rate limits use the client address and generated URLs use the
+public scheme and host. The default is `0` (off); invalid or negative values also
+disable trust. For other proxy chains, set the exact number of trusted hops.
+Only enable this when clients cannot reach Intercept directly and every trusted
+proxy sets the forwarded headers. This setting counts hops; it does not restrict
+trusted proxy IP addresses. For Docker, pass the variable into the container
+(e.g. through the stack's `environment` or `env_file`).
+
 ## Read-only contract
 
 - Public manifest: `/.well-known/ami-module.json`; sanitized liveness: `/api/module/health`.
@@ -41,7 +54,7 @@ Keep Intercept's existing single WSGI worker: radio state is in process memory, 
 
 ## Deployment and validation
 
-The optional `ami-deploy/stacks/intercept/` configuration is deliberately separate from the existing AMI/VIGIL stacks. Choose the receiver host, devices, DNS and image revision before enabling it. No radio hardware or production stack is configured automatically. Image publication is gated on the fork's successful main-branch CI run.
+The optional `ami-deploy/stacks/intercept/` configuration is deliberately separate from the existing AMI/VIGIL stacks. Choose the receiver host, devices, DNS and image revision before enabling it. No radio hardware or production stack is configured automatically. Automatic image publication is gated on the fork's successful main-branch CI run and builds `linux/arm64` only, on a native arm64 runner. To add amd64, manually run **Build and Push Docker Image** from `main` with `amd64` ticked; arm64 is always included, so the `main` tag never loses the image tyr runs. Manual runs publish the selected main revision without waiting for a CI run; all action SHA pins are retained.
 
 ```sh
 python3 -m venv /tmp/intercept-test-env
