@@ -1,7 +1,15 @@
 name: Build and Push Docker Image
 
-# Publish only the exact main revision whose complete CI (including browser smoke) passed.
+# Automatic publication uses the exact main revision whose complete CI passed.
+# Manual builds are restricted to main and allow additional architectures on demand.
 on:
+  workflow_dispatch:
+    inputs:
+      amd64:
+        description: 'Also build linux/amd64 (arm64, which tyr runs, is always built)'
+        required: false
+        default: false
+        type: boolean
   workflow_run:
     workflows: [CI]
     branches: [main]
@@ -21,18 +29,23 @@ permissions:
 
 jobs:
   build:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
-    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    # Native arm64 runner (free for public repos): no QEMU for the image tyr runs (it took ~3h45m)
+    runs-on: ubuntu-24.04-arm
 
     steps:
       # Step 1: Check out the repository code
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
-      # Step 2: Set up QEMU for multi-arch builds
+      # Step 2: QEMU, only for an extra amd64 build
       - name: Set up QEMU
+        if: inputs.amd64
         uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
 
       # Step 3: Set up Docker Buildx for advanced features
@@ -54,18 +67,18 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           labels: |
-            org.opencontainers.image.revision=${{ github.event.workflow_run.head_sha }}
+            org.opencontainers.image.revision=${{ github.event.workflow_run.head_sha || github.sha }}
           tags: |
             type=raw,value=main
-            type=raw,value=sha-${{ github.event.workflow_run.head_sha }}
+            type=raw,value=sha-${{ github.event.workflow_run.head_sha || github.sha }}
 
       # Step 6: Build and push the Docker image
       - name: Build and push
         uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
-          # Only this successful main CI revision is published
+          platforms: ${{ inputs.amd64 && 'linux/arm64,linux/amd64' || 'linux/arm64' }}
+          # Publish the successful CI revision, or the manually selected main revision
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
