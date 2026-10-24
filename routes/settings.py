@@ -30,8 +30,11 @@ _env_lock = threading.Lock()
 
 
 def _get_env_file_path() -> Path:
-    """Return the project .env path."""
-    return Path(__file__).resolve().parent.parent / ".env"
+    """Where settings saved from the UI go: INTERCEPT_SETTINGS_ENV when set (the Docker image points it at
+    instance/settings.env, the persistent volume; the project's own .env is inside the container and is
+    lost on every redeploy), else the project .env. start.sh reads it back at startup."""
+    configured = os.environ.get("INTERCEPT_SETTINGS_ENV", "").strip()
+    return Path(configured) if configured else Path(__file__).resolve().parent.parent / ".env"
 
 
 def _write_env_value(key: str, value: str, env_path: Path | None = None) -> None:

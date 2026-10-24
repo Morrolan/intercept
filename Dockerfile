@@ -336,6 +336,7 @@ EXPOSE 5443
 # Environment variables with defaults
 ENV INTERCEPT_HOST=0.0.0.0 \
     INTERCEPT_PORT=5050 \
+    INTERCEPT_SETTINGS_ENV=/app/instance/settings.env \
     INTERCEPT_LOG_LEVEL=INFO \
     PYTHONUNBUFFERED=1
 
