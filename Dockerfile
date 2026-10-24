@@ -137,7 +137,9 @@ RUN cd /tmp \
     && cd SatDump \
     && mkdir build && cd build \
     && ARCH_FLAGS=""; if [ "$(uname -m)" = "x86_64" ]; then ARCH_FLAGS="-march=x86-64"; fi \
-    && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=OFF -DCMAKE_INSTALL_LIBDIR=lib \
+    # SatDump defaults to prefix /usr on Linux and compiles <prefix>/share/satdump/ and <prefix>/lib/satdump/
+    # into the binary; everything is staged under /usr/local, so the prefix must say so
+    && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=OFF -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=lib \
            -DCMAKE_C_FLAGS="$ARCH_FLAGS" \
            -DCMAKE_CXX_FLAGS="$ARCH_FLAGS" .. \
     && make -j$(nproc) \
@@ -156,7 +158,7 @@ RUN cd /tmp \
     && rm -rf /tmp/SatDump
 
 # Stage SatDump artifacts (separate layer so compile cache survives staging changes)
-# On arm64 cmake installs to /usr/{bin,lib,share}; on x86 to /usr/local/{bin,lib,share}
+# Installed under /usr/local (CMAKE_INSTALL_PREFIX above); the /usr fallbacks are for older builds
 RUN mkdir -p /staging/usr/local/share /staging/usr/local/lib/satdump/plugins \
     # Binary
     && (cp -a /usr/local/bin/satdump /staging/usr/local/bin/ 2>/dev/null \
@@ -210,6 +212,18 @@ RUN cd /tmp \
     && cp /tmp/gopath/bin/rtlamr /staging/usr/bin/rtlamr \
     && rm -rf /usr/local/go /tmp/gopath
 
+# Python bindings for Bluetooth through BlueZ (utils/bluetooth/dbus_scanner.py: dbus-python + PyGObject for
+# its GLib main loop). Built here because the image's Python isn't Debian's, so python3-dbus/python3-gi
+# can't be used; the site-packages are copied into the runtime stage. Separate layer, after the heavy
+# compiles, so changing it doesn't rebuild them. PyGObject first (dbus-python's build looks for gi);
+# no build isolation, because PyGObject's declared build deps pull in pycairo, which needs cairo.
+RUN apt-get update && apt-get install -y --no-install-recommends libdbus-1-dev libgirepository-2.0-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir meson-python meson ninja patchelf \
+    && pip install --no-cache-dir --no-build-isolation --no-deps PyGObject==3.58.1 -Csetup-args=-Dpycairo=disabled \
+    && pip install --no-cache-dir --no-build-isolation --no-deps dbus-python==1.4.0 -Csetup-args=-Dtests=false -Csetup-args=-Ddoc=false \
+    && pip uninstall -y meson-python meson ninja patchelf
+
 ###############################################################################
 # Stage 2: Runtime — lean image with only runtime dependencies
 ###############################################################################
@@ -252,6 +266,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Bluetooth tools
     bluez \
     bluetooth \
+    # Bluetooth through the host's BlueZ: runtime libs for dbus-python and PyGObject (GLib's typelib)
+    libdbus-1-3 \
+    libglib2.0-0t64 \
+    libgirepository-2.0-0 \
+    gir1.2-glib-2.0 \
     # GPS support
     gpsd \
     gpsd-clients \
@@ -285,6 +304,17 @@ COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/pyth
 
 # Refresh shared library cache for custom-built libraries
 RUN ldconfig
+
+# Check what the decoders need is where they look, in this image as it ships: SatDump compiles its config
+# and plugin paths in (a mismatch: "Couldn't load config file!"), and the Bluetooth bindings must import
+RUN cd /tmp && out=$(timeout 120 satdump live meteor_m2-x_lrpt /tmp/satdump-check --source file --file_path /dev/null \
+        --samplerate 2400000 --baseband_format cf32 2>&1; true) \
+    && rm -rf /tmp/satdump-check /root/.config/satdump \
+    && echo "$out" | grep -q 'Loading config /usr/local/share/satdump/satdump_cfg.json' \
+    && echo "$out" | grep -q 'Plugin meteor_support loaded' \
+    && python -c "import dbus, gi; from dbus.mainloop.glib import DBusGMainLoop; from gi.repository import GLib" \
+    && echo "SatDump and Bluetooth bindings OK" \
+    || { echo "$out" | tail -20; exit 1; }
 
 # Copy requirements first for better caching
 COPY requirements.txt .
