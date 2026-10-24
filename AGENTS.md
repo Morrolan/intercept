@@ -199,3 +199,10 @@ Owner-reported look-and-feel mismatches with AMI (2026-10-24). Not urgent; fold 
 - Static asset URLs append `-ami1` to the upstream version as a cache key; the displayed release version is unchanged. Change the asset revision when future fork changes would otherwise reuse cached scripts.
 
 - Embedded speech uses `window.InterceptAMI` in ami-bridge.js and AMI’s `ami-speak`/`ami-speech` messages. VoiceAlerts keeps its queue/mute/source choices; automatic speech also requires AMI autoplay. Never synthesize locally inside AMI or expose separate voice/rate/pitch choices there. Standalone speech remains native.
+
+## Account preferences (fork-owned)
+
+- `utils/preferences.py` is the complete localStorage classification and server allowlist; the first head script receives that same registry. Add every new key there, including any dynamic prefix, and choose its scope deliberately. `tests/test_preferences.py` checks literal keys and the layout list.
+- SYNCED: observer/module locations, theme/map theme, timezone/hour format, UI tier, default mode/setup/disclaimer, update choice, `intercept_settings`, watch/ignore/mute lists, pager/OOK/waterfall presets, bias-T, Morse/station/receiver preferences and ADS-B range/retention/history choices. There is currently no separate AIS watch-list localStorage key.
+- PER-DEVICE: all `LAYOUT_KEYS`/`LAYOUT_PREFIXES`, other view/overlay/autoscroll choices, speaker audio/mute/voice config, debug flags, transient handoff/session/dismissal data, legacy animation keys, `intercept.reach.*` reception caches and the sync owner marker/outbox (`intercept.prefs.pending.<user id>`). Generic storage helpers have no callers; module location keys are explicitly enumerated.
+- Account prefs use the session username resolved to `users.id`, never identity headers. NULL rows are deletion markers; first imports cannot overwrite existing rows. Shared HTML heads hydrate before other scripts read storage; global observer-location `.env` persistence remains separate.

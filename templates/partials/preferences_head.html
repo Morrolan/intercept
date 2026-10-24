@@ -1,0 +1,4 @@
+{% if account_prefs %}
+<script id="intercept-account-prefs" type="application/json">{{ account_prefs | tojson }}</script>
+<script src="{{ url_for('static', filename='js/core/preferences.js') }}"></script>
+{% endif %}

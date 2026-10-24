@@ -170,6 +170,8 @@ const Settings = {
                 if (response.ok) {
                     const data = await response.json();
                     this._cache = { ...this.defaults, ...data.settings };
+                    const personal = JSON.parse(localStorage.getItem('intercept_settings') || '{}');
+                    Object.assign(this._cache, personal);
                 } else {
                     // Fall back to localStorage
                     this._loadFromLocalStorage();
