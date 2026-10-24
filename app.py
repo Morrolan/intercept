@@ -17,6 +17,8 @@ if not site.ENABLE_USER_SITE:
     if user_site and user_site not in sys.path:
         sys.path.insert(0, user_site)
 
+import functools
+import hashlib
 import logging
 import os
 import platform
@@ -261,8 +263,23 @@ def version_static_urls(endpoint: str, values: dict) -> None:
     not a function" after an upgrade). A new version is a new URL.
     """
     if endpoint == "static" and "v" not in values:
-        # Bust upstream caches for this fork's reskin without changing its release version.
-        values["v"] = f"{VERSION}-ami1"
+        # The version plus a digest of the file itself: this fork deploys many builds under one release
+        # version, so a fixed suffix left browsers on a day-old stylesheet after a deploy. A file that
+        # changed gets a new URL; the others stay cached.
+        values["v"] = f"{VERSION}-{_static_digest(str(values.get('filename', '')))}"
+
+
+@functools.lru_cache(maxsize=4096)
+def _static_digest(filename: str) -> str:
+    """First 10 hex digits of the static file's SHA-256 (computed once per process), or 'ami' if unreadable."""
+    folder = Path(app.static_folder or "static").resolve()
+    path = (folder / filename).resolve()
+    if folder not in path.parents:
+        return "ami"
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()[:10]
+    except OSError:
+        return "ami"
 
 
 @app.context_processor
