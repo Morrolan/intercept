@@ -7,9 +7,20 @@ from flask import url_for
 from config import VERSION
 
 
-def test_url_for_static_carries_version(app):
+def test_url_for_static_carries_version_and_content_digest(app):
+    import hashlib
+    from pathlib import Path
+
     with app.test_request_context():
-        assert url_for("static", filename="js/modes/gps.js").endswith(f"?v={VERSION}-ami1")
+        digest = hashlib.sha256((Path(app.static_folder) / "js/modes/gps.js").read_bytes()).hexdigest()[:10]
+        assert url_for("static", filename="js/modes/gps.js").endswith(f"?v={VERSION}-{digest}")
+        # Different files, different digests: a deploy only changes the URLs of files that changed
+        def v(filename):
+            return url_for("static", filename=filename).split("?v=")[1]
+
+        assert v("css/ami-theme.css") != v("js/modes/gps.js")
+        # Never reads outside the static folder
+        assert url_for("static", filename="../app.py").endswith(f"?v={VERSION}-ami")
 
 
 def test_pages_version_every_app_asset(client):

@@ -138,3 +138,18 @@ html.ami-embedded .scanline { display: none; }
 .ami-voice-note { display: none; }
 html.ami-embedded [data-ami-voice-settings] { display: none; }
 html.ami-embedded .ami-voice-note { display: block; color: var(--text-secondary); margin: 10px 0; }
+
+/* Short windows (AMI's frame, a small laptop, a phone on its side). Intercept's pages are full-window apps
+   pinned to the window's height with page scrolling off, so in a short window everything squashes to fit.
+   Below --intercept-min-h each page keeps the layout it has at that height and the window scrolls instead;
+   taller windows are unchanged. Offsets match each page's own calc(100vh - N). Tune the one variable (the
+   media query must use the same number: CSS can't put a variable there). */
+:root { --intercept-min-h: 760px; }
+@media (max-height: 759px) {
+  html, body { height: auto !important; overflow-y: auto !important; }
+  body { min-height: var(--intercept-min-h) !important; }
+  .main-content { height: calc(var(--intercept-min-h) - 96px) !important; }
+  body[data-mode="ais"] .dashboard { height: calc(var(--intercept-min-h) - 160px) !important; }
+  .aprs-dashboard, .meshcore-dashboard, .mesh-dashboard { height: calc(var(--intercept-min-h) - 52px) !important; }
+  .dashboard-layout { height: var(--intercept-min-h) !important; }
+}
