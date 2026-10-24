@@ -49,7 +49,9 @@ def test_account_sync_and_offline(browser, prefs_url):
         local_only(first, prefs_url)
         local_only(second, prefs_url)
         page = sign_in(first, prefs_url)
-        with page.expect_response(lambda r: '/api/me/prefs' in r.url and r.request.method == 'PUT') as saved:
+        # Wait for the upload that carries this change: the page's own start-up writes may go first.
+        with page.expect_response(lambda r: '/api/me/prefs' in r.url and r.request.method == 'PUT'
+                                  and 'interceptTimezone' in (r.request.post_data or '')) as saved:
             page.evaluate("""() => {
                 localStorage.setItem('interceptTimezone', 'Europe/London');
                 localStorage.setItem('mainSidebarCollapsed', 'true');
