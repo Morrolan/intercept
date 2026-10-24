@@ -228,6 +228,29 @@ class TestSettingsEndpoints:
         assert ais_routes.DEFAULT_LATITUDE == 48.0
         assert ais_routes.DEFAULT_LONGITUDE == 16.16
 
+    def test_observer_location_goes_to_the_persistent_settings_file(self, client, monkeypatch, tmp_path):
+        """With INTERCEPT_SETTINGS_ENV (the Docker image sets instance/settings.env) the location is saved
+        there, on the persistent volume, not in the project .env inside the container."""
+        from routes import settings as settings_routes
+
+        with client.session_transaction() as sess:
+            sess["logged_in"] = True
+
+        target = tmp_path / "instance" / "settings.env"
+        monkeypatch.setenv("INTERCEPT_SETTINGS_ENV", str(target))
+        assert settings_routes._get_env_file_path() == target
+
+        response = client.post(
+            "/settings/observer-location", data=json.dumps({"lat": 51.5, "lon": -0.12}), content_type="application/json"
+        )
+        assert response.status_code == 200
+        text = target.read_text()
+        assert "INTERCEPT_DEFAULT_LAT=51.5" in text
+        assert "INTERCEPT_DEFAULT_LON=-0.12" in text
+
+        monkeypatch.delenv("INTERCEPT_SETTINGS_ENV")
+        assert settings_routes._get_env_file_path().name == ".env"
+
     def test_save_observer_location_rejects_invalid_values(self, client):
         """Observer location save should validate coordinates."""
         with client.session_transaction() as sess:

@@ -25,6 +25,17 @@ if [[ -f "$SCRIPT_DIR/.env" ]]; then
     set +a
 fi
 
+# ── Settings saved from the UI (INTERCEPT_SETTINGS_ENV, e.g. the observer location) ──
+# Written by the app, so never run as shell code: only INTERCEPT_* keys with plain numeric values are
+# taken (the app writes only the validated observer latitude/longitude; widen this if that changes).
+if [[ -n "${INTERCEPT_SETTINGS_ENV:-}" && -f "$INTERCEPT_SETTINGS_ENV" ]]; then
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        if [[ "$line" =~ ^(INTERCEPT_[A-Z0-9_]+)=([-+]?[0-9]+(\.[0-9]+)?)$ ]]; then
+            export "${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+        fi
+    done < "$INTERCEPT_SETTINGS_ENV"
+fi
+
 if [[ -x "$SCRIPT_DIR/venv/bin/python" ]]; then
     PYTHON="$SCRIPT_DIR/venv/bin/python"
 elif [[ -n "${VIRTUAL_ENV:-}" && -x "$VIRTUAL_ENV/bin/python" ]]; then
