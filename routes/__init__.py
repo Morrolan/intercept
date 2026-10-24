@@ -34,6 +34,7 @@ def register_blueprints(app):
     from .offline import offline_bp
     from .ook import ook_bp
     from .pager import pager_bp
+    from .preferences import preferences_bp
     from .radiosonde import radiosonde_bp
     from .recordings import recordings_bp
     from .rtlamr import rtlamr_bp
@@ -57,6 +58,7 @@ def register_blueprints(app):
     from .wifi_v2 import wifi_v2_bp
 
     app.register_blueprint(ami_bp)
+    app.register_blueprint(preferences_bp)
     app.register_blueprint(pager_bp)
     app.register_blueprint(sensor_bp)
     app.register_blueprint(rtlamr_bp)

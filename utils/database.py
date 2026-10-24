@@ -297,6 +297,18 @@ def init_db() -> None:
             )
         """)
 
+        # Account preferences. NULL is a deletion marker: stale browsers must not
+        # import a removed value again. Created idempotently on existing installs.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS user_prefs (
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                key TEXT NOT NULL,
+                value TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, key)
+            )
+        """)
+
         # Older databases predate the forced-change flag.
         try:
             user_columns = {row["name"] for row in conn.execute("PRAGMA table_info(users)")}

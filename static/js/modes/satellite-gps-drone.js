@@ -945,6 +945,7 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', localTheme);
 
     // Then fetch from server to sync (in case changed on another device)
+    if (window.InterceptPrefs) return;
     fetch('/settings/theme')
         .then(r => r.json())
         .then(data => {

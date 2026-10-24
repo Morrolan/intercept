@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="{% if offline_settings.tile_provider in ['cartodb_dark', 'cartodb_dark_cyan'] %}map-cyber-enabled{% endif %}">
 <head>
+{% include 'partials/preferences_head.html' %}
     {% set dash_title = 'APRS TRACKER // INTERCEPT - See the Invisible' %}
     {% set dash_mode_css = 'css/modes/aprs.css' %}
     {% set dash_layout_css = 'css/aprs_dashboard.css' %}

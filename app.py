@@ -538,6 +538,9 @@ def require_login():
     if request.blueprint == "ami":
         return None
 
+    if request.blueprint == "preferences" and not (session.get("logged_in") and session.get("username")):
+        return jsonify(error="Sign in required"), 401
+
     # Skip auth entirely when INTERCEPT_DISABLE_AUTH is set
     if os.environ.get("INTERCEPT_DISABLE_AUTH", "").lower() in ("1", "true", "yes"):
         session["logged_in"] = True
