@@ -144,6 +144,27 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = bool(SSL_CERT and SSL_KEY)
 
+
+@app.before_request
+def enforce_ami_away():
+    # Run before CSRF and legacy auth exemptions, including DISABLE_AUTH.
+    from utils.ami import ami_origin
+    from utils.ami_access import away_request
+
+    if request.blueprint == "ami" or not away_request():
+        return None
+    if request.endpoint in ("ami_enter", "static", "favicon"):
+        return None
+    if request.endpoint == "login":
+        return render_template("ami_access.html", ami_url=ami_origin(), invalid_ticket=False), 403, {"Cache-Control": "no-store"}
+    if not (session.get("logged_in") and session.get("via_ami") is True):
+        if (request.path.startswith(("/api/", "/stream", "/ws/")) or request.is_json
+                or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+                or request.accept_mimetypes.best in ("application/json", "text/event-stream")):
+            return jsonify(error="Open Intercept through AMI"), 401
+        return redirect(url_for("login"))
+
+
 # Set up HTTP compression (gzip/brotli for HTML, CSS, JS, JSON)
 if _has_compress:
     Compress(app)
@@ -230,7 +251,7 @@ def add_security_headers(response):
     # Enable XSS filter
     response.headers["X-XSS-Protection"] = "1; mode=block"
     # Referrer policy
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
     # Permissions policy (disable unnecessary features)
     response.headers["Permissions-Policy"] = "geolocation=(self), microphone=()"
     # Cache-Control for static assets
@@ -547,7 +568,7 @@ def require_login():
         return None
 
     # Routes that don't require login (to avoid infinite redirect loop)
-    allowed_routes = ["login", "static", "favicon", "health", "health_check", "change_password"]
+    allowed_routes = ["login", "static", "favicon", "health", "health_check", "change_password", "ami_enter"]
 
     # A WebSocket upgrade is an ordinary HTTP request until the handshake
     # completes, so the session is checkable here. It used to be allowed
@@ -634,24 +655,21 @@ def login():
 
         # Connect to DB and find user
         with get_db() as conn:
-            cursor = conn.execute("SELECT password_hash, role FROM users WHERE username = ?", (username,))
+            cursor = conn.execute(
+                "SELECT username, password_hash, role, must_change_password FROM users WHERE username = ? AND enabled = 1",
+                (username,),
+            )
             user = cursor.fetchone()
 
         # Verify user exists and password is correct
         if user and check_password_hash(user["password_hash"], password):
-            # Store data in session
-            session["logged_in"] = True
-            session["username"] = username
-            session["role"] = user["role"]
+            from utils.ami_access import start_session
 
-            from utils.database import user_must_change_password
-
-            if user_must_change_password(username):
-                session["must_change_password"] = True
+            start_session(user)
+            if session.get("must_change_password"):
                 logger.info(f"User '{username}' logged in; password change required.")
                 return redirect(url_for("change_password"))
 
-            session.pop("must_change_password", None)
             logger.info(f"User '{username}' logged in successfully.")
             return redirect(url_for("index"))
         else:
@@ -659,6 +677,26 @@ def login():
             flash("ACCESS DENIED: INVALID CREDENTIALS", "error")
 
     return render_template("login.html", version=VERSION)
+
+
+@app.get("/ami/enter")
+def ami_enter():
+    from utils.ami import ami_origin
+    from utils.ami_access import enabled_account, entry_tickets, start_session
+
+    username = entry_tickets.consume(request.args.get("ticket"))
+    account = enabled_account(username) if username and ami_origin() else None
+    if not account:
+        logger.warning("Failed AMI entry attempt from IP: %s", request.remote_addr)
+        response = app.make_response((render_template(
+            "ami_access.html", ami_url=ami_origin(), invalid_ticket=True), 403))
+    else:
+        start_session(account, via_ami=True)
+        logger.info("User '%s' logged in through AMI from IP: %s", username, request.remote_addr)
+        response = redirect("/?ami=1")
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response
 
 
 @app.route("/")

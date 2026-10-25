@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include 'partials/preferences_head.html' %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Intercept — Open through AMI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts-local.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    {% include 'partials/ami_head.html' %}
+</head>
+<body>
+    <main class="landing-content">
+        <h1 class="landing-title">INTERCEPT</h1>
+        <div class="login-box">
+            {% if invalid_ticket %}
+            <p>Open Intercept again from AMI. This entry pass is invalid or has expired.</p>
+            {% else %}
+            <p>Intercept is opened through AMI when you're away from home</p>
+            {% endif %}
+            {% if ami_url %}<a href="{{ ami_url }}" target="_top">Open AMI</a>{% endif %}
+        </div>
+    </main>
+</body>
+</html>

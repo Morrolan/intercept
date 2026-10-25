@@ -4,7 +4,7 @@ This fork retains the native Flask application and receiver/decoder processes. I
 
 ## Enable the module
 
-Use an HTTPS hostname under the same parent domain as AMI (for example `intercept.example.test` and `ami.example.test`). The browser must be able to send Intercept's own sign-in cookie in AMI's frame. Authentication remains enabled; never use `INTERCEPT_DISABLE_AUTH` for this deployment. AMI's service-token integration does not sign a browser into Intercept.
+Use an HTTPS hostname under the same parent domain as AMI (for example `intercept.example.test` and `ami.example.test`). The browser must be able to send Intercept's own sign-in cookie in AMI's frame. Authentication remains enabled; never use `INTERCEPT_DISABLE_AUTH` for this deployment. AMI can exchange its service token and an MFA-verified, allowlisted username for a one-use browser entry pass (see below).
 
 1. Create a service token locally, outside shell history, using `python3 scripts/ami-token.py`. Store the printed token in your password manager and paste it into AMI's module registration. Store the separately printed digest in Intercept's private environment file. The script neither writes a credential file nor changes running configuration.
 2. Configure Intercept, then restart it through its normal deployment:
@@ -30,6 +30,56 @@ Only enable this when clients cannot reach Intercept directly and every trusted
 proxy sets the forwarded headers. This setting counts hops; it does not restrict
 trusted proxy IP addresses. For Docker, pass the variable into the container
 (e.g. through the stack's `environment` or `env_file`).
+
+## AMI-only browser access away from home
+
+Opt in with `INTERCEPT_AMI_ONLY_AWAY=1`, `INTERCEPT_TRUSTED_PROXIES=1` and
+`INTERCEPT_AMI_USERS=alice=operator,bob`. The list contains exact, case-sensitive
+AMI usernames; `ami_name=intercept_name` maps to an existing Intercept account,
+and an unmapped name uses the same account name. Empty lists deny all entry
+passes. Accounts must have `users.enabled=1` (the migration defaults existing
+accounts to enabled). Intercept's account role and forced password-change flag
+are authoritative; AMI's role never grants an Intercept role.
+
+Caddy must **always overwrite** `X-Intercept-Access` on every public request:
+`home` for the home network and `away` for everything else. Never pass through a
+client's value. Keep exactly one trusted Caddy, restrict public ingress to it,
+and do not expose the container port directly. Proxy trust counts hops, not
+source IPs. The header is ignored unless proxy trust is positive and the away
+option is `1`; the default remains today's password-login behaviour.
+
+Away requests cannot sign in with a password, including password POSTs. The
+login page returns 403 and links to `AMI_URL`. Sessions created by password
+login are refused away (browser redirect to login; API/XHR/SSE 401). A session
+created through AMI works both away and at home. Home and headerless internal
+requests retain their existing behaviour. Module manifest/health, bearer MCP,
+events and session issuance retain their existing independent authorization;
+Docker-network service calls and the headerless loopback healthcheck need no
+access header. Do not enable `INTERCEPT_DISABLE_AUTH`.
+
+The shared AMI entry contract is advertised as `ui.session` and `ui.enter`:
+
+1. AMI's server POSTs to `/api/module/session` over the internal connection with
+   its service bearer token and JSON `{"user":"alice","role":"resident","mfa":true}`.
+   `role` must be `admin`, `resident` or `viewer`; `mfa` must be the boolean true.
+   AMI must derive these values from its authenticated, MFA-verified session.
+2. Intercept checks the allowlist and enabled local account and returns
+   `{"ticket":"<url-safe random pass>","expiresIn":60}`. Denied eligibility
+   returns 403 `{"error":"not allowed"}`. Missing/invalid bearer tokens return
+   401. Issuance is limited globally to 30 authenticated attempts per minute
+   (429 with `Retry-After: 60`), including denied eligibility checks.
+3. AMI opens Intercept's public `/ami/enter?ticket=<pass>`. Intercept consumes
+   the ticket once, rechecks the enabled account, replaces the browser session,
+   sets `via_ami`, and redirects to `/?ami=1`. Forced password change still
+   applies. Invalid, expired or reused passes show a 403 page asking the person
+   to open Intercept again from AMI; there is no redirect loop.
+
+Tickets are stored only by hash in worker memory for 60 seconds. A restart
+invalidates outstanding passes; keep the existing single gunicorn worker.
+Entry responses disable caching and referrer transmission. Configure proxy
+access logs to omit/redact the `ticket` query parameter; treat it as a short-lived
+login credential. No bearer token is sent to the browser. Serve AMI and Intercept
+under the same parent domain so the embedded session cookie works.
 
 ## Read-only contract
 

@@ -293,7 +293,8 @@ def init_db() -> None:
                 password_hash TEXT NOT NULL,
                 role TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                must_change_password INTEGER NOT NULL DEFAULT 0
+                must_change_password INTEGER NOT NULL DEFAULT 0,
+                enabled INTEGER NOT NULL DEFAULT 1
             )
         """)
 
@@ -312,6 +313,8 @@ def init_db() -> None:
         # Older databases predate the forced-change flag.
         try:
             user_columns = {row["name"] for row in conn.execute("PRAGMA table_info(users)")}
+            if "enabled" not in user_columns:
+                conn.execute("ALTER TABLE users ADD COLUMN enabled INTEGER NOT NULL DEFAULT 1")
             if "must_change_password" not in user_columns:
                 conn.execute("ALTER TABLE users ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0")
         except Exception as e:

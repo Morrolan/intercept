@@ -26,9 +26,26 @@ def manifest():
                     "health": "/api/module/health", "events": "/api/module/events",
                     "auth": {"type": "token", "roles": ["admin"]},
                     "scopes": [{"id": "intercept.read", "description": "Read decoder health and sanitized contacts"}],
-                    "ui": {"entry": "/?ami=1", "embed": True, "deepLinks": {
+                    "ui": {"entry": "/?ami=1", "embed": True,
+                           "session": "/api/module/session", "enter": "/ami/enter", "deepLinks": {
                         "aircraft": "/adsb/dashboard?ami=1", "vessels": "/ais/dashboard?ami=1"}},
                     "eventKinds": [{"id": "decoder-health", "label": "Decoder health", "adminOnly": True}]})
+
+
+@ami_bp.post("/api/module/session")
+def browser_session():
+    from utils.ami_access import enabled_account, entry_tickets, mapped_account
+
+    if not entry_tickets.rate_allowed():
+        return jsonify(error="Too many requests"), 429, {"Retry-After": "60", "Cache-Control": "no-store"}
+    request.max_content_length = 4096
+    body = request.get_json(silent=True)
+    username = mapped_account(body.get("user")) if isinstance(body, dict) else None
+    if (not username or body.get("mfa") is not True
+            or body.get("role") not in ("admin", "resident", "viewer")
+            or not enabled_account(username)):
+        return jsonify(error="not allowed"), 403, {"Cache-Control": "no-store"}
+    return jsonify(ticket=entry_tickets.issue(username), expiresIn=60), 200, {"Cache-Control": "no-store"}
 
 
 @ami_bp.get("/api/module/health")
