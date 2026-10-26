@@ -1,5 +1,6 @@
 """Offline recordings must reach SatDump as the signal actually stored on disk."""
 
+import json
 import os
 import wave
 from unittest.mock import MagicMock, patch
@@ -11,8 +12,15 @@ from utils.weather_sat import WeatherSatDecoder
 
 @pytest.fixture
 def offline(tmp_path):
+    resources = tmp_path / "satdump" / "share" / "satdump"
+    resources.mkdir(parents=True)
+    (resources / "satdump_cfg.json").write_text(json.dumps({
+        "viewer": {"instruments": {"msu_mr": {"rgb_composites": {
+            "RGB": {"equation": "ch1,ch2,ch3", "project": {"config": {}}},
+        }}}},
+    }))
     with (
-        patch("utils.weather_sat.shutil.which", return_value="/usr/bin/satdump"),
+        patch("shutil.which", return_value=str(tmp_path / "satdump" / "bin" / "satdump")),
         patch("utils.weather_sat.ALLOWED_OFFLINE_INPUT_DIRS", (tmp_path,)),
         patch("utils.weather_sat.register_process"),
         patch("utils.weather_sat.time.sleep"),
@@ -50,6 +58,40 @@ def test_iq_wav_uses_baseband_and_header_rate(offline, tmp_path, satellite, pipe
     assert argv[:4] == ["satdump", pipeline, "baseband", str(path)]
     assert argv[argv.index("--samplerate") + 1] == str(rate)
     assert argv[argv.index("--baseband_format") + 1] == "cs16"
+
+
+def test_meteor_offline_run_has_isolated_image_only_settings(offline, tmp_path):
+    decoder, popen = offline
+    path = recording(tmp_path / "sample.wav", 3000000)
+    success, error = decoder.start_from_file("METEOR-HRPT", str(path))
+    assert success, error
+    folder = popen.call_args.kwargs["cwd"]
+    settings = json.loads((folder / "settings.json").read_text())
+    rgb = settings["viewer"]["instruments"]["msu_mr"]["rgb_composites"]["RGB"]
+    assert rgb["project"] is None
+    assert rgb["draw_map_overlay"] is False
+    argv = popen.call_args.args[0]
+    tle = argv[argv.index("--tle_override") + 1]
+    assert tle == str(folder / "offline.tle")
+    assert (folder / "offline.tle").read_text() == ""
+    assert folder.is_absolute()
+    assert argv[3] == str(path.resolve())
+    assert argv[4] == str(folder)
+
+
+def test_offline_failure_does_not_blame_sdr_hardware(offline):
+    decoder, _ = offline
+    decoder._process = MagicMock(returncode=-11)
+    decoder._running = True
+    decoder._pty_master_fd, writer = os.pipe()
+    os.close(writer)
+    progress = []
+    decoder.set_callback(progress.append)
+    with patch.object(decoder, "_read_pty_lines", return_value=iter(())):
+        decoder._read_satdump_output()
+    error = next(item.message for item in progress if item.status == "error")
+    assert "offline" in error.lower()
+    assert "SDR" not in error
 
 
 @pytest.mark.parametrize("channels,width", [(1, 2), (2, 3)])

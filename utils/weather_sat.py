@@ -29,6 +29,7 @@ from typing import Callable
 
 from utils.logging import get_logger
 from utils.process import register_process, safe_terminate
+from utils.satdump_offline import prepare_offline_run
 
 logger = get_logger("intercept.weather_sat")
 
@@ -682,7 +683,7 @@ class WeatherSatDecoder:
         # Create timestamped output directory for this decode
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         sat_name = sat_info["tle_key"].replace(" ", "_")
-        self._capture_output_dir = self._output_dir / f"{sat_name}_{timestamp}"
+        self._capture_output_dir = (self._output_dir / f"{sat_name}_{timestamp}").resolve()
         self._capture_output_dir.mkdir(parents=True, exist_ok=True)
 
         # Meteor WAV recordings contain I/Q, not FM-demodulated audio.
@@ -707,13 +708,19 @@ class WeatherSatDecoder:
             "satdump",
             sat_info["pipeline"],
             input_level,
-            str(input_file),
+            str(input_file.resolve()),
             str(self._capture_output_dir),
             "--samplerate",
             str(sample_rate),
         ]
         if baseband_format:
             cmd.extend(["--baseband_format", baseband_format])
+
+        run_options = {}
+        if sat_info["mode"] != "APT":
+            tle = prepare_offline_run(self._capture_output_dir)
+            cmd.extend(["--tle_override", str(tle)])
+            run_options["cwd"] = self._capture_output_dir
 
         logger.info(f"Starting SatDump offline: {' '.join(cmd)}")
 
@@ -728,6 +735,7 @@ class WeatherSatDecoder:
             stderr=slave_fd,
             stdin=subprocess.DEVNULL,
             close_fds=True,
+            **run_options,
         )
         register_process(self._process)
         try:
@@ -1019,7 +1027,12 @@ class WeatherSatDecoder:
                             satellite=self._current_satellite,
                             frequency=self._current_frequency,
                             mode=self._current_mode,
-                            message=f"SatDump crashed (exit code {retcode}). Check SatDump installation and SDR device.",
+                            message=(
+                                f"Offline decode failed (exit code {retcode}). Check decoder logs; "
+                                "any images already produced remain available."
+                                if self._device_index < 0 else
+                                f"SatDump crashed (exit code {retcode}). Check SatDump installation and SDR device."
+                            ),
                             elapsed_seconds=elapsed,
                             log_type="error",
                             capture_phase="error",
