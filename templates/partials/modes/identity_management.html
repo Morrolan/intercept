@@ -6,7 +6,7 @@
         <div
             style="display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color, #ccc); padding-bottom: 12px; width: 100%;">
             <button id="btnNavAccount" onclick="switchIdentityView('account')"
-                style="background: #198754; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer;">
+                style="background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid var(--accent-green); padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer;">
                 User Account
             </button>
             <button id="btnNavUsers" onclick="switchIdentityView('users')"
@@ -27,9 +27,9 @@
             <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
                 <!-- Avatar Card 
                 <div
-                    style="background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px; display: flex; align-items: center; gap: 16px;">
+                    style="background: var(--bg-card); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px; display: flex; align-items: center; gap: 16px;">
                     <div
-                        style="width: 56px; height: 56px; border-radius: 50%; background: var(--bg-input, #eee); overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color, #ccc); flex-shrink: 0;">
+                        style="width: 56px; height: 56px; border-radius: 50%; background: var(--bg-tertiary); overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color, #ccc); flex-shrink: 0;">
                         <img id="accountPreviewImg" src="" alt="Avatar"
                             style="width: 100%; height: 100%; object-fit: cover; display: none;" />
                         <span id="accountAvatarPlaceholder"
@@ -45,17 +45,17 @@
                 -->
                 <!-- User Details Card -->
                 <div
-                    style="background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px;">
+                    style="background: var(--bg-card); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px;">
                     <label for="accountNameInput"
                         style="display: block; font-size: 11px; color: var(--text-dim, #666); margin-bottom: 4px; font-weight: bold;">Display
                         Name</label>
                     <input type="text" id="accountNameInput" placeholder="Enter display name"
-                        style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-input, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
+                        style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
                 </div>
 
                 <!-- Account Overview Card -->
                 <div
-                    style="background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px; font-size: 12px; color: var(--text-dim, #666); line-height: 1.6;">
+                    style="background: var(--bg-card); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px; font-size: 12px; color: var(--text-dim, #666); line-height: 1.6;">
                     <div style="font-weight: bold; margin-bottom: 6px; color: inherit;">Account Overview</div>
                     <div><strong>Status:</strong> <span id="accountStatusText" style="color: #4caf50;">Active</span>
                     </div>
@@ -72,7 +72,7 @@
             <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
                 <!-- Change Password Card -->
                 <div
-                    style="background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px;">
+                    style="background: var(--bg-card); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px;">
                     <div style="font-weight: bold; margin-bottom: 12px; font-size: 12px;">Change Password</div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
                         <div>
@@ -80,30 +80,30 @@
                                 style="display: block; font-size: 11px; color: var(--text-dim, #666); margin-bottom: 4px;">Current
                                 Password</label>
                             <input type="password" id="accountCurrentPass" placeholder="••••••••"
-                                style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-input, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
+                                style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
                         </div>
                         <div>
                             <label for="accountNewPass"
                                 style="display: block; font-size: 11px; color: var(--text-dim, #666); margin-bottom: 4px;">New
                                 Password</label>
                             <input type="password" id="accountNewPass" placeholder="••••••••"
-                                style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-input, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
+                                style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
                         </div>
                         <div>
                             <label for="accountConfirmPass"
                                 style="display: block; font-size: 11px; color: var(--text-dim, #666); margin-bottom: 4px;">Confirm
                                 Password</label>
                             <input type="password" id="accountConfirmPass" placeholder="••••••••"
-                                style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-input, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
+                                style="width: 100%; padding: 8px; font-size: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; box-sizing: border-box;" />
                         </div>
                     </div>
                 </div>
 
                 <!-- Save Button Card -->
                 <div
-                    style="background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px;">
+                    style="background: var(--bg-card); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px;">
                     <button
-                        style="width: 100%; padding: 10px; background: #198754; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px;"
+                        style="width: 100%; padding: 10px; background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid var(--accent-green); border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px;"
                         onclick="saveAccountSettings()">
                         Save Account Settings
                     </button>
@@ -119,11 +119,11 @@
             <h2 style="font-size: 18px; margin-bottom: 16px; font-weight: bold;">Users &amp; Roles Management</h2>
 
             <div
-                style="background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px; width: 100%; box-sizing: border-box;">
+                style="background: var(--bg-card); border: 1px solid var(--border-color, #ddd); border-radius: 6px; padding: 16px; width: 100%; box-sizing: border-box;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <span style="font-weight: bold; font-size: 12px;">Registered Users Directory</span>
                     <input type="text" id="usersSearchInput" oninput="filterUsersTable()" placeholder="Search users..."
-                        style="padding: 6px 10px; font-size: 11px; background: var(--bg-input, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; width: 200px;" />
+                        style="padding: 6px 10px; font-size: 11px; background: var(--bg-tertiary); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px; width: 200px;" />
                 </div>
 
                 <div style="overflow-x: auto;">
@@ -151,9 +151,9 @@
                     <span id="usersPaginationInfo">Showing 0-0 of 0</span>
                     <div style="display: flex; gap: 6px;">
                         <button onclick="changeUsersPage(-1)"
-                            style="padding: 6px 12px; font-size: 11px; cursor: pointer; background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px;">Previous</button>
+                            style="padding: 6px 12px; font-size: 11px; cursor: pointer; background: var(--bg-card); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px;">Previous</button>
                         <button onclick="changeUsersPage(1)"
-                            style="padding: 6px 12px; font-size: 11px; cursor: pointer; background: var(--bg-surface, #fff); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px;">Next</button>
+                            style="padding: 6px 12px; font-size: 11px; cursor: pointer; background: var(--bg-card); border: 1px solid var(--border-color, #ccc); color: inherit; border-radius: 4px;">Next</button>
                     </div>
                 </div>
             </div>
@@ -181,9 +181,9 @@
             accountView.style.display = 'block';
             usersView.style.display = 'none';
 
-            btnNavAccount.style.background = '#198754';
-            btnNavAccount.style.color = '#fff';
-            btnNavAccount.style.border = 'none';
+            btnNavAccount.style.background = 'var(--accent-green-dim)';
+            btnNavAccount.style.color = 'var(--accent-green)';
+            btnNavAccount.style.border = '1px solid var(--accent-green)';
 
             btnNavUsers.style.background = 'transparent';
             btnNavUsers.style.color = 'inherit';
@@ -194,9 +194,9 @@
             accountView.style.display = 'none';
             usersView.style.display = 'block';
 
-            btnNavUsers.style.background = '#198754';
-            btnNavUsers.style.color = '#fff';
-            btnNavUsers.style.border = 'none';
+            btnNavUsers.style.background = 'var(--accent-green-dim)';
+            btnNavUsers.style.color = 'var(--accent-green)';
+            btnNavUsers.style.border = '1px solid var(--accent-green)';
 
             btnNavAccount.style.background = 'transparent';
             btnNavAccount.style.color = 'inherit';
@@ -307,10 +307,10 @@
                 <td style="padding: 10px;">${user.id}</td>
                 <td style="padding: 10px; font-weight: bold;">${user.name}</td>
                 <td style="padding: 10px; color: var(--text-dim, #666);">${emailField}</td>
-                <td style="padding: 10px;"><span style="padding: 2px 6px; border-radius: 4px; background: var(--bg-input, #eee); font-size: 10px;">${user.role}</span></td>
+                <td style="padding: 10px;"><span style="padding: 2px 6px; border-radius: 4px; background: var(--bg-tertiary); font-size: 10px;">${user.role}</span></td>
                 <td style="padding: 10px;"><span style="color: ${statusColor}; font-weight: bold;">${user.status}</span></td>
                 <td style="padding: 10px; text-align: right;">
-                    <button style="padding: 4px 8px; font-size: 10px; cursor: pointer; background: #198754; color: #fff; border: none; border-radius: 3px;" onclick="editUserRecord(${user.id})">Manage</button>
+                    <button style="padding: 4px 8px; font-size: 10px; cursor: pointer; background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid var(--accent-green); border-radius: 3px;" onclick="editUserRecord(${user.id})">Manage</button>
                 </td>
             `;
             tbody.appendChild(tr);
