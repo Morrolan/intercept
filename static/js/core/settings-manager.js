@@ -440,6 +440,7 @@ const Settings = {
             tilePane.style.opacity = '';
             tilePane.style.willChange = '';
         }
+        container.classList.remove('map-tint-cyber');
         if (container.style) {
             container.style.background = '';
         }
@@ -456,11 +457,8 @@ const Settings = {
             if (container.style) {
                 container.style.background = '#020813';
             }
-            if (tilePane && tilePane.style) {
-                tilePane.style.filter = 'sepia(0.74) hue-rotate(176deg) saturate(1.72) brightness(1.05) contrast(1.08)';
-                tilePane.style.opacity = '1';
-                tilePane.style.willChange = 'filter';
-            }
+            // Tinted per tile by CSS (settings.css), not on the whole pane: see the note there
+            container.classList.add('map-tint-cyber');
         }
 
         // Map overlays are rendered via CSS pseudo elements on

@@ -497,7 +497,10 @@ html[data-ui-tier="lean"] .tile-layer-cyan {
     isolation: isolate;
 }
 
-html:not([data-ui-tier="lean"]) .leaflet-container.map-theme-cyber .leaflet-tile-pane {
+/* Tints go on each tile, never the whole tile pane: a filtered pane becomes one GPU layer the size of every
+   tile Leaflet keeps around, and past the GPU's texture limit (large or Retina screens, after panning) the
+   browser drops parts of it (black strips) or skips the filter (untinted areas). */
+html:not([data-ui-tier="lean"]) .leaflet-container.map-theme-cyber .leaflet-tile-pane .leaflet-tile {
     filter: sepia(0.74) hue-rotate(176deg) saturate(1.72) brightness(1.05) contrast(1.08);
     opacity: 1;
 }
@@ -554,7 +557,7 @@ html[data-ui-tier="enhanced"] .leaflet-container::before {
     background: none !important;
 }
 
-html[data-ui-tier="enhanced"] .leaflet-tile-pane {
+html[data-ui-tier="enhanced"] .leaflet-tile-pane .leaflet-tile {
     filter: sepia(0.85) hue-rotate(150deg) saturate(1.35) brightness(0.78) contrast(1.08);
 }
 
@@ -567,7 +570,7 @@ html[data-ui-tier="enhanced"] .tile-layer-cyan {
     filter: sepia(0.85) hue-rotate(150deg) saturate(1.35) brightness(0.78) contrast(1.08);
 }
 
-html[data-ui-tier="enhanced"] .leaflet-container.map-theme-cyber .leaflet-tile-pane {
+html[data-ui-tier="enhanced"] .leaflet-container.map-theme-cyber .leaflet-tile-pane .leaflet-tile {
     filter: sepia(0.85) hue-rotate(150deg) saturate(1.35) brightness(0.78) contrast(1.08);
 }
 
@@ -629,4 +632,10 @@ html[data-ui-tier="enhanced"]:not([data-theme="light"]).map-cyber-enabled .leafl
     .settings-input {
         width: 100%;
     }
+}
+
+/* The cyber theme as Settings applies it to one map (settings-manager.js), per tile; it takes precedence
+   over the tier tints above, as the inline pane filter it replaces did */
+.leaflet-container.map-tint-cyber .leaflet-tile-pane .leaflet-tile {
+    filter: sepia(0.74) hue-rotate(176deg) saturate(1.72) brightness(1.05) contrast(1.08) !important;
 }
