@@ -401,7 +401,7 @@ const MeshCore = (function () {
         // avoids a flash of the unkeyed CartoDB URL when a CARTO API key is configured.
         const fallback = (typeof Settings !== 'undefined' && Settings._initialized && Settings.createTileLayer)
             ? Settings.createTileLayer().addTo(_map)
-            : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+            : L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png', {
                 attribution: '© CartoDB',
                 maxZoom: 19,
             }).addTo(_map);

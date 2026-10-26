@@ -1071,8 +1071,7 @@ const WeatherSat = (function() {
             // flash of the unkeyed CartoDB URL when a CARTO API key has been configured.
             const fallbackTiles = (typeof Settings !== 'undefined' && Settings._initialized && Settings.createTileLayer)
                 ? Settings.createTileLayer().addTo(groundMap)
-                : L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    subdomains: 'abcd',
+                : L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png', {
                     maxZoom: 18,
                     noWrap: false,
                     crossOrigin: true,
