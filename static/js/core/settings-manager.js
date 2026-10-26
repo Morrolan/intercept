@@ -22,25 +22,25 @@ const Settings = {
             subdomains: 'abc'
         },
         cartodb_dark: {
-            url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+            url: 'https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-            subdomains: 'abcd',
+            subdomains: null,
             mapTheme: 'cyber',
             options: {},
             supportsKey: true
         },
         cartodb_dark_cyan: {
-            url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+            url: 'https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-            subdomains: 'abcd',
+            subdomains: null,
             mapTheme: 'cyber',
             options: {},
             supportsKey: true
         },
         cartodb_light: {
-            url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+            url: 'https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-            subdomains: 'abcd',
+            subdomains: null,
             supportsKey: true
         },
         esri_world: {
@@ -357,8 +357,8 @@ const Settings = {
     },
 
     /**
-     * Save CARTO API key and refresh tiles. CartoDB tiles work without a key
-     * but CARTO now watermarks unauthenticated raster tile requests.
+     * Save CARTO API key and refresh tiles. CARTO now requires a key: without one
+     * every tile is an "API key required" image.
      * @param {string} key
      */
     async setCartoKey(key) {
@@ -397,8 +397,8 @@ const Settings = {
 
         let resolvedConfig = baseConfig;
         if (baseConfig.supportsKey) {
-            // CartoDB raster tiles work without a key but CARTO now watermarks
-            // unauthenticated requests; a free key (carto.com/basemaps/apikey) removes it.
+            // CARTO now requires a key (free: carto.com/basemaps/apikey) and accepts it only on
+            // basemaps.cartocdn.com/rastertiles/...; the old fastly host ignores it.
             const cartoKey = (this.get('offline.carto_key') || '').trim();
             if (cartoKey) {
                 resolvedConfig = { ...baseConfig, url: baseConfig.url + '?key=' + encodeURIComponent(cartoKey) };

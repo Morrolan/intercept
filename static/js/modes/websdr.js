@@ -413,9 +413,8 @@ async function initWebsdrLeaflet(mapEl) {
     // flash of the unkeyed CartoDB URL when a CARTO API key has been configured.
     const fallbackTiles = (typeof Settings !== 'undefined' && Settings._initialized && Settings.createTileLayer)
         ? Settings.createTileLayer().addTo(websdrMap)
-        : L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        : L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-            subdomains: 'abcd',
             maxZoom: 19,
             className: 'tile-layer-cyan',
         }).addTo(websdrMap);

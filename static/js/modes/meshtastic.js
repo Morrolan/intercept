@@ -133,10 +133,9 @@ const Meshtastic = (function() {
         // flash of the unkeyed CartoDB URL when a CARTO API key has been configured.
         const fallbackTiles = (typeof Settings !== 'undefined' && Settings._initialized && Settings.createTileLayer)
             ? Settings.createTileLayer().addTo(meshMap)
-            : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+            : L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
                 maxZoom: 19,
-                subdomains: 'abcd',
                 className: 'tile-layer-cyan'
             }).addTo(meshMap);
 
