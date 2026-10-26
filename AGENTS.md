@@ -180,6 +180,8 @@ Tests use pytest with extensive mocking of external tools. Key fixtures in `test
 
 ## Backlog: fix during the next major Intercept work
 
+New minor items go in the shared backlog, `../ami/docs/backlog.md`, not here; the items below stay until done.
+
 Owner-reported look-and-feel mismatches with AMI (2026-10-24). Not urgent; fold into the next substantial change. Fix them in the AMI visual layer (`static/css/ami-theme.css`, loaded by `partials/ami_head.html`) wherever possible, rather than per page.
 
 - **Native checkboxes everywhere.** First noticed in ADS-B's DISPLAY group (`templates/adsb_dashboard.html` ~line 330: Trails, Rings, Labels, Reach), but every checkbox is the browser's own (only tinted by `accent-color`): about 90 in templates (index 13, adsb_dashboard 12, satellite_dashboard 7, settings-modal 7, modes/tscm 7, pager 6, waterfall 5, morse 5, ais_dashboard 5, wefax 3, and others) plus ones created in JS (`satellite-gps-drone.js`, `core/updater.js`, `tscm.js`, `spy-stations.js`). Give them one square outlined style matching AMI (`appearance:none`, border like AMI's outlined controls, accent tick, focus-visible ring), keeping them real inputs (keyboard and screen readers). Check the hand-styled ones aren't broken: `settings.css` ~286 (already `appearance:none`), `adsb_dashboard.css` 1298/1304, `.bias-t-label` (orange on purpose: it powers the antenna).
