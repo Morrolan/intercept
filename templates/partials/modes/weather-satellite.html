@@ -260,7 +260,7 @@
                 <ul style="margin: 4px 0 0 14px; padding: 0;">
                     <li>Record one yourself with <code>rtl_sdr -f 137900000 -s 2400000 meteor.raw</code> during a pass</li>
                     <li>Download samples from <a href="https://www.sigidwiki.com/wiki/Meteor-M_LRPT" target="_blank" rel="noopener" style="color: var(--accent-cyan);">SigID Wiki</a> or <a href="https://www.sondehub.org/" target="_blank" rel="noopener" style="color: var(--accent-cyan);">community forums</a></li>
-                    <li>Place the file in <code>data/weather_sat/</code> on the server</li>
+                    <li>Place the file in <code>data/weather_sat/</code> on the server, then pick it below</li>
                 </ul>
             </div>
             <div class="form-group">
@@ -274,8 +274,13 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>File Path (server-side, relative to app root)</label>
-                <input type="text" id="wxsatTestFilePath" placeholder="data/weather_sat/my_recording.raw" style="font-family: 'Roboto Condensed', 'Arial Narrow', sans-serif; font-size: 11px;">
+                <label for="wxsatTestFile">Recording (in <code>data/weather_sat/</code>)</label>
+                <div style="display: flex; gap: 6px;">
+                    <select id="wxsatTestFile" class="mode-select" style="flex: 1; min-width: 0;">
+                        <option value="">Loading recordings...</option>
+                    </select>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="WeatherSat.loadTestFiles()" title="List the recordings again" aria-label="Refresh recordings">Refresh</button>
+                </div>
             </div>
             <div class="form-group">
                 <label for="wxsatTestSampleRate">Raw file sample rate (samples/sec)</label>
@@ -290,7 +295,7 @@
                 <p class="info-text">For stereo PCM I/Q WAV, the sample rate and 8/16-bit format are read from the file automatically. Mono audio is not Meteor I/Q. Choose original Meteor-M2 for older QPSK LRPT recordings; choose HRPT for HRPT recordings.</p>
             </div>
             <p class="info-text">Offline Meteor decoding produces channel images and image-based composites without orbital map overlays.</p>
-            <button class="mode-btn" onclick="WeatherSat.testDecode()" style="width: 100%; margin-top: 4px;">
+            <button type="button" class="btn btn-primary" onclick="WeatherSat.testDecode()" style="width: 100%; margin-top: 4px;">
                 Decode File
             </button>
         </div>

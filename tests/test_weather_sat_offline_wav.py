@@ -163,11 +163,11 @@ def test_offline_profiles_accepted_by_route(client, tmp_path, satellite):
     path = recording(tmp_path / "sample.wav", 187500)
     with (
         patch("routes.weather_sat.is_weather_sat_available", return_value=True),
-        patch("routes.weather_sat.ALLOWED_TEST_DECODE_DIRS", (tmp_path,)),
+        patch("routes.weather_sat.TEST_DECODE_DIR", tmp_path),
         patch("routes.weather_sat.get_weather_sat_decoder", return_value=decoder),
     ):
         response = client.post("/weather-sat/test-decode", json={
-            "satellite": satellite, "input_file": str(path), "sample_rate": 187500,
+            "satellite": satellite, "file": path.name, "sample_rate": 187500,
         })
         assert response.status_code == 200
         assert response.json["status"] == "started"

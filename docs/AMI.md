@@ -119,7 +119,9 @@ The tests use temporary databases and mocked decoder state, never production rec
 ## Offline Meteor recordings
 
 In Weather Satellites → Offline Decode (IQ File), select the recording's
-transmission type, enter its server-side path, and press Decode File. Original
+transmission type, pick the recording, and press Decode File. Only plain files
+placed directly in `data/weather_sat/` are offered or accepted (not links, hidden
+files or anything in a sub-folder such as the decoded passes; Refresh lists new ones). Original
 Meteor-M2 LRPT 72k and Meteor HRPT are offline-only choices; they do not add live
 receiver or scheduling targets.
 
@@ -131,10 +133,10 @@ For headerless recordings, enter the actual sample rate, not the LRPT symbol rat
 
 Owner's test recordings in the persistent `/app/data/weather_sat/` mount:
 
-| File path relative to app root | Recording type | Rate read from WAV |
+| Recording | Recording type | Rate read from WAV |
 |---|---|---|
-| `data/weather_sat/LRPT_16-29-02_137900kHz.wav` | Meteor-M2 original (LRPT 72k) | 187500 samples/sec |
-| `data/weather_sat/METEOR_HRPT.wav` | Meteor HRPT | 3000000 samples/sec |
+| `LRPT_16-29-02_137900kHz.wav` | Meteor-M2 original (LRPT 72k) | 187500 samples/sec |
+| `METEOR_HRPT.wav` | Meteor HRPT | 3000000 samples/sec |
 
 Offline Meteor files run with isolated SatDump settings in their own output
 folder. Channel images and equation/LUT colour composites are retained; orbital

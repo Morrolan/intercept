@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import queue
+import stat
 from pathlib import Path
 
 from flask import Blueprint, Response, jsonify, request, send_file
@@ -46,10 +47,39 @@ METEOR_NORAD_IDS = {
     "METEOR-M2-3": 57166,
     "METEOR-M2-4": 59051,
 }
-ALLOWED_TEST_DECODE_DIRS = (
-    Path(__file__).resolve().parent.parent / "data",
-    Path(__file__).resolve().parent.parent / "instance" / "ground_station" / "recordings",
-)
+# Offline decode reads only recordings placed directly in this folder (no sub-folders, links or paths)
+TEST_DECODE_DIR = Path(__file__).resolve().parent.parent / "data" / "weather_sat"
+
+
+def _test_decode_file(name: object) -> Path | None:
+    """The recording called `name` directly in TEST_DECODE_DIR, or None: a plain file only, never a
+    link, a hidden file, a sub-folder or anything named by a path."""
+    if not isinstance(name, str) or not name or name.startswith(".") or "/" in name or "\\" in name:
+        return None
+    path = TEST_DECODE_DIR / name
+    try:
+        if not stat.S_ISREG(path.lstat().st_mode) or path.resolve().parent != TEST_DECODE_DIR.resolve():
+            return None
+    except OSError:
+        return None
+    return path
+
+
+@weather_sat_bp.route("/test-decode/files")
+def test_decode_files():
+    """The recordings Offline Decode can use: plain files directly in data/weather_sat/, newest first."""
+    files = []
+    try:
+        entries = list(TEST_DECODE_DIR.iterdir())
+    except OSError:
+        entries = []
+    for entry in entries:
+        if _test_decode_file(entry.name) is None:
+            continue
+        info = entry.lstat()
+        files.append({"name": entry.name, "size": info.st_size, "modified": info.st_mtime})
+    files.sort(key=lambda f: f["modified"], reverse=True)
+    return jsonify({"status": "ok", "folder": "data/weather_sat", "files": files})
 
 
 def _progress_callback(progress: CaptureProgress) -> None:
@@ -274,7 +304,7 @@ def test_decode():
     JSON body:
         {
             "satellite": "METEOR-M2-3",   // Required: satellite key
-            "input_file": "/path/to/file", // Required: server-side file path
+            "file": "pass.wav",           // Required: a recording directly in data/weather_sat/
             "sample_rate": 1000000         // Sample rate in Hz (default: 1000000)
         }
 
@@ -309,28 +339,14 @@ def test_decode():
             {"status": "error", "message": f"Invalid satellite. Must be one of: {', '.join(OFFLINE_WEATHER_SATELLITES.keys())}"}
         ), 400
 
-    # Validate input file
-    input_file = data.get("input_file")
-    if not input_file:
-        return jsonify({"status": "error", "message": "input_file is required"}), 400
-
-    from pathlib import Path
-
-    input_path = Path(input_file)
-
-    # Restrict test-decode to application-owned sample and recording paths.
-    try:
-        resolved = input_path.resolve()
-        if not any(resolved.is_relative_to(base) for base in ALLOWED_TEST_DECODE_DIRS):
-            return jsonify(
-                {"status": "error", "message": "input_file must be under INTERCEPT data or ground-station recordings"}
-            ), 403
-    except (OSError, ValueError):
-        return jsonify({"status": "error", "message": "Invalid file path"}), 400
-
-    if not input_path.is_file():
-        logger.warning("Test-decode file not found")
-        return jsonify({"status": "error", "message": "File not found"}), 404
+    # Validate input file: only a recording directly in data/weather_sat/
+    name = data.get("file")
+    if not name:
+        return jsonify({"status": "error", "message": "file is required"}), 400
+    input_file = _test_decode_file(name)
+    if input_file is None:
+        logger.warning("Test-decode file not usable")
+        return jsonify({"status": "error", "message": "No such recording in data/weather_sat/"}), 404
 
     # Validate sample rate
     sample_rate = data.get("sample_rate", 1000000)
@@ -354,7 +370,7 @@ def test_decode():
 
     success, error_msg = decoder.start_from_file(
         satellite=satellite,
-        input_file=input_file,
+        input_file=str(input_file),
         sample_rate=sample_rate,
     )
 
@@ -367,7 +383,7 @@ def test_decode():
                 "frequency": sat_info["frequency"],
                 "mode": sat_info["mode"],
                 "source": "file",
-                "input_file": str(input_file),
+                "file": input_file.name,
             }
         )
     else:

@@ -19,6 +19,11 @@ def test_offline_recording_controls(browser, base_url, theme, width):
             route.fulfill(content_type="application/json", body=json.dumps({
                 "status": "error", "message": "Decode request captured by browser test",
             }))
+        elif route.request.url.endswith("/weather-sat/test-decode/files"):
+            route.fulfill(content_type="application/json", body=json.dumps({"status": "ok", "files": [
+                {"name": "LRPT_16-29-02_137900kHz.wav", "size": 78750044, "modified": 2},
+                {"name": "METEOR_HRPT.wav", "size": 57000044, "modified": 1},
+            ]}))
         elif route.request.url.startswith(base_url):
             route.continue_()
         else:
@@ -44,12 +49,12 @@ def test_offline_recording_controls(browser, base_url, theme, width):
             ("METEOR-HRPT", "METEOR_HRPT.wav", "3000000"),
         ]:
             page.locator("#wxsatTestSatSelect").select_option(satellite)
-            page.locator("#wxsatTestFilePath").fill("data/weather_sat/" + filename)
+            page.locator("#wxsatTestFile").select_option(filename)
             page.locator("#wxsatTestSampleRate").fill(rate)
             with page.expect_response(lambda response: response.url.endswith("/weather-sat/test-decode")):
                 page.get_by_role("button", name="Decode File", exact=True).click(timeout=5000)
             assert sent[-1] == {
-                "satellite": satellite, "input_file": "data/weather_sat/" + filename, "sample_rate": int(rate),
+                "satellite": satellite, "file": filename, "sample_rate": int(rate),
             }
         page.locator("#wxsatTestSampleRate").fill("999")
         page.evaluate("WeatherSat.testDecode()")

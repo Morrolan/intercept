@@ -290,130 +290,79 @@ class TestWeatherSatRoutes:
             assert data["status"] == "error"
             assert "SatDump exited immediately" in data["message"]
 
-    def test_test_decode_success(self, client):
-        """POST /weather-sat/test-decode successfully starts file decode."""
+    @pytest.fixture
+    def decode_dir(self, tmp_path, monkeypatch):
+        """A data/weather_sat/ folder with one recording, plus things that must never be offered."""
+        folder = tmp_path / "weather_sat"
+        folder.mkdir()
+        (folder / "pass.wav").write_bytes(b"RIFF")
+        (folder / ".hidden.raw").write_bytes(b"x")
+        (folder / "METEOR_20261026").mkdir()
+        (folder / "METEOR_20261026" / "inner.raw").write_bytes(b"x")
+        outside = tmp_path / "secret.raw"
+        outside.write_bytes(b"x")
+        (folder / "link.raw").symlink_to(outside)
+        monkeypatch.setattr("routes.weather_sat.TEST_DECODE_DIR", folder)
+        return folder
+
+    def _post_decode(self, client, payload, running=False, started=(True, None)):
         with (
             patch("routes.weather_sat.is_weather_sat_available", return_value=True),
             patch("routes.weather_sat.get_weather_sat_decoder") as mock_get,
-            patch("pathlib.Path.is_file", return_value=True),
-            patch("pathlib.Path.resolve") as mock_resolve,
         ):
-            # Mock path resolution to be under data/
-            mock_path = MagicMock()
-            mock_path.is_relative_to.return_value = True
-            mock_resolve.return_value = mock_path
-
             mock_decoder = MagicMock()
-            mock_decoder.is_running = False
-            mock_decoder.start_from_file.return_value = (True, None)
+            mock_decoder.is_running = running
+            mock_decoder.start_from_file.return_value = started
             mock_get.return_value = mock_decoder
-
-            payload = {
-                "satellite": "NOAA-18",
-                "input_file": "data/weather_sat/test.wav",
-                "sample_rate": 1000000,
-            }
-
             response = client.post(
                 "/weather-sat/test-decode", data=json.dumps(payload), content_type="application/json"
             )
+            return response, mock_decoder
 
-            assert response.status_code == 200
-            data = response.get_json()
-            assert data["status"] == "started"
-            assert data["satellite"] == "NOAA-18"
-            assert data["source"] == "file"
+    def test_test_decode_files_lists_only_plain_files_in_the_folder(self, client, decode_dir):
+        """GET /weather-sat/test-decode/files: top-level plain files only (no links, hidden files or sub-folders)."""
+        response = client.get("/weather-sat/test-decode/files")
+        assert response.status_code == 200
+        data = response.get_json()
+        assert [f["name"] for f in data["files"]] == ["pass.wav"]
+        assert data["files"][0]["size"] == 4
 
-    def test_test_decode_invalid_path(self, client):
-        """POST /weather-sat/test-decode with path outside data/."""
-        with (
-            patch("routes.weather_sat.is_weather_sat_available", return_value=True),
-            patch("routes.weather_sat.get_weather_sat_decoder") as mock_get,
-            patch("pathlib.Path.resolve") as mock_resolve,
-        ):
-            # Mock path outside allowed directory
-            mock_path = MagicMock()
-            mock_path.is_relative_to.return_value = False
-            mock_resolve.return_value = mock_path
+    def test_test_decode_success(self, client, decode_dir):
+        """POST /weather-sat/test-decode starts a decode of a recording in data/weather_sat/."""
+        response, decoder = self._post_decode(client, {"satellite": "NOAA-18", "file": "pass.wav", "sample_rate": 1000000})
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data["status"] == "started"
+        assert data["satellite"] == "NOAA-18"
+        assert data["source"] == "file"
+        assert data["file"] == "pass.wav"
+        assert decoder.start_from_file.call_args.kwargs["input_file"] == str(decode_dir / "pass.wav")
 
-            mock_decoder = MagicMock()
-            mock_decoder.is_running = False
-            mock_get.return_value = mock_decoder
+    @pytest.mark.parametrize(
+        "name",
+        ["link.raw", ".hidden.raw", "METEOR_20261026", "METEOR_20261026/inner.raw", "../secret.raw", "/etc/passwd", "missing.wav", 42],
+    )
+    def test_test_decode_refuses_anything_but_a_plain_file_in_the_folder(self, client, decode_dir, name):
+        """Links, hidden files, folders, paths and traversal are all refused, and nothing starts."""
+        response, decoder = self._post_decode(client, {"satellite": "NOAA-18", "file": name})
+        assert response.status_code == 404
+        assert response.get_json()["status"] == "error"
+        decoder.start_from_file.assert_not_called()
 
-            payload = {
-                "satellite": "NOAA-18",
-                "input_file": "/etc/passwd",
-            }
+    def test_test_decode_requires_a_file(self, client, decode_dir):
+        """POST /weather-sat/test-decode without a file (the old input_file path is no longer read)."""
+        response, decoder = self._post_decode(client, {"satellite": "NOAA-18", "input_file": str(decode_dir / "pass.wav")})
+        assert response.status_code == 400
+        assert "file is required" in response.get_json()["message"]
+        decoder.start_from_file.assert_not_called()
 
-            response = client.post(
-                "/weather-sat/test-decode", data=json.dumps(payload), content_type="application/json"
-            )
-
-            assert response.status_code == 403
-            data = response.get_json()
-            assert data["status"] == "error"
-            assert "must be under INTERCEPT data" in data["message"]
-
-    def test_test_decode_file_not_found(self, client):
-        """POST /weather-sat/test-decode with non-existent file."""
-        with (
-            patch("routes.weather_sat.is_weather_sat_available", return_value=True),
-            patch("routes.weather_sat.get_weather_sat_decoder") as mock_get,
-            patch("pathlib.Path.is_file", return_value=False),
-            patch("pathlib.Path.resolve") as mock_resolve,
-        ):
-            mock_path = MagicMock()
-            mock_path.is_relative_to.return_value = True
-            mock_resolve.return_value = mock_path
-
-            mock_decoder = MagicMock()
-            mock_decoder.is_running = False
-            mock_get.return_value = mock_decoder
-
-            payload = {
-                "satellite": "NOAA-18",
-                "input_file": "data/missing.wav",
-            }
-
-            response = client.post(
-                "/weather-sat/test-decode", data=json.dumps(payload), content_type="application/json"
-            )
-
-            assert response.status_code == 404
-            data = response.get_json()
-            assert data["status"] == "error"
-            assert "not found" in data["message"].lower()
-
-    def test_test_decode_invalid_sample_rate(self, client):
+    def test_test_decode_invalid_sample_rate(self, client, decode_dir):
         """POST /weather-sat/test-decode with invalid sample rate."""
-        with (
-            patch("routes.weather_sat.is_weather_sat_available", return_value=True),
-            patch("routes.weather_sat.get_weather_sat_decoder") as mock_get,
-            patch("pathlib.Path.is_file", return_value=True),
-            patch("pathlib.Path.resolve") as mock_resolve,
-        ):
-            mock_path = MagicMock()
-            mock_path.is_relative_to.return_value = True
-            mock_resolve.return_value = mock_path
-
-            mock_decoder = MagicMock()
-            mock_decoder.is_running = False
-            mock_get.return_value = mock_decoder
-
-            payload = {
-                "satellite": "NOAA-18",
-                "input_file": "data/test.wav",
-                "sample_rate": 100,  # Too low
-            }
-
-            response = client.post(
-                "/weather-sat/test-decode", data=json.dumps(payload), content_type="application/json"
-            )
-
-            assert response.status_code == 400
-            data = response.get_json()
-            assert data["status"] == "error"
-            assert "sample_rate" in data["message"]
+        response, _ = self._post_decode(client, {"satellite": "NOAA-18", "file": "pass.wav", "sample_rate": 100})
+        assert response.status_code == 400
+        data = response.get_json()
+        assert data["status"] == "error"
+        assert "sample_rate" in data["message"]
 
     def test_stop_capture(self, client):
         """POST /weather-sat/stop stops capture."""

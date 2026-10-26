@@ -88,6 +88,7 @@ const WeatherSat = (function() {
         // Sync timezone selector with global setting
         const tzSel = document.getElementById('wxsatTimezone');
         if (tzSel && typeof InterceptTime !== 'undefined') tzSel.value = InterceptTime.getTimezone();
+        loadTestFiles();
 
         if (initialized) {
             checkStatus();
@@ -429,19 +430,42 @@ const WeatherSat = (function() {
     }
 
     /**
+     * List the recordings Offline Decode can use (files directly in data/weather_sat/)
+     */
+    async function loadTestFiles() {
+        const select = document.getElementById('wxsatTestFile');
+        if (!select) return;
+        const previous = select.value;
+        const option = (value, text) => { const o = document.createElement('option'); o.value = value; o.textContent = text; return o; };
+        try {
+            const response = await fetch('/weather-sat/test-decode/files');
+            const data = await response.json();
+            const files = Array.isArray(data.files) ? data.files : [];
+            select.replaceChildren(files.length
+                ? option('', 'Choose a recording...')
+                : option('', 'No recordings in data/weather_sat/'));
+            for (const f of files) select.append(option(f.name, `${f.name} (${formatSize(f.size)})`));
+            if (files.some(f => f.name === previous)) select.value = previous;
+        } catch (err) {
+            console.error('Failed to list recordings:', err);
+            select.replaceChildren(option('', 'Could not list recordings'));
+        }
+    }
+
+    /**
      * Start test decode from a pre-recorded file
      */
     async function testDecode() {
         const satSelect = document.getElementById('wxsatTestSatSelect');
-        const fileInput = document.getElementById('wxsatTestFilePath');
+        const fileSelect = document.getElementById('wxsatTestFile');
         const rateSelect = document.getElementById('wxsatTestSampleRate');
 
         const satellite = satSelect?.value || 'METEOR-M2-3';
-        const inputFile = (fileInput?.value || '').trim();
+        const inputFile = fileSelect?.value || '';
         const sampleRate = Number(rateSelect?.value || '1000000');
 
         if (!inputFile) {
-            showNotification('Weather Sat', 'Enter a file path');
+            showNotification('Weather Sat', 'Choose a recording');
             return;
         }
 
@@ -462,7 +486,7 @@ const WeatherSat = (function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     satellite,
-                    input_file: inputFile,
+                    file: inputFile,
                     sample_rate: sampleRate,
                 })
             });
@@ -2458,6 +2482,7 @@ const WeatherSat = (function() {
         startPass,
         selectPass,
         testDecode,
+        loadTestFiles,
         loadImages,
         loadPasses,
         showImage,
