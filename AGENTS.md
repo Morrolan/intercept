@@ -190,7 +190,7 @@ Owner-reported look-and-feel mismatches with AMI (2026-10-24). Not urgent; fold 
 
 ## AMI integration (fork-owned)
 
-- Read `/home/morrolan/Development/ami/docs/handoffs/README.md` and open notes before editing when that sibling checkout is available. Never commit another task's changes.
+- Read `../ami/docs/handoffs/README.md` (the sibling AMI checkout) and open notes before editing when that sibling checkout is available. Never commit another task's changes.
 - `routes/ami.py` and `utils/ami.py` implement the opt-in, admin-only read-only service module. `AMI_URL` must be an HTTP(S) origin; `INTERCEPT_AMI_TOKEN_SHA256` contains the service token's SHA-256 digest. Browser sessions never authorize MCP or events.
 - Receiver reads use the existing discovery cache; never probe or start a decoder from an AMI read tool. Tool data is explicitly allowlisted. No pager payloads, WiFi/Bluetooth identities, observer coordinates, serial numbers or network receiver addresses enter AMI read tools.
 - `instance/ami-events.sqlite` persists decoder-health transitions for 48 hours. Existing stopped processes generate a critical event after 60 seconds; idle modes do not. One WSGI worker owns Intercept's global decoder state. SSE supports `Last-Event-ID`.
