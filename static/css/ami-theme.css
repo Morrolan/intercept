@@ -96,6 +96,53 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, te
   color: var(--text-primary);
   border-color: var(--border-light);
 }
+/* Real checkbox inputs retain native keyboard and accessibility behaviour. */
+html body input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  padding: 0;
+  flex-shrink: 0;
+  vertical-align: middle;
+  border: 1px solid var(--border-light);
+  background: var(--bg-tertiary);
+  color: var(--accent-cyan);
+  cursor: pointer;
+}
+html body input[type="checkbox"]::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  background: currentColor;
+  clip-path: polygon(12% 42%, 38% 68%, 88% 10%, 100% 23%, 39% 94%, 0 56%);
+  visibility: hidden;
+}
+html body input[type="checkbox"]:checked { border-color: currentColor; }
+html body input[type="checkbox"]:checked::before { visibility: visible; }
+html body input[type="checkbox"]:indeterminate::before {
+  visibility: visible;
+  clip-path: inset(40% 0);
+}
+html body input[type="checkbox"]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+html body input[type="checkbox"]:disabled { opacity: .5; cursor: not-allowed; }
+html body .bias-t-label input[type="checkbox"] { color: var(--accent-orange, #ff6400); }
+/* Not for checkboxes hidden on purpose: the settings toggle switches draw their own slider. */
+html body input[type="checkbox"][hidden] { display: none; }
+html body .toggle-switch input[type="checkbox"] { width: 0; height: 0; min-width: 0; border: 0; opacity: 0; }
+
+.nav-notices-count {
+  border-radius: 0;
+  background: var(--warn, #ffb84c);
+  color: #1a1000;
+}
+
 :focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 3px; }
 .globe-background, .scanlines, .crt-overlay { display: none; }
 .logo svg, .app-logo svg { color: var(--accent-cyan); }

@@ -812,6 +812,7 @@
         let _satelliteSelectionRequestToken = 0;
         let _lastSatelliteCatalogRefresh = 0;
         let _pageTearingDown = false;
+        let _gsEventSource = null;  // Shared with ground-station controller and teardown.
         let _clockTimer = null;
         let _countdownTimer = null;
         const passCache = new Map();
@@ -3216,7 +3217,6 @@
         'use strict';
 
         let _gsEnabled = false;
-        let _gsEventSource = null;
         let _editingNorad = null;   // norad_id being edited, or null for new
 
         // -----------------------------------------------------------------------
