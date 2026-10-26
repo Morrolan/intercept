@@ -2,7 +2,12 @@
 
 import json
 import os
+import shutil
+import subprocess
+import threading
+import time
 import wave
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -19,20 +24,31 @@ def offline(tmp_path):
             "RGB": {"equation": "ch1,ch2,ch3", "project": {"config": {}}},
         }}}},
     }))
+    # Patch the decoder's bindings, not modules shared with existing SSE threads.
+    popen = MagicMock()
+    local_time = SimpleNamespace(**{**vars(time), "sleep": lambda _: None})
+    local_threads = SimpleNamespace(**{**vars(threading), "Thread": MagicMock()})
+    local_processes = SimpleNamespace(**{**vars(subprocess), "Popen": popen})
+    local_files = SimpleNamespace(**{
+        **vars(shutil), "which": lambda _: str(tmp_path / "satdump" / "bin" / "satdump"),
+    })
     with (
-        patch("shutil.which", return_value=str(tmp_path / "satdump" / "bin" / "satdump")),
+        patch("utils.weather_sat.shutil", local_files),
+        patch("utils.satdump_offline.shutil", local_files),
         patch("utils.weather_sat.ALLOWED_OFFLINE_INPUT_DIRS", (tmp_path,)),
         patch("utils.weather_sat.register_process"),
-        patch("utils.weather_sat.time.sleep"),
-        patch("utils.weather_sat.threading.Thread.start"),
-        patch("utils.weather_sat.subprocess.Popen") as popen,
+        patch("utils.weather_sat.time", local_time),
+        patch("utils.weather_sat.threading", local_threads),
+        patch("utils.weather_sat.subprocess", local_processes),
     ):
         popen.return_value.poll.return_value = None
         decoder = WeatherSatDecoder(output_dir=tmp_path / "output")
-        yield decoder, popen
-        decoder._running = False
-        if decoder._pty_master_fd is not None:
-            os.close(decoder._pty_master_fd)
+        try:
+            yield decoder, popen
+        finally:
+            decoder._running = False
+            decoder._stop_event.set()
+            decoder._close_pty()
 
 
 def recording(path, rate, channels=2, width=2):

@@ -2,6 +2,8 @@
 
 import copy
 import json
+import shutil
+from types import SimpleNamespace
 
 
 def test_profile_removes_only_existing_orbital_keys_and_preserves_composites():
@@ -57,7 +59,9 @@ def test_preparation_reads_commented_master_without_changing_it(tmp_path, monkey
         }}}}
     }'''
     config.write_text(text)
-    monkeypatch.setattr("shutil.which", lambda _: str(install / "bin" / "satdump"))
+    monkeypatch.setattr("utils.satdump_offline.shutil", SimpleNamespace(**{
+        **vars(shutil), "which": lambda _: str(install / "bin" / "satdump"),
+    }))
     folder = tmp_path / "run"
     folder.mkdir()
     tle = prepare_offline_run(folder)
