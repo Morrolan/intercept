@@ -28,6 +28,7 @@ from utils.validation import (
 )
 from utils.weather_sat import (
     DEFAULT_SAMPLE_RATE,
+    OFFLINE_WEATHER_SATELLITES,
     WEATHER_SATELLITES,
     CaptureProgress,
     get_weather_sat_decoder,
@@ -303,9 +304,9 @@ def test_decode():
 
     # Validate satellite
     satellite = data.get("satellite")
-    if not satellite or satellite not in WEATHER_SATELLITES:
+    if not satellite or satellite not in OFFLINE_WEATHER_SATELLITES:
         return jsonify(
-            {"status": "error", "message": f"Invalid satellite. Must be one of: {', '.join(WEATHER_SATELLITES.keys())}"}
+            {"status": "error", "message": f"Invalid satellite. Must be one of: {', '.join(OFFLINE_WEATHER_SATELLITES.keys())}"}
         ), 400
 
     # Validate input file
@@ -358,7 +359,7 @@ def test_decode():
     )
 
     if success:
-        sat_info = WEATHER_SATELLITES[satellite]
+        sat_info = OFFLINE_WEATHER_SATELLITES[satellite]
         return jsonify(
             {
                 "status": "started",

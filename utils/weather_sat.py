@@ -21,6 +21,7 @@ import shutil
 import subprocess
 import threading
 import time
+import wave
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -94,6 +95,25 @@ WEATHER_SATELLITES = {
         "tle_key": "METEOR-M2-4",
         "description": "Meteor-M2-4 LRPT 80k baud (fallback symbol rate)",
         "active": True,
+    },
+}
+
+# Extra pipelines are available only for offline recordings, never live capture.
+OFFLINE_WEATHER_SATELLITES = {
+    **WEATHER_SATELLITES,
+    "METEOR-M2": {
+        "name": "Meteor-M2 (original LRPT 72k)",
+        "frequency": 137.900,
+        "mode": "LRPT",
+        "pipeline": "meteor_m2_lrpt",
+        "tle_key": "METEOR-M2",
+    },
+    "METEOR-HRPT": {
+        "name": "Meteor HRPT",
+        "frequency": 1700.000,
+        "mode": "HRPT",
+        "pipeline": "meteor_hrpt",
+        "tle_key": "METEOR-HRPT",
     },
 }
 
@@ -305,7 +325,7 @@ class WeatherSatDecoder:
                 )
                 return False, msg
 
-            sat_info = WEATHER_SATELLITES.get(satellite)
+            sat_info = OFFLINE_WEATHER_SATELLITES.get(satellite)
             if not sat_info:
                 logger.error(f"Unknown satellite: {satellite}")
                 msg = f"Unknown satellite: {satellite}"
@@ -665,14 +685,23 @@ class WeatherSatDecoder:
         self._capture_output_dir = self._output_dir / f"{sat_name}_{timestamp}"
         self._capture_output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Determine input level from file extension.
-        # WAV audio files (FM-demodulated) use 'audio_wav' level.
-        # Raw IQ baseband files use 'baseband' level.
-        suffix = input_file.suffix.lower()
-        if suffix in (".wav", ".wave"):
-            input_level = "audio_wav"
-        else:
-            input_level = "baseband"
+        # Meteor WAV recordings contain I/Q, not FM-demodulated audio.
+        # SatDump detects/skips the WAV header in baseband mode. Use its
+        # sample rate and PCM format rather than the raw-file UI defaults.
+        is_wav = input_file.suffix.lower() in (".wav", ".wave")
+        input_level = "audio_wav" if is_wav and sat_info["mode"] == "APT" else "baseband"
+        baseband_format = None
+        if is_wav and input_level == "baseband":
+            try:
+                with wave.open(str(input_file), "rb") as wav:
+                    if wav.getnchannels() != 2 or wav.getsampwidth() not in (1, 2):
+                        raise ValueError("Meteor I/Q WAV must be stereo PCM with 8-bit or 16-bit samples")
+                    sample_rate = wav.getframerate()
+                    baseband_format = "cu8" if wav.getsampwidth() == 1 else "cs16"
+            except (wave.Error, EOFError) as exc:
+                raise ValueError("Invalid or unsupported I/Q WAV; use a stereo PCM 8-bit or 16-bit WAV") from exc
+            if not 1000 <= sample_rate <= 20000000:
+                raise ValueError("I/Q WAV sample rate must be between 1000 and 20000000 samples/sec")
 
         cmd = [
             "satdump",
@@ -683,6 +712,8 @@ class WeatherSatDecoder:
             "--samplerate",
             str(sample_rate),
         ]
+        if baseband_format:
+            cmd.extend(["--baseband_format", baseband_format])
 
         logger.info(f"Starting SatDump offline: {' '.join(cmd)}")
 
@@ -1181,12 +1212,12 @@ class WeatherSatDecoder:
 
                 # Parse satellite name from filename
                 satellite = "Unknown"
-                for sat_key in WEATHER_SATELLITES:
+                for sat_key in OFFLINE_WEATHER_SATELLITES:
                     if sat_key in filepath.name:
                         satellite = sat_key
                         break
 
-                sat_info = WEATHER_SATELLITES.get(satellite, {})
+                sat_info = OFFLINE_WEATHER_SATELLITES.get(satellite, {})
 
                 image = WeatherSatImage(
                     filename=filepath.name,

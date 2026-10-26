@@ -115,3 +115,31 @@ python3 -m venv /tmp/intercept-test-env
 ```
 
 The tests use temporary databases and mocked decoder state, never production receivers. Existing browser smoke tests exercise all dashboards and modes in dark/light themes and desktop/phone layouts. `tests/smoke/test_ami_embed.py` additionally checks a genuine cross-origin embedded login/navigation flow and bridge origin checks.
+
+## Offline Meteor recordings
+
+In Weather Satellites → Offline Decode (IQ File), select the recording's
+transmission type, enter its server-side path, and press Decode File. Original
+Meteor-M2 LRPT 72k and Meteor HRPT are offline-only choices; they do not add live
+receiver or scheduling targets.
+
+Stereo PCM I/Q WAV files are decoded as baseband. Their header supplies the sample
+rate and 8-bit unsigned or 16-bit signed sample format, overriding the raw-file
+rate field. Mono FM audio is not valid Meteor I/Q; unsupported or malformed WAV
+files are rejected with an explanation. NOAA APT audio WAV compatibility is retained.
+For headerless recordings, enter the actual sample rate, not the LRPT symbol rate.
+
+Owner's test recordings in the persistent `/app/data/weather_sat/` mount:
+
+| File path relative to app root | Recording type | Rate read from WAV |
+|---|---|---|
+| `data/weather_sat/LRPT_16-29-02_137900kHz.wav` | Meteor-M2 original (LRPT 72k) | 187500 samples/sec |
+| `data/weather_sat/METEOR_HRPT.wav` | Meteor HRPT | 3000000 samples/sec |
+
+Verified with Tyr's installed SatDump on 2026-10-26, using temporary output and no
+SDR access: HRPT recovered 34 frames and generated images; LRPT recovered about
+640 lines in channels 1, 2 and 5 and generated images, but SatDump subsequently
+segfaulted during automatic reprojection. That is a separate decoder limitation;
+these input fixes do not claim to fix SatDump's historical-image reprojection.
+Unprojected decoded images remain usable. Historical maps also require matching
+timestamps and orbital data; do not assume a current orbit fits an old recording.

@@ -252,7 +252,7 @@
         </h3>
         <div class="wxsat-test-decode-body collapsed" style="overflow: hidden;">
             <p class="info-text" style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px;">
-                Decode a pre-recorded Meteor IQ baseband file without SDR hardware.
+                Decode a pre-recorded Meteor LRPT or HRPT I/Q baseband file without SDR hardware.
                 You need an actual <code>.raw</code>, <code>.sigmf-data</code>, or <code>.wav</code> recording of a Meteor pass.
             </p>
             <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px; padding: 8px; margin-bottom: 10px; font-size: 10px; color: var(--text-dim); line-height: 1.5;">
@@ -266,6 +266,8 @@
             <div class="form-group">
                 <label>Satellite</label>
                 <select id="wxsatTestSatSelect" class="mode-select">
+                    <option value="METEOR-M2">Meteor-M2 original (LRPT 72k, older recordings)</option>
+                    <option value="METEOR-HRPT">Meteor HRPT (1.7 GHz recordings)</option>
                     <option value="METEOR-M2-3" selected>Meteor-M2-3 (LRPT)</option>
                     <option value="METEOR-M2-4">Meteor-M2-4 (LRPT)</option>
                     <option value="METEOR-M2-4-80K">Meteor-M2-4 80k baud</option>
@@ -276,12 +278,16 @@
                 <input type="text" id="wxsatTestFilePath" placeholder="data/weather_sat/my_recording.raw" style="font-family: 'Roboto Condensed', 'Arial Narrow', sans-serif; font-size: 11px;">
             </div>
             <div class="form-group">
-                <label>Sample Rate</label>
-                <select id="wxsatTestSampleRate" class="mode-select">
-                    <option value="500000">500 kHz (IQ LRPT)</option>
-                    <option value="1000000">1 MHz (IQ narrow)</option>
-                    <option value="2400000" selected>2.4 MHz (INTERCEPT default)</option>
-                </select>
+                <label for="wxsatTestSampleRate">Raw file sample rate (samples/sec)</label>
+                <input type="number" id="wxsatTestSampleRate" min="1000" max="20000000" step="1" value="2400000" list="wxsatTestRates" required>
+                <datalist id="wxsatTestRates">
+                    <option value="187500"></option>
+                    <option value="500000"></option>
+                    <option value="1000000"></option>
+                    <option value="2400000"></option>
+                    <option value="3000000"></option>
+                </datalist>
+                <p class="info-text">For stereo PCM I/Q WAV, the sample rate and 8/16-bit format are read from the file automatically. Mono audio is not Meteor I/Q. Choose original Meteor-M2 for older QPSK LRPT recordings; choose HRPT for HRPT recordings.</p>
             </div>
             <button class="mode-btn" onclick="WeatherSat.testDecode()" style="width: 100%; margin-top: 4px;">
                 Decode File

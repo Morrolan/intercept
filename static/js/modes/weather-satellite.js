@@ -438,10 +438,15 @@ const WeatherSat = (function() {
 
         const satellite = satSelect?.value || 'METEOR-M2-3';
         const inputFile = (fileInput?.value || '').trim();
-        const sampleRate = parseInt(rateSelect?.value || '1000000', 10);
+        const sampleRate = Number(rateSelect?.value || '1000000');
 
         if (!inputFile) {
             showNotification('Weather Sat', 'Enter a file path');
+            return;
+        }
+
+        if (!Number.isInteger(sampleRate) || sampleRate < 1000 || sampleRate > 20000000) {
+            showNotification('Weather Sat', 'Enter a sample rate from 1000 to 20000000 samples/sec');
             return;
         }
 
