@@ -1280,7 +1280,7 @@ body {
 .airband-panel .airband-controls,
 .airband-panel select { width: 100%; }
 .airband-panel .airband-sliders { width: 100%; justify-content: space-between; }
-.airband-panel .airband-sliders input[type="range"] { flex: 1; width: auto; }
+.airband-panel .airband-sliders input[type="range"] { flex: 1; width: auto; min-width: 0; }
 .airband-panel .airband-btn { width: 100%; justify-content: center; }
 .airband-panel .airband-visualizer { width: 100%; justify-content: center; display: flex; }
 
