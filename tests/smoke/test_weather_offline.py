@@ -36,6 +36,9 @@ def test_offline_recording_controls(browser, base_url, theme, width):
             # Scope this test to the form, independent of the navigation drawer's handlers.
             page.locator("#mainSidebar").evaluate("el => el.classList.add('open')")
         page.locator("#weatherSatMode h3").filter(has_text="Offline Decode").click()
+        assert page.locator(".wxsat-test-decode-body").filter(has=page.locator("#wxsatTestSatSelect")).evaluate(
+            "el => el.scrollHeight <= el.clientHeight + 1"
+        ), "Expanded offline form clips its controls"
         for satellite, filename, rate in [
             ("METEOR-M2", "LRPT_16-29-02_137900kHz.wav", "187500"),
             ("METEOR-HRPT", "METEOR_HRPT.wav", "3000000"),
@@ -43,7 +46,8 @@ def test_offline_recording_controls(browser, base_url, theme, width):
             page.locator("#wxsatTestSatSelect").select_option(satellite)
             page.locator("#wxsatTestFilePath").fill("data/weather_sat/" + filename)
             page.locator("#wxsatTestSampleRate").fill(rate)
-            page.evaluate("WeatherSat.testDecode()")
+            with page.expect_response(lambda response: response.url.endswith("/weather-sat/test-decode")):
+                page.get_by_role("button", name="Decode File", exact=True).click(timeout=5000)
             assert sent[-1] == {
                 "satellite": satellite, "input_file": "data/weather_sat/" + filename, "sample_rate": int(rate),
             }

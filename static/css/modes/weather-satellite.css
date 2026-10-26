@@ -1363,8 +1363,8 @@
 
 /* Test Decode collapsible section */
 .wxsat-test-decode-body {
-    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
-    max-height: 400px;
+    transition: opacity 0.2s ease, margin 0.3s ease;
+    max-height: none;
     opacity: 1;
     margin-top: 8px;
 }
