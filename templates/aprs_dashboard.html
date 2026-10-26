@@ -19,7 +19,7 @@
         </div>
         <div class="status-bar">
             <div class="agent-selector-compact" id="agentSection">
-                <select id="agentSelect" class="agent-select-sm" title="Select signal source">
+                <select id="agentSelect" class="agent-select-sm" data-explain-text="Select signal source">
                     <option value="local">Local</option>
                 </select>
                 <span class="agent-status-dot online" id="agentStatusDot"></span>
@@ -75,7 +75,7 @@
                 </div>
                 <div class="strip-control">
                     <span class="strip-input-label">DEVICE</span>
-                    <select id="deviceSelect" class="strip-select" title="SDR device">
+                    <select id="deviceSelect" class="strip-select" data-explain-text="SDR device">
                         <option value="0">SDR 0</option>
                     </select>
                 </div>
@@ -85,11 +85,11 @@
                 </div>
                 <div class="strip-divider"></div>
                 <div class="strip-tools">
-                    <span class="strip-tool" id="aprsStripDirewolf" title="direwolf">DW</span>
-                    <span class="strip-tool" id="aprsStripMultimon" title="multimon-ng">MM</span>
+                    <span class="strip-tool" id="aprsStripDirewolf" data-explain-text="direwolf">DW</span>
+                    <span class="strip-tool" id="aprsStripMultimon" data-explain-text="multimon-ng">MM</span>
                 </div>
                 <span id="aprsGpsIndicator" class="gps-indicator" style="display: none;"
-                    title="GPS connected via gpsd"><span class="gps-dot"></span> GPS</span>
+                    data-explain-text="GPS connected via gpsd"><span class="gps-dot"></span> GPS</span>
                 <div class="strip-divider"></div>
                 <button type="button" class="strip-btn primary" id="aprsStripStartBtn" onclick="startAprs()">
                     ▶ START

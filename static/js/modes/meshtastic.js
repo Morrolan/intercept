@@ -506,7 +506,7 @@ const Meshtastic = (function() {
                     <div class="mesh-channel-badges">
                         <span class="mesh-channel-badge ${roleBadge}">${ch.role || 'SECONDARY'}</span>
                         <span class="mesh-channel-badge ${encBadge}">${encText}</span>
-                        <button class="mesh-qr-btn" data-channel-index="${ch.index}" title="Generate QR Code">QR</button>
+                        <button class="mesh-qr-btn" data-channel-index="${ch.index}" data-explain-text="Generate QR Code">QR</button>
                         <button class="mesh-channel-configure" onclick="Meshtastic.openChannelModal(${ch.index})">Configure</button>
                     </div>
                 </div>
@@ -779,23 +779,23 @@ const Meshtastic = (function() {
             const snr = (n.snr != null) ? `${n.snr} dB` : '--';
             const batt = (n.battery_level != null) ? ` · ${n.battery_level}%` : '';
             const pos = n.has_position
-                ? '<span class="mesh-node-pos" title="On map">◉</span>'
-                : '<span class="mesh-node-nopos" title="No position reported">○</span>';
+                ? '<span class="mesh-node-pos" data-explain-text="On map">◉</span>'
+                : '<span class="mesh-node-nopos" data-explain-text="No position reported">○</span>';
             const isLocal = n.num === localNodeId;
             const local = isLocal ? ' <span class="mesh-node-local">YOU</span>' : '';
             const ignored = n.is_ignored ? ' <span class="mesh-node-ignored">IGNORED</span>' : '';
             const eid = _nodeEsc(id);
             // Device NodeDB actions; your own node can't be favourited, ignored or removed
             const actions = isLocal ? '' : `
-                    <button type="button" class="mesh-node-msg mesh-node-fav${n.is_favorite ? ' active' : ''}" title="${n.is_favorite ? 'Remove from favourites' : 'Add to favourites'}" aria-label="${n.is_favorite ? 'Unfavourite' : 'Favourite'} ${name}" aria-pressed="${n.is_favorite ? 'true' : 'false'}" onclick="event.stopPropagation();Meshtastic.nodeAction('${eid}','${n.is_favorite ? 'unfavorite' : 'favorite'}')">${n.is_favorite ? '&#9733;' : '&#9734;'}</button>`;
+                    <button type="button" class="mesh-node-msg mesh-node-fav${n.is_favorite ? ' active' : ''}" data-explain-text="${n.is_favorite ? 'Remove from favourites' : 'Add to favourites'}" aria-label="${n.is_favorite ? 'Unfavourite' : 'Favourite'} ${name}" aria-pressed="${n.is_favorite ? 'true' : 'false'}" onclick="event.stopPropagation();Meshtastic.nodeAction('${eid}','${n.is_favorite ? 'unfavorite' : 'favorite'}')">${n.is_favorite ? '&#9733;' : '&#9734;'}</button>`;
             const moreActions = isLocal ? '' : `
-                    <button type="button" class="mesh-node-msg${n.is_ignored ? ' active' : ''}" title="${n.is_ignored ? 'Stop ignoring this node' : 'Ignore this node (the device drops its packets)'}" aria-label="${n.is_ignored ? 'Unignore' : 'Ignore'} ${name}" onclick="event.stopPropagation();Meshtastic.nodeAction('${eid}','${n.is_ignored ? 'unignore' : 'ignore'}')">&#8856;</button>
-                    <button type="button" class="mesh-node-msg mesh-node-del" title="Remove from the device's node list" aria-label="Remove ${name}" onclick="event.stopPropagation();Meshtastic.nodeAction('${eid}','remove')">&#128465;</button>`;
-            return `<div class="mesh-node-row${n.has_position ? ' has-pos' : ''}${n.is_ignored ? ' ignored' : ''}" data-node="${eid}" onclick="Meshtastic.focusNode('${eid}')" title="${n.has_position ? 'Show on map' : 'No position reported yet'}">
+                    <button type="button" class="mesh-node-msg${n.is_ignored ? ' active' : ''}" data-explain-text="${n.is_ignored ? 'Stop ignoring this node' : 'Ignore this node (the device drops its packets)'}" aria-label="${n.is_ignored ? 'Unignore' : 'Ignore'} ${name}" onclick="event.stopPropagation();Meshtastic.nodeAction('${eid}','${n.is_ignored ? 'unignore' : 'ignore'}')">&#8856;</button>
+                    <button type="button" class="mesh-node-msg mesh-node-del" data-explain-text="Remove from the device's node list" aria-label="Remove ${name}" onclick="event.stopPropagation();Meshtastic.nodeAction('${eid}','remove')">&#128465;</button>`;
+            return `<div class="mesh-node-row${n.has_position ? ' has-pos' : ''}${n.is_ignored ? ' ignored' : ''}" data-node="${eid}" onclick="Meshtastic.focusNode('${eid}')" data-explain-text="${n.has_position ? 'Show on map' : 'No position reported yet'}">
                 <div class="mesh-node-row-main">
                     <span class="mesh-node-name">${pos} ${name}${local}${ignored}</span>
                     <span class="mesh-node-actions">${actions}
-                    <button type="button" class="mesh-node-msg" title="Message this node" aria-label="Message ${name}" onclick="event.stopPropagation();Meshtastic.messageNode('${eid}')">&#9993;</button>${moreActions}
+                    <button type="button" class="mesh-node-msg" data-explain-text="Message this node" aria-label="Message ${name}" onclick="event.stopPropagation();Meshtastic.messageNode('${eid}')">&#9993;</button>${moreActions}
                     </span>
                 </div>
                 <div class="mesh-node-row-meta"><span class="mesh-node-id">${_nodeEsc(id)}</span> · ${snr}${batt} · ${_nodeRelTime(n.last_heard)}</div>
@@ -1203,7 +1203,7 @@ const Meshtastic = (function() {
         const canReply = msg.text && msg.packet_id && !msg._pending
             && msg.portnum === 'TEXT_MESSAGE_APP' && msg.from !== formatNodeId(localNodeId);
         const replyBtn = canReply
-            ? `<button type="button" class="mesh-message-reply" title="Reply" aria-label="Reply to this message" onclick="Meshtastic.replyTo(${Number(msg.packet_id)})">&#8617;</button>`
+            ? `<button type="button" class="mesh-message-reply" data-explain-text="Reply" aria-label="Reply to this message" onclick="Meshtastic.replyTo(${Number(msg.packet_id)})">&#8617;</button>`
             : '';
 
         let body;

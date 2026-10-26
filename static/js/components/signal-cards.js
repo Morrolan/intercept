@@ -456,7 +456,7 @@ const SignalCards = (function() {
         if (compact) {
             return `
                 <span class="signal-strength-indicator compact ${confidenceClass}"
-                      ${showTooltip ? `title="${escapeHtml(tooltipContent)}"` : ''}>
+                      ${showTooltip ? `data-explain-text="${escapeHtml(tooltipContent)}"` : ''}>
                     ${barsSvg}
                 </span>
             `;
@@ -464,7 +464,7 @@ const SignalCards = (function() {
 
         return `
             <span class="signal-strength-indicator ${confidenceClass}"
-                  ${showTooltip ? `title="${escapeHtml(tooltipContent)}"` : ''}>
+                  ${showTooltip ? `data-explain-text="${escapeHtml(tooltipContent)}"` : ''}>
                 ${barsSvg}
                 ${showLabel ? `<span class="signal-strength-label" style="color: ${info.color}">${info.label}</span>` : ''}
             </span>
@@ -562,8 +562,8 @@ const SignalCards = (function() {
             <div class="signal-card-body">
                 <div class="signal-meta-row">
                     <span class="signal-msg-type">${escapeHtml(msgType)}</span>
-                    ${seenCount > 1 ? `<span class="signal-seen-count" title="Messages from this address">×${seenCount}</span>` : ''}
-                    <span class="signal-timestamp" data-timestamp="${escapeHtml(msg.timestamp)}" title="${escapeHtml(msg.timestamp)}">${escapeHtml(relativeTime)}</span>
+                    ${seenCount > 1 ? `<span class="signal-seen-count" data-explain-text="Messages from this address">×${seenCount}</span>` : ''}
+                    <span class="signal-timestamp" data-timestamp="${escapeHtml(msg.timestamp)}" data-explain-text="${escapeHtml(msg.timestamp)}">${escapeHtml(relativeTime)}</span>
                 </div>
                 <div class="signal-message ${isNumeric ? 'numeric' : ''} ${isToneOnly ? 'tone-only' : ''}">${escapeHtml(msg.message || '[No content]')}</div>
             </div>
@@ -613,7 +613,7 @@ const SignalCards = (function() {
             <div class="signal-card-header">
                 <div class="signal-card-badges">
                     <span class="signal-proto-badge aprs">APRS</span>
-                    <span class="signal-freq-badge signal-station-clickable" data-callsign="${escapeHtml(msg.callsign || 'Unknown')}" data-raw="${msg.raw ? escapeHtml(msg.raw) : ''}" onclick="SignalCards.showStationRawData(this)" title="Click to view raw data">${escapeHtml(msg.callsign || 'Unknown')}</span>
+                    <span class="signal-freq-badge signal-station-clickable" data-callsign="${escapeHtml(msg.callsign || 'Unknown')}" data-raw="${msg.raw ? escapeHtml(msg.raw) : ''}" onclick="SignalCards.showStationRawData(this)" data-explain-text="Click to view raw data">${escapeHtml(msg.callsign || 'Unknown')}</span>
                 </div>
                 ${status !== 'baseline' ? `
                 <span class="signal-status-pill" data-status="${status}">
@@ -625,7 +625,7 @@ const SignalCards = (function() {
             <div class="signal-card-body">
                 <div class="signal-meta-row">
                     <span class="signal-msg-type">${aprsType.charAt(0).toUpperCase() + aprsType.slice(1)}</span>
-                    ${msg.symbol ? `<span class="signal-aprs-symbol" title="APRS Symbol">${escapeHtml(msg.symbol)}</span>` : ''}
+                    ${msg.symbol ? `<span class="signal-aprs-symbol" data-explain-text="APRS Symbol">${escapeHtml(msg.symbol)}</span>` : ''}
                     ${msg.distance !== null && msg.distance !== undefined ? `<span class="signal-distance">${msg.distance.toFixed(1)} mi</span>` : ''}
                     ${seenCount > 1 ? `<span class="signal-seen-count">×${seenCount}</span>` : ''}
                     <span class="signal-timestamp" data-timestamp="${escapeHtml(msg.timestamp)}">${escapeHtml(relativeTime)}</span>
@@ -745,7 +745,7 @@ const SignalCards = (function() {
         const rssi = msg.rssi || msg.signal_strength || msg.snr || msg.noise || null;
         const signalIndicator = rssi !== null
             ? createSignalIndicator(rssi, { compact: true })
-            : '<span class="signal-strength-indicator compact no-data" title="No signal data available">--</span>';
+            : '<span class="signal-strength-indicator compact no-data" data-explain-text="No signal data available">--</span>';
 
         // Signal type guessing based on frequency
         let signalGuessBadge = '';
@@ -1186,7 +1186,7 @@ const SignalCards = (function() {
                     <div class="meter-aggregated-col consumption-col">
                         <span class="meter-aggregated-label">Consumption</span>
                         <span class="meter-aggregated-value consumption-value">${latestConsumption !== null ? latestConsumption.toLocaleString() : '--'}</span>
-                        <span class="meter-delta ${deltaClass}" title="Change from previous reading">${deltaFormatted}</span>
+                        <span class="meter-delta ${deltaClass}" data-explain-text="Change from previous reading">${deltaFormatted}</span>
                     </div>
                     <div class="meter-aggregated-col trend-col">
                         <span class="meter-aggregated-label">Trend</span>

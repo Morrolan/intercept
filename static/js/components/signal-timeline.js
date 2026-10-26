@@ -289,13 +289,13 @@ const SignalTimeline = (function() {
             </div>
             <div class="signal-timeline-body">
                 <div class="signal-timeline-controls" style="display: flex; align-items: center; gap: 6px; padding: 8px 0; flex-wrap: wrap;">
-                    <button class="signal-timeline-btn" data-filter="hideBaseline" title="Hide baseline signals">
+                    <button class="signal-timeline-btn" data-filter="hideBaseline" data-explain-text="Hide baseline signals">
                         Hide Known
                     </button>
-                    <button class="signal-timeline-btn" data-filter="showOnlyNew" title="Show only new signals">
+                    <button class="signal-timeline-btn" data-filter="showOnlyNew" data-explain-text="Show only new signals">
                         New Only
                     </button>
-                    <button class="signal-timeline-btn" data-filter="showOnlyBurst" title="Show only burst activity">
+                    <button class="signal-timeline-btn" data-filter="showOnlyBurst" data-explain-text="Show only burst activity">
                         Bursts
                     </button>
                     <div class="signal-timeline-window" style="margin-left: auto;">

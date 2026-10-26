@@ -94,15 +94,15 @@
             <label style="font-size: 10px; color: var(--text-dim);">Quick presets (short/long &mu;s)</label>
             <div class="ook-timing-presets">
                 <button class="preset-btn" onclick="OokMode.setTiming(300,600,8000,5000,150,8)"
-                        title="Generic ISM default">300/600</button>
+                        data-explain-text="Generic ISM default">300/600</button>
                 <button class="preset-btn" onclick="OokMode.setTiming(300,900,8000,5000,150,16)"
-                        title="PWM common variant">300/900</button>
+                        data-explain-text="PWM common variant">300/900</button>
                 <button class="preset-btn" onclick="OokMode.setTiming(400,800,8000,5000,150,16)"
-                        title="Generic 2:1 ratio">400/800</button>
+                        data-explain-text="Generic 2:1 ratio">400/800</button>
                 <button class="preset-btn" onclick="OokMode.setTiming(500,1500,10000,6000,200,16)"
-                        title="Long-range keyfob">500/1500</button>
+                        data-explain-text="Long-range keyfob">500/1500</button>
                 <button class="preset-btn" onclick="OokMode.setTiming(500,1000,8000,5000,150,8)"
-                        title="Manchester clock period">500 MC</button>
+                        data-explain-text="Manchester clock period">500 MC</button>
             </div>
         </div>
     </div>
@@ -138,7 +138,7 @@
         <div id="ookCommandDisplay" class="ook-command-display">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                 <span class="ook-command-label">Active Command</span>
-                <button class="btn btn-sm btn-ghost" onclick="OokMode.copyCommand()" title="Copy to clipboard"
+                <button class="btn btn-sm btn-ghost" onclick="OokMode.copyCommand()" data-explain-text="Copy to clipboard"
                         style="font-size: 9px; padding: 1px 6px;">Copy</button>
             </div>
             <pre id="ookCommandText" class="ook-command-text"></pre>

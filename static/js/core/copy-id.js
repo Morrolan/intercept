@@ -31,7 +31,7 @@ const CopyId = (function () {
         const text = String(value);
         const shown = escape(label === undefined ? text : label);
         return '<span class="copy-id">' + shown +
-            '<button type="button" class="copy-id-btn" data-copy="' + escape(text) + '" title="Copy ' + escape(text) +
+            '<button type="button" class="copy-id-btn" data-copy="' + escape(text) + '" data-explain-text="Copy ' + escape(text) +
             '" aria-label="Copy ' + escape(text) + '">⧉</button></span>';
     }
 

@@ -1433,7 +1433,7 @@ function updateTscmIgnoreListUI() {
         const safe = escapeHtml(k);
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border-color);">
             <span style="font-family:monospace;font-size:9px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${safe}</span>
-            <button onclick="tscmRemoveFromIgnoreList('${safe}')" style="background:none;border:none;color:var(--accent-red);cursor:pointer;font-size:12px;padding:0 4px;flex-shrink:0;" title="Remove">✕</button>
+            <button onclick="tscmRemoveFromIgnoreList('${safe}')" style="background:none;border:none;color:var(--accent-red);cursor:pointer;font-size:12px;padding:0 4px;flex-shrink:0;" data-explain-text="Remove">✕</button>
         </div>`;
     }).join('');
 }
@@ -1609,7 +1609,7 @@ function getTrackerLabel(device) {
 function formatTrackerBadge(device) {
     const label = getTrackerLabel(device);
     if (!label) return '';
-    return `<span class="tracker-badge" title="Tracker">${escapeHtml(label)}</span>`;
+    return `<span class="tracker-badge" data-explain-text="Tracker">${escapeHtml(label)}</span>`;
 }
 
 function getScoreBadge(score) {
@@ -1736,7 +1736,7 @@ function showDeviceDetails(id, protocol) {
                     Listen (AM)
                 </button>
                 <button class="tscm-action-btn" onclick="decodeWithOok(${freq})"
-                        title="Open OOK decoder tuned to this frequency">
+                        data-explain-text="Open OOK decoder tuned to this frequency">
                     Decode (OOK)
                 </button>
         `;
@@ -1996,7 +1996,7 @@ async function tscmShowInvestigate(device, protocol) {
                     <div class="tscm-case-note-actions">
                         <button class="preset-btn" onclick="tscmAddTriageNote()" style="font-size: 10px;">Add Note</button>
                         <button class="preset-btn" onclick="tscmOpenSelectedCase()" style="font-size: 10px;">Open Case</button>
-                        ${tscmLastSweepId ? `<button class="preset-btn" onclick="tscmPromptLinkSweep(${tscmLastSweepId})" style="font-size: 10px;" title="Link the current sweep to a case">Link to Case</button>` : ''}
+                        ${tscmLastSweepId ? `<button class="preset-btn" onclick="tscmPromptLinkSweep(${tscmLastSweepId})" style="font-size: 10px;" data-explain-text="Link the current sweep to a case">Link to Case</button>` : ''}
                     </div>
                 </div>
             `}
@@ -2831,7 +2831,7 @@ function updateTscmDisplays() {
                         <span class="classification-indicator">${getClassificationIcon(d.classification)}</span>
                         ${escapeHtml(d.ssid || d.bssid || 'Hidden')}
                         ${cleared ? '<span class="cleared-badge">CLEARED</span>' : ''}
-                        ${d.known_device ? '<span class="known-badge" title="Known device">KNOWN</span>' : ''}
+                        ${d.known_device ? '<span class="known-badge" data-explain-text="Known device">KNOWN</span>' : ''}
                     </div>
                     ${getScoreBadge(d.score)}
                 </div>
@@ -2843,8 +2843,8 @@ function updateTscmDisplays() {
                 ${d.indicators && d.indicators.length > 0 ? `<div class="tscm-device-indicators">${formatIndicators(d.indicators)}</div>` : ''}
                 ${d.recommended_action && d.recommended_action !== 'monitor' ? `<div class="tscm-action">Action: ${d.recommended_action}</div>` : ''}
                 <div class="tscm-device-actions" onclick="event.stopPropagation()">
-                    <button class="tscm-action-btn${cleared ? ' cleared' : ''}" onclick="tscmMarkCleared('${dkey}')" title="${cleared ? 'Undo cleared mark' : 'Mark as investigated and cleared'}">${cleared ? '✓ Cleared' : 'Mark Cleared'}</button>
-                    <button class="tscm-action-btn ignore" onclick="tscmAddToIgnoreList('${dkey}')" title="Add to ignore list (my device)">Ignore</button>
+                    <button class="tscm-action-btn${cleared ? ' cleared' : ''}" onclick="tscmMarkCleared('${dkey}')" data-explain-text="${cleared ? 'Undo cleared mark' : 'Mark as investigated and cleared'}">${cleared ? '✓ Cleared' : 'Mark Cleared'}</button>
+                    <button class="tscm-action-btn ignore" onclick="tscmAddToIgnoreList('${dkey}')" data-explain-text="Add to ignore list (my device)">Ignore</button>
                 </div>
             </div>`;
         }).join('');
@@ -2866,9 +2866,9 @@ function updateTscmDisplays() {
                     <div class="tscm-device-name">
                         <span class="classification-indicator">${getClassificationIcon(c.classification)}</span>
                         ${escapeHtml(c.vendor || 'WiFi Client')}
-                        <span class="client-badge" title="WiFi client">CLIENT</span>
+                        <span class="client-badge" data-explain-text="WiFi client">CLIENT</span>
                         ${cleared ? '<span class="cleared-badge">CLEARED</span>' : ''}
-                        ${c.known_device ? '<span class="known-badge" title="Known device">KNOWN</span>' : ''}
+                        ${c.known_device ? '<span class="known-badge" data-explain-text="Known device">KNOWN</span>' : ''}
                     </div>
                     ${getScoreBadge(c.score)}
                 </div>
@@ -2904,10 +2904,10 @@ function updateTscmDisplays() {
                     <div class="tscm-device-name">
                         <span class="classification-indicator">${getClassificationIcon(d.classification)}</span>
                         ${escapeHtml(d.name || 'Unknown')}
-                        ${d.is_audio_capable ? '<span class="audio-badge" title="Audio-capable device">AUDIO</span>' : ''}
+                        ${d.is_audio_capable ? '<span class="audio-badge" data-explain-text="Audio-capable device">AUDIO</span>' : ''}
                         ${formatTrackerBadge(d)}
                         ${cleared ? '<span class="cleared-badge">CLEARED</span>' : ''}
-                        ${d.known_device ? '<span class="known-badge" title="Known device">KNOWN</span>' : ''}
+                        ${d.known_device ? '<span class="known-badge" data-explain-text="Known device">KNOWN</span>' : ''}
                     </div>
                     ${getScoreBadge(d.score)}
                 </div>
@@ -2948,7 +2948,7 @@ function updateTscmDisplays() {
                         <span class="classification-indicator">${getClassificationIcon(s.classification)}</span>
                         ${s.frequency.toFixed(3)} MHz
                         ${cleared ? '<span class="cleared-badge">CLEARED</span>' : ''}
-                        ${s.known_device ? '<span class="known-badge" title="Known device">KNOWN</span>' : ''}
+                        ${s.known_device ? '<span class="known-badge" data-explain-text="Known device">KNOWN</span>' : ''}
                     </div>
                     ${getScoreBadge(s.score)}
                 </div>

@@ -1,0 +1,14 @@
+/* Shared original: ami/shared/ui/explain.css. Edit there and sync. */
+.sig-tip{position:fixed;z-index:var(--explain-z,1300);width:min(320px,calc(100vw - 16px));padding:10px 12px;border:1px solid var(--border-bright,var(--border));background:var(--bg-card,var(--bg,#080c10));box-shadow:0 8px 28px rgba(0,0,0,0.5);pointer-events:none;display:none}
+.sig-tip.show{display:block}
+.sig-tip.docked{left:0!important;right:0;bottom:0;top:auto!important;width:100%;box-sizing:border-box;max-height:65vh;overflow:auto;border-left:none;border-right:none;border-bottom:none;pointer-events:auto}
+.sig-tip-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.sig-tip-head strong{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text)}
+.sig-tip-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border:1px solid rgba(100,240,200,0.18);color:var(--accent)}
+.sig-tip-line{font-size:11px;line-height:1.45;color:var(--text);margin-top:4px}
+.sig-tip-label{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-right:6px}
+.sig-tip-example{font-size:10px;line-height:1.45;color:var(--dim);margin-top:6px;font-style:italic}
+.sig-tip-foot{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06)}
+.sig-tip.interactive{pointer-events:auto}
+.sig-tip-read{margin-top:8px;padding:4px 8px;color:var(--text);background:transparent;border:1px solid var(--border);font-family:var(--mono);cursor:pointer}
+.sig-tip-read:focus-visible,[data-explain]:focus-visible{outline:1px solid var(--accent,var(--accent-cyan));outline-offset:2px}

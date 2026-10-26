@@ -281,7 +281,7 @@ const IdentityManagementMode = (function () {
                 for (var chip in m.temperatures) {
                     m.temperatures[chip].forEach(function (s) {
                         var name = s.label && s.label !== chip ? s.label : chip;
-                        html += '<div class="sys-heat-tile ' + heatClass(s.current) + '" title="' + escHtml(chip + ' ' + (s.label || '')) + '">' +
+                        html += '<div class="sys-heat-tile ' + heatClass(s.current) + '" data-explain-text="' + escHtml(chip + ' ' + (s.label || '')) + '">' +
                             '<span class="sys-heat-name">' + escHtml(name) + '</span>' +
                             '<span class="sys-heat-value">' + Math.round(s.current) + '&deg;</span></div>';
                     });

@@ -1375,11 +1375,11 @@ function updateProbeAnalysis() {
                 ? 'background: var(--accent-orange); color: #000; padding: 1px 4px; border-radius: 2px; margin: 1px;'
                 : 'background: var(--bg-tertiary); padding: 1px 4px; border-radius: 2px; margin: 1px;';
 
-            return `<span style="${style}" title="${isSensitive ? 'Potentially sensitive - reveals user location history' : ''}">${escapeHtml(probe)}</span>`;
+            return `<span style="${style}" data-explain-text="${isSensitive ? 'Potentially sensitive - reveals user location history' : ''}">${escapeHtml(probe)}</span>`;
         }).join(' ');
 
         html += `
-            <div style="border-left: 2px solid var(--accent-cyan); padding-left: 8px; cursor: pointer;" onclick="selectWifiDevice('${escapeAttr(client.mac)}', 'client')" title="Click for details">
+            <div style="border-left: 2px solid var(--accent-cyan); padding-left: 8px; cursor: pointer;" onclick="selectWifiDevice('${escapeAttr(client.mac)}', 'client')" data-explain-text="Click for details">
                 <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
                     <span style="color: var(--accent-cyan); font-family: monospace; font-size: 10px;">${escapeHtml(client.mac)}</span>
                     ${vendorBadge}
@@ -1853,10 +1853,10 @@ function checkCaptureStatus() {
                     exportDiv.innerHTML =
                         '<a class="preset-btn" href="/wifi/handshake/export?file=' + encFile + '&format=hc22000" ' +
                         'style="flex:1;font-size:10px;padding:4px;text-align:center;text-decoration:none;" ' +
-                        'title="Download hashcat .hc22000 for offline cracking">Export (hashcat)</a>' +
+                        'data-explain-text="Download hashcat .hc22000 for offline cracking">Export (hashcat)</a>' +
                         '<a class="preset-btn" href="/wifi/handshake/export?file=' + encFile + '&format=cap" ' +
                         'style="flex:1;font-size:10px;padding:4px;text-align:center;text-decoration:none;" ' +
-                        'title="Download the raw .cap capture">Download .cap</a>';
+                        'data-explain-text="Download the raw .cap capture">Download .cap</a>';
                 }
             } else if (data.file_exists) {
                 const sizeKB = (data.file_size / 1024).toFixed(1);

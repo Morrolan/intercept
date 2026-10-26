@@ -278,7 +278,7 @@
                 <h1 class="welcome-title">INTERCEPT</h1>
                 <p class="welcome-tagline">// See the Invisible</p>
                 <span class="welcome-version">v{{ version }}</span>
-                <button type="button" class="welcome-settings-btn" onclick="showSettings()" title="Settings" aria-label="Open settings">
+                <button type="button" class="welcome-settings-btn" onclick="showSettings()" data-explain-text="Settings" aria-label="Open settings">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -597,7 +597,7 @@
     <div class="container">
         <div class="main-content">
             <div class="sidebar mobile-drawer" id="mainSidebar">
-                <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleMainSidebarCollapse()" title="Collapse sidebar">
+                <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleMainSidebarCollapse()" data-explain-text="Collapse sidebar">
                     <span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></span>
                     Collapse Sidebar
                 </button>
@@ -610,7 +610,7 @@
                             <select id="agentSelect" style="flex: 1;">
                                 <option value="local">Local (This Device)</option>
                             </select>
-                            <span id="agentStatusDot" class="agent-status-dot online" title="Agent status"></span>
+                            <span id="agentStatusDot" class="agent-status-dot online" data-explain-text="Agent status"></span>
                         </div>
                     </div>
                     <div id="agentInfo" class="info-text" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">
@@ -781,40 +781,40 @@
             </div>
 
                 <div class="output-panel">
-                    <button class="sidebar-expand-handle" id="sidebarExpandHandle" onclick="toggleMainSidebarCollapse()" title="Expand sidebar">
+                    <button class="sidebar-expand-handle" id="sidebarExpandHandle" onclick="toggleMainSidebarCollapse()" data-explain-text="Expand sidebar">
                         <span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></span>
                     </button>
                     <div class="output-header">
                         <h3 id="outputTitle">Pager Decoder</h3>
                         <div class="header-controls">
                         <div class="stats" id="pagerStats">
-                            <div title="Total Messages"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> <span id="msgCount">0</span></div>
-                            <div title="POCSAG Messages"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span> <span id="pocsagCount">0</span></div>
-                            <div title="FLEX Messages"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span> <span id="flexCount">0</span></div>
+                            <div data-explain-text="Total Messages"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> <span id="msgCount">0</span></div>
+                            <div data-explain-text="POCSAG Messages"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span> <span id="pocsagCount">0</span></div>
+                            <div data-explain-text="FLEX Messages"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span> <span id="flexCount">0</span></div>
                             <div class="view-toggle-group">
                                 <button class="view-toggle-btn view-toggle-btn--active" id="pagerToggleDir" onclick="PagerDirectory.show()">Directory</button>
                                 <button class="view-toggle-btn" id="pagerToggleFeed" onclick="PagerDirectory.hide()">Feed</button>
                             </div>
                         </div>
                         <div class="stats" id="sensorStats">
-                            <div title="Unique Sensors"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg></span> <span id="sensorCount">0</span></div>
-                            <div title="Device Types"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> <span id="deviceCount">0</span></div>
+                            <div data-explain-text="Unique Sensors"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg></span> <span id="sensorCount">0</span></div>
+                            <div data-explain-text="Device Types"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> <span id="deviceCount">0</span></div>
                             <div class="view-toggle-group">
                                 <button class="view-toggle-btn view-toggle-btn--active" id="sensorToggleDash" onclick="SensorDashboard.show()">Dashboard</button>
                                 <button class="view-toggle-btn" id="sensorToggleFeed" onclick="SensorDashboard.hide()">Feed</button>
                             </div>
                         </div>
                         <div class="stats" id="wifiStats">
-                            <div title="Access Points"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg></span> <span id="apCount">0</span></div>
-                            <div title="Connected Clients"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> <span id="clientCount">0</span></div>
-                            <div title="Captured Handshakes" style="color: var(--accent-green);"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span> <span id="handshakeCount">0</span></div>
+                            <div data-explain-text="Access Points"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg></span> <span id="apCount">0</span></div>
+                            <div data-explain-text="Connected Clients"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> <span id="clientCount">0</span></div>
+                            <div data-explain-text="Captured Handshakes" style="color: var(--accent-green);"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span> <span id="handshakeCount">0</span></div>
                             <div style="color: var(--accent-orange); cursor: pointer;" onclick="showDroneDetails()"
-                                title="Click: Drone details"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M3 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M3 15a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 15a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M9 9l-4 -1"/><path d="M15 9l4 -1"/><path d="M9 15l-4 1"/><path d="M15 15l4 1"/></svg></span> <span id="droneCount">0</span></div>
+                                data-explain-text="Click: Drone details"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M3 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M3 15a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 15a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M9 9l-4 -1"/><path d="M15 9l4 -1"/><path d="M9 15l-4 1"/><path d="M15 15l4 1"/></svg></span> <span id="droneCount">0</span></div>
                             <div style="color: var(--accent-red); cursor: pointer;" onclick="showRogueApDetails()"
-                                title="Click: Rogue AP details"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> <span id="rogueApCount">0</span></div>
+                                data-explain-text="Click: Rogue AP details"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> <span id="rogueApCount">0</span></div>
                         </div>
                         <div class="stats" id="satelliteStats">
-                            <div title="Upcoming Passes"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 7L9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4-6 6"/></svg></span> <span id="passCount">0</span></div>
+                            <div data-explain-text="Upcoming Passes"><span class="icon icon--sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 7L9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4-6 6"/></svg></span> <span id="passCount">0</span></div>
                         </div>
                         </div>
                     </div>
@@ -942,9 +942,9 @@
                                     </div>
 
                                     <div class="wifi-detail-actions">
-                                        <button type="button" class="wifi-detail-action" onclick="WiFiMode.captureSelected()" title="Capture this network's WPA handshake (monitor mode required)">Capture Handshake</button>
-                                        <button type="button" class="wifi-detail-action" onclick="WiFiMode.locateNetwork()" title="Locate this network">Locate</button>
-                                        <button type="button" class="wifi-detail-action wifi-detail-action--danger" onclick="WiFiMode.deauthSelected()" title="Send deauth to this network — authorized testing only">Deauth</button>
+                                        <button type="button" class="wifi-detail-action" onclick="WiFiMode.captureSelected()" data-explain-text="Capture this network's WPA handshake (monitor mode required)">Capture Handshake</button>
+                                        <button type="button" class="wifi-detail-action" onclick="WiFiMode.locateNetwork()" data-explain-text="Locate this network">Locate</button>
+                                        <button type="button" class="wifi-detail-action wifi-detail-action--danger" onclick="WiFiMode.deauthSelected()" data-explain-text="Send deauth to this network — authorized testing only">Deauth</button>
                                     </div>
 
                                     <div class="wifi-detail-signal-bar">
@@ -994,7 +994,7 @@
                                     </div>
 
                                     <div class="wifi-detail-actions">
-                                        <button class="wfl-locate-btn locate-action locate-action-lg" title="Locate this AP"
+                                        <button class="wfl-locate-btn locate-action locate-action-lg" data-explain-text="Locate this AP"
                                             onclick="WiFiMode.locateNetwork()">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <circle cx="12" cy="10" r="3"/>
@@ -1109,7 +1109,7 @@
                                         </div>
                                         <button class="bt-detail-btn" id="btDetailWatchBtn" onclick="BluetoothMode.toggleWatchlist()">Watchlist</button>
                                         <button class="bt-detail-btn" id="btDetailCopyBtn" onclick="BluetoothMode.copyAddress()">Copy</button>
-                                        <button class="bt-detail-btn bt-locate-btn locate-action locate-action-lg" id="btDetailLocateBtn" onclick="BluetoothMode.locateDevice()" title="Locate this device">Locate</button>
+                                        <button class="bt-detail-btn bt-locate-btn locate-action locate-action-lg" id="btDetailLocateBtn" onclick="BluetoothMode.locateDevice()" data-explain-text="Locate this device">Locate</button>
                                     </div>
                                 </div>
                             </div>
@@ -1354,19 +1354,19 @@
 
                     <!-- Capabilities Summary Bar -->
                     <div id="tscmCapabilitiesBar" class="tscm-capabilities-bar" style="display: none;">
-                        <div class="cap-item" id="capWifi" title="WiFi Capability">
+                        <div class="cap-item" id="capWifi" data-explain-text="WiFi Capability">
                             <span class="cap-icon icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg></span>
                             <span class="cap-status" id="capWifiStatus">--</span>
                         </div>
-                        <div class="cap-item" id="capBt" title="Bluetooth Capability">
+                        <div class="cap-item" id="capBt" data-explain-text="Bluetooth Capability">
                             <span class="cap-icon icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6.5 6.5 17.5 17.5 12 22 12 2 17.5 6.5 6.5 17.5"/></svg></span>
                             <span class="cap-status" id="capBtStatus">--</span>
                         </div>
-                        <div class="cap-item" id="capRf" title="RF/SDR Capability">
+                        <div class="cap-item" id="capRf" data-explain-text="RF/SDR Capability">
                             <span class="cap-icon icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c0-3 2-6 5-6s4 3 5 6c1 3 2 6 5 6s5-3 5-6"/></svg></span>
                             <span class="cap-status" id="capRfStatus">--</span>
                         </div>
-                        <div class="cap-item" id="capRoot" title="Privilege Level">
+                        <div class="cap-item" id="capRoot" data-explain-text="Privilege Level">
                             <span class="cap-icon icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
                             <span class="cap-status" id="capRootStatus">--</span>
                         </div>
@@ -1430,28 +1430,28 @@
                         <div class="tscm-threat-cards">
                         <div class="threat-card critical clickable" id="tscmHighInterestCard"
                             onclick="showDevicesByCategory('high_interest')"
-                            title="Click to view high interest devices">
+                            data-explain-text="Click to view high interest devices">
                             <span class="count" id="tscmHighInterestCount">0</span>
                             <span class="label">High Interest</span>
                         </div>
                         <div class="threat-card high clickable" id="tscmNeedsReviewCard"
-                            onclick="showDevicesByCategory('review')" title="Click to view devices needing review">
+                            onclick="showDevicesByCategory('review')" data-explain-text="Click to view devices needing review">
                             <span class="count" id="tscmNeedsReviewCount">0</span>
                             <span class="label">Needs Review</span>
                         </div>
                         <div class="threat-card low clickable" id="tscmInformationalCard"
                             onclick="showDevicesByCategory('informational')"
-                            title="Click to view informational devices">
+                            data-explain-text="Click to view informational devices">
                             <span class="count" id="tscmInformationalCount">0</span>
                             <span class="label">Informational</span>
                         </div>
                         <div class="threat-card medium clickable" id="tscmCorrelationsCard"
-                            onclick="showDevicesByCategory('correlations')" title="Click to view correlations">
+                            onclick="showDevicesByCategory('correlations')" data-explain-text="Click to view correlations">
                             <span class="count" id="tscmCorrelationsCount">0</span>
                             <span class="label">Correlations</span>
                         </div>
                         <div class="threat-card medium clickable" id="tscmIdentityCard"
-                            onclick="showDevicesByCategory('identity')" title="Click to view identity clusters">
+                            onclick="showDevicesByCategory('identity')" data-explain-text="Click to view identity clusters">
                             <span class="count" id="tscmIdentityCount">0</span>
                             <span class="label">Identity Clusters</span>
                         </div>
@@ -1593,7 +1593,7 @@
                                 <span class="subghz-phase-arrow">&#9656;</span>
                                 <span class="subghz-phase-step" id="subghzPhaseDecoding">DECODING</span>
                             </div>
-                            <div class="subghz-burst-indicator" id="subghzBurstIndicator" title="Live burst detector">
+                            <div class="subghz-burst-indicator" id="subghzBurstIndicator" data-explain-text="Live burst detector">
                                 <span class="subghz-burst-dot"></span>
                                 <span class="subghz-burst-text" id="subghzBurstText">NO BURST</span>
                             </div>
@@ -1647,7 +1647,7 @@
                     <!-- RX (Raw Capture) Panel -->
                     <div class="subghz-op-panel" id="subghzPanelRx" style="display: none;">
                         <div class="subghz-op-panel-header">
-                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" title="Back to hub">&#9664; Back</button>
+                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" data-explain-text="Back to hub">&#9664; Back</button>
                             <span class="subghz-op-panel-title">Read RAW — Signal Capture</span>
                             <div class="subghz-op-panel-actions">
                                 <button class="subghz-btn start" id="subghzRxStartBtnPanel" onclick="SubGhz.startRx()">Start</button>
@@ -1730,7 +1730,7 @@
                     <!-- Sweep Panel -->
                     <div class="subghz-op-panel" id="subghzPanelSweep" style="display: none;">
                         <div class="subghz-op-panel-header">
-                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" title="Back to hub">&#9664; Back</button>
+                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" data-explain-text="Back to hub">&#9664; Back</button>
                             <span class="subghz-op-panel-title">Frequency Analyzer</span>
                             <div class="subghz-op-panel-actions">
                                 <button class="subghz-btn start" id="subghzSweepStartBtnPanel" onclick="SubGhz.startSweep()">Start</button>
@@ -1751,7 +1751,7 @@
                     <!-- TX Panel -->
                     <div class="subghz-op-panel" id="subghzPanelTx" style="display: none;">
                         <div class="subghz-op-panel-header">
-                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" title="Back to hub">&#9664; Back</button>
+                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" data-explain-text="Back to hub">&#9664; Back</button>
                             <span class="subghz-op-panel-title">Transmit</span>
                         </div>
                         <div class="subghz-tx-display" id="subghzTxDisplay">
@@ -1784,7 +1784,7 @@
                     <!-- Saved Panel -->
                     <div class="subghz-op-panel" id="subghzPanelSaved" style="display: none;">
                         <div class="subghz-op-panel-header">
-                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" title="Back to hub">&#9664; Back</button>
+                            <button class="subghz-op-back-btn" onclick="SubGhz.backToHub()" data-explain-text="Back to hub">&#9664; Back</button>
                             <span class="subghz-op-panel-title">Saved Captures</span>
                             <div class="subghz-op-panel-actions subghz-saved-actions">
                                 <span class="subghz-saved-selection-count" id="subghzSavedSelectionCount" style="display: none;">0 selected</span>
@@ -2175,9 +2175,9 @@
                         <div class="sstv-strip-group">
                             <div class="sstv-strip-location">
                                 <span class="sstv-strip-label" style="margin-right: 6px;">LOC</span>
-                                <input type="number" id="sstvObsLat" class="sstv-loc-input" step="0.0001" placeholder="Lat" title="Latitude">
-                                <input type="number" id="sstvObsLon" class="sstv-loc-input" step="0.0001" placeholder="Lon" title="Longitude">
-                                <button class="sstv-strip-btn gps" onclick="SSTV.useGPS(this)" title="Use GPS location">
+                                <input type="number" id="sstvObsLat" class="sstv-loc-input" step="0.0001" placeholder="Lat" data-explain-text="Latitude">
+                                <input type="number" id="sstvObsLon" class="sstv-loc-input" step="0.0001" placeholder="Lon" data-explain-text="Longitude">
+                                <button class="sstv-strip-btn gps" onclick="SSTV.useGPS(this)" data-explain-text="Use GPS location">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px;">
                                         <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
                                         <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
@@ -2190,7 +2190,7 @@
                         <div class="sstv-strip-divider"></div>
                         <!-- TLE Update -->
                         <div class="sstv-strip-group">
-                            <button class="sstv-strip-btn update-tle" onclick="SSTV.updateTLE(this)" title="Update satellite orbital data from CelesTrak">
+                            <button class="sstv-strip-btn update-tle" onclick="SSTV.updateTLE(this)" data-explain-text="Update satellite orbital data from CelesTrak">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px;">
                                     <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                                     <path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
@@ -2312,7 +2312,7 @@
                                 </div>
                                 <div style="display:flex;align-items:center;gap:4px;">
                                     <span class="sstv-gallery-count" id="sstvImageCount">0</span>
-                                    <button class="sstv-gallery-clear-btn" onclick="SSTV.deleteAllImages()" title="Delete all images">Clear All</button>
+                                    <button class="sstv-gallery-clear-btn" onclick="SSTV.deleteAllImages()" data-explain-text="Delete all images">Clear All</button>
                                 </div>
                             </div>
                             <div class="sstv-gallery-grid" id="sstvGallery">
@@ -2360,9 +2360,9 @@
                         <div class="wxsat-strip-group">
                             <div class="wxsat-strip-location">
                                 <span class="wxsat-strip-label" style="margin-right: 6px;">LOC</span>
-                                <input type="number" id="wxsatObsLat" class="wxsat-loc-input" step="0.0001" placeholder="Lat" title="Latitude">
-                                <input type="number" id="wxsatObsLon" class="wxsat-loc-input" step="0.0001" placeholder="Lon" title="Longitude">
-                                <button class="wxsat-strip-btn gps" onclick="WeatherSat.useGPS(this)" title="Use GPS location">
+                                <input type="number" id="wxsatObsLat" class="wxsat-loc-input" step="0.0001" placeholder="Lat" data-explain-text="Latitude">
+                                <input type="number" id="wxsatObsLon" class="wxsat-loc-input" step="0.0001" placeholder="Lon" data-explain-text="Longitude">
+                                <button class="wxsat-strip-btn gps" onclick="WeatherSat.useGPS(this)" data-explain-text="Use GPS location">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
                                 </button>
                             </div>
@@ -2388,7 +2388,7 @@
                         </div>
                         <div class="wxsat-strip-divider"></div>
                         <div class="wxsat-strip-group">
-                            <label class="wxsat-schedule-toggle" title="Auto-capture passes">
+                            <label class="wxsat-schedule-toggle" data-explain-text="Auto-capture passes">
                                 <input type="checkbox" id="wxsatAutoSchedule" onchange="WeatherSat.toggleScheduler(this)">
                                 <span class="wxsat-toggle-label">AUTO</span>
                             </label>
@@ -2476,10 +2476,10 @@
                                 <button class="wxsat-console-filter" data-filter="error" onclick="WeatherSat.filterConsole('error')">ERR</button>
                             </div>
                             <div class="wxsat-console-actions">
-                                <button class="wxsat-strip-btn" onclick="WeatherSat.exportConsole()" title="Copy log to clipboard">COPY</button>
-                                <button class="wxsat-strip-btn" onclick="WeatherSat.clearConsole()" title="Clear console">CLR</button>
+                                <button class="wxsat-strip-btn" onclick="WeatherSat.exportConsole()" data-explain-text="Copy log to clipboard">COPY</button>
+                                <button class="wxsat-strip-btn" onclick="WeatherSat.clearConsole()" data-explain-text="Clear console">CLR</button>
                                 <button class="wxsat-strip-btn" id="wxsatConsoleToggle"
-                                        onclick="WeatherSat.toggleConsole()" title="Toggle console">&#x25BC;</button>
+                                        onclick="WeatherSat.toggleConsole()" data-explain-text="Toggle console">&#x25BC;</button>
                             </div>
                         </div>
                         <div class="wxsat-console-body" id="wxsatConsoleBody">
@@ -2496,7 +2496,7 @@
                             <div class="wxsat-passes-header">
                                 <span class="wxsat-passes-title">Upcoming Passes</span>
                                 <span class="wxsat-passes-count" id="wxsatPassesCount">0</span>
-                                <button class="wxsat-strip-btn" onclick="WeatherSat.loadPasses()" title="Refresh pass predictions" style="margin-left: auto; font-size: 9px; padding: 2px 6px;">REFRESH</button>
+                                <button class="wxsat-strip-btn" onclick="WeatherSat.loadPasses()" data-explain-text="Refresh pass predictions" style="margin-left: auto; font-size: 9px; padding: 2px 6px;">REFRESH</button>
                             </div>
                             <!-- Pass geometry detail (shown when pass selected) -->
                             <div class="wxsat-pass-geometry" id="wxsatPassGeometry" style="display: none;">
@@ -2553,7 +2553,7 @@
                             <div class="wxsat-gallery-header">
                                 <span class="wxsat-gallery-title">Decoded Images</span>
                                 <span class="wxsat-gallery-count" id="wxsatImageCount">0</span>
-                                <button class="wxsat-gallery-clear-btn" onclick="WeatherSat.deleteAllImages()" title="Delete all images">
+                                <button class="wxsat-gallery-clear-btn" onclick="WeatherSat.deleteAllImages()" data-explain-text="Delete all images">
                                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                                     </svg>
@@ -2658,7 +2658,7 @@
                                 </div>
                                 <div style="display:flex;align-items:center;gap:4px;">
                                     <span class="sstv-general-gallery-count" id="sstvGeneralImageCount">0</span>
-                                    <button class="sstv-general-gallery-clear-btn" onclick="SSTVGeneral.deleteAllImages()" title="Delete all images">Clear All</button>
+                                    <button class="sstv-general-gallery-clear-btn" onclick="SSTVGeneral.deleteAllImages()" data-explain-text="Delete all images">Clear All</button>
                                 </div>
                             </div>
                             <div class="sstv-general-gallery-grid" id="sstvGeneralGallery">
@@ -2686,7 +2686,7 @@
                             </div>
                             <button class="wefax-strip-btn start" id="wefaxStartBtn" onclick="WeFax.start()">Start</button>
                             <button class="wefax-strip-btn stop" id="wefaxStopBtn" onclick="WeFax.stop()" style="display: none;">Stop</button>
-                            <label class="wefax-schedule-toggle" title="Auto-capture broadcasts">
+                            <label class="wefax-schedule-toggle" data-explain-text="Auto-capture broadcasts">
                                 <input type="checkbox" id="wefaxStripAutoSchedule"
                                        onchange="WeFax.toggleScheduler(this)">
                                 <span>Auto</span>
@@ -2796,7 +2796,7 @@
                                 </div>
                                 <div class="wefax-gallery-controls">
                                     <span class="wefax-gallery-count" id="wefaxImageCount">0</span>
-                                    <button class="wefax-gallery-clear-btn" onclick="WeFax.deleteAllImages()" title="Delete all images">Clear All</button>
+                                    <button class="wefax-gallery-clear-btn" onclick="WeFax.deleteAllImages()" data-explain-text="Delete all images">Clear All</button>
                                 </div>
                             </div>
                             <div class="wefax-gallery-grid" id="wefaxGallery">
@@ -3028,19 +3028,19 @@
 
                         <!-- Frequency control bar -->
                         <div class="wf-freq-bar">
-                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(-10)" title="Step down ×10">«</button>
-                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(-1)" title="Step down">‹</button>
+                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(-10)" data-explain-text="Step down ×10">«</button>
+                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(-1)" data-explain-text="Step down">‹</button>
                             <div class="wf-freq-display-wrap">
                                 <span class="wf-freq-bar-label">CENTER</span>
                                 <input type="text" id="wfFreqCenterDisplay" class="wf-freq-center-input" value="100.0000" inputmode="decimal" autocomplete="off" spellcheck="false">
                                 <span class="wf-freq-bar-unit">MHz</span>
                             </div>
-                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(1)" title="Step up">›</button>
-                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(10)" title="Step up ×10">»</button>
+                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(1)" data-explain-text="Step up">›</button>
+                            <button class="wf-step-btn" onclick="Waterfall.stepFreq && Waterfall.stepFreq(10)" data-explain-text="Step up ×10">»</button>
                             <div class="wf-freq-bar-sep"></div>
                             <span class="wf-freq-bar-label">ZOOM</span>
-                            <button class="wf-step-btn wf-zoom-btn" onclick="Waterfall.zoomOut && Waterfall.zoomOut()" title="Zoom out (wider span)">-</button>
-                            <button class="wf-step-btn wf-zoom-btn" onclick="Waterfall.zoomIn && Waterfall.zoomIn()" title="Zoom in (narrower span)">+</button>
+                            <button class="wf-step-btn wf-zoom-btn" onclick="Waterfall.zoomOut && Waterfall.zoomOut()" data-explain-text="Zoom out (wider span)">-</button>
+                            <button class="wf-step-btn wf-zoom-btn" onclick="Waterfall.zoomIn && Waterfall.zoomIn()" data-explain-text="Zoom in (narrower span)">+</button>
                             <div class="wf-freq-bar-sep"></div>
                             <span class="wf-freq-bar-label">STEP</span>
                             <select id="wfStepSize" class="wf-step-select">
@@ -3355,7 +3355,7 @@
                                 <button class="btn btn-sm btn-ghost" id="ookBitLSB"
                                         onclick="OokMode.setBitOrder('lsb')">LSB</button>
                                 <button class="btn btn-sm btn-ghost" onclick="OokMode.suggestBitOrder()"
-                                        title="Auto-detect best bit order from printable character count">
+                                        data-explain-text="Auto-detect best bit order from printable character count">
                                     Suggest <span id="ookSuggestLabel" style="font-size:9px; margin-left:2px;"></span>
                                 </button>
                             </div>
@@ -3412,7 +3412,7 @@
                             <button class="control-btn" onclick="exportCSV()">CSV</button>
                             <button class="control-btn" onclick="exportJSON()">JSON</button>
                             <button class="control-btn" onclick="exportDeviceDB()"
-                                title="Export Device Intelligence">INTEL</button>
+                                data-explain-text="Export Device Intelligence">INTEL</button>
                         </div>
                         <button class="clear-btn" onclick="clearMessages()">Clear</button>
                     </div>

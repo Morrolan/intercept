@@ -1489,7 +1489,7 @@ function renderPresets() {
     const presets = loadPresets();
     const container = document.getElementById('presetButtons');
     container.innerHTML = presets.map(freq =>
-        `<button class="preset-btn" onclick="setFreq('${freq}')" oncontextmenu="removePreset('${freq}'); return false;" title="Right-click to remove">${freq}</button>`
+        `<button class="preset-btn" onclick="setFreq('${freq}')" oncontextmenu="removePreset('${freq}'); return false;" data-explain-text="Right-click to remove">${freq}</button>`
     ).join('');
 }
 

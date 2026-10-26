@@ -293,9 +293,9 @@ const MeshCore = (function () {
         el.title = located ? 'Show on map' : 'No position reported';
         el.innerHTML = `
             <div class="meshcore-node-icon${node.is_repeater ? ' repeater' : ''}"></div>
-            <div class="meshcore-node-name" title="${_esc(node.node_id)}">${_esc(node.name)}</div>
+            <div class="meshcore-node-name" data-explain-text="${_esc(node.node_id)}">${_esc(node.name)}</div>
             <div class="meshcore-node-meta">${hops} ${snr}</div>
-            <button type="button" class="meshcore-node-msg" title="Message this node" aria-label="Message ${_esc(node.name || node.node_id)}">Msg</button>`;
+            <button type="button" class="meshcore-node-msg" data-explain-text="Message this node" aria-label="Message ${_esc(node.name || node.node_id)}">Msg</button>`;
         el.querySelector('.meshcore-node-msg').addEventListener('click', (e) => {
             e.stopPropagation();
             messageNode(node.node_id);
@@ -427,8 +427,8 @@ const MeshCore = (function () {
         const icon = L.divIcon({
             className: '',
             html: node.is_repeater
-                ? `<div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:14px solid #ff9800;" title="${node.name}"></div>`
-                : `<div style="width:12px;height:12px;border-radius:50%;background:#00bcd4;border:2px solid #fff;box-shadow:0 0 4px rgba(0,0,0,.4);" title="${node.name}"></div>`,
+                ? `<div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:14px solid #ff9800;" data-explain-text="${node.name}"></div>`
+                : `<div style="width:12px;height:12px;border-radius:50%;background:#00bcd4;border:2px solid #fff;box-shadow:0 0 4px rgba(0,0,0,.4);" data-explain-text="${node.name}"></div>`,
             iconSize: [14, 14],
             iconAnchor: [7, 7],
         });

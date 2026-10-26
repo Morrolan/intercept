@@ -450,7 +450,7 @@
             const c = 2 * Math.PI * 20;
             const title = !isOnline ? 'Not answering' : ms == null ? 'Checking response time' : `Answered in ${Math.round(ms)} ms`;
             const value = !isOnline ? '!' : ms == null ? '··' : `${Math.round(ms)}<small>ms</small>`;
-            return `<div class="agent-ring ${cls}" title="${title}">
+            return `<div class="agent-ring ${cls}" data-explain-text="${title}">
                     <svg viewBox="0 0 48 48" aria-hidden="true">
                         <circle class="track" cx="24" cy="24" r="20"/>
                         <circle class="arc" cx="24" cy="24" r="20" stroke-dasharray="${(fill * c).toFixed(1)} ${c.toFixed(1)}"/>

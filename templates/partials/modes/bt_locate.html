@@ -28,7 +28,7 @@
         <label class="input-label" style="margin-top: 6px;">IRK (hex, optional)</label>
         <div style="display: flex; gap: 4px; align-items: center;">
             <input type="text" id="btLocateIrk" class="text-input" placeholder="32 hex chars for RPA resolution" style="font-family: var(--font-mono); font-size: 10px; flex: 1;">
-            <button class="btl-detect-irk-btn" id="btLocateDetectIrkBtn" onclick="BtLocate.fetchPairedIrks()" title="Detect IRKs from paired devices">Detect</button>
+            <button class="btl-detect-irk-btn" id="btLocateDetectIrkBtn" onclick="BtLocate.fetchPairedIrks()" data-explain-text="Detect IRKs from paired devices">Detect</button>
         </div>
         <div id="btLocateIrkPicker" class="btl-irk-picker" style="display: none;">
             <div id="btLocateIrkPickerStatus" class="btl-irk-picker-status"></div>

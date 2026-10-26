@@ -93,7 +93,7 @@
                 <td><span class="civ-badge">${escapeHtml(MODE_LABELS[m.mode] || m.mode)}</span></td>
                 <td class="mono">${escapeHtml(m.ident || '')}</td>
                 <td class="mono msg-nowrap">${escapeHtml(fmtFreq(m.freq_hz))}</td>
-                <td class="msg-summary">${escapeHtml(m.summary || '')}${m.lat != null ? ' <span class="msg-pos" title="Has position">⌖</span>' : ''}</td>
+                <td class="msg-summary">${escapeHtml(m.summary || '')}${m.lat != null ? ' <span class="msg-pos" data-explain-text="Has position">⌖</span>' : ''}</td>
             </tr>`).join('');
         resultBody.insertAdjacentHTML('beforeend', html);
         shown += rows.length;

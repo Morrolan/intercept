@@ -269,11 +269,11 @@ const Waterfall = (function () {
             const mode = _safeMode(b.mode);
             return `
                 <div class="wf-bookmark-item">
-                    <button class="wf-bookmark-link" onclick="Waterfall.quickTune(${freq}, '${mode}')" title="Tune ${freq.toFixed(4)} MHz">
+                    <button class="wf-bookmark-link" onclick="Waterfall.quickTune(${freq}, '${mode}')" data-explain-text="Tune ${freq.toFixed(4)} MHz">
                         ${freq.toFixed(4)} MHz
                     </button>
                     <span class="wf-bookmark-mode">${mode.toUpperCase()}</span>
-                    <button class="wf-bookmark-remove" onclick="Waterfall.removeBookmark(${idx})" title="Remove bookmark">x</button>
+                    <button class="wf-bookmark-remove" onclick="Waterfall.removeBookmark(${idx})" data-explain-text="Remove bookmark">x</button>
                 </div>
             `;
         }).join('');

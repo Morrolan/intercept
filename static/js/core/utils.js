@@ -234,7 +234,7 @@ const InterceptTime = (function() {
         const date = parse(input);
         if (!date) return '';
         const iso = date.toISOString();
-        return '<time class="rel-time" data-timestamp="' + iso + '" datetime="' + iso + '" title="' +
+        return '<time class="rel-time" data-timestamp="' + iso + '" datetime="' + iso + '" data-explain-text="' +
             _escapeAttr(absolute(date)) + '">' + _escapeAttr(relative(date)) + '</time>';
     }
 

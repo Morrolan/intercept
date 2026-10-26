@@ -710,7 +710,7 @@ function renderSatelliteList() {
                 <span class="sat-name">${sat.name}</span>
                 <span class="sat-norad">#${sat.norad}</span>
             </label>
-            <button class="sat-remove" onclick="removeSatellite(${idx})" title="Remove">✕</button>
+            <button class="sat-remove" onclick="removeSatellite(${idx})" data-explain-text="Remove">✕</button>
         </div>
     `).join('');
 }

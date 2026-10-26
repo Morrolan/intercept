@@ -57,7 +57,7 @@
             <!-- Location Source Selector -->
             <div class="location-selector" id="locationSection">
                 <span class="location-label">Location:</span>
-                <select id="locationSource" class="location-select" title="Select observer location">
+                <select id="locationSource" class="location-select" data-explain-text="Select observer location">
                     <option value="local">Local (This Device)</option>
                 </select>
                 <span class="location-status-dot online" id="locationStatusDot"></span>
@@ -209,7 +209,7 @@
                         <option value="57166">METEOR-M2-3</option>
                         <option value="59051">METEOR-M2-4</option>
                     </select>
-                    <button id="satRefreshBtn" onclick="loadDashboardSatellites()" title="Refresh satellite list">↺</button>
+                    <button id="satRefreshBtn" onclick="loadDashboardSatellites()" data-explain-text="Refresh satellite list">↺</button>
                 </div>
 
                 <!-- Countdown -->
@@ -1314,11 +1314,11 @@
                     const cls = el >= 60 ? 'excellent' : el >= 30 ? 'good' : 'fair';
                     const title = `${sat.name || id} · ${fmt(aos)}–${fmt(los)} UTC · peak ${el.toFixed(0)}° · ${Number(p.duration || 0).toFixed(0)} min`;
                     return `<button type="button" class="ptl-pass ${cls}" style="left:${left.toFixed(2)}%;width:${width.toFixed(2)}%;height:${height.toFixed(0)}%"
-                                title="${ptlEsc(title)}" onclick="selectTimelineSatellite(${id})"></button>`;
+                                data-explain-text="${ptlEsc(title)}" onclick="selectTimelineSatellite(${id})"></button>`;
                 }).join('');
                 const active = id === selectedSatellite ? ' active' : '';
                 return `<div class="ptl-row${active}">
-                        <button type="button" class="ptl-name" onclick="selectTimelineSatellite(${id})" title="Select ${ptlEsc(sat.name || String(id))}">
+                        <button type="button" class="ptl-name" onclick="selectTimelineSatellite(${id})" data-explain-text="Select ${ptlEsc(sat.name || String(id))}">
                             <i style="background:${ptlEsc(sat.color || 'var(--accent-cyan)')}"></i>${ptlEsc(sat.name || String(id))}
                         </button>
                         <div class="ptl-track">${bars || '<span class="ptl-none">no pass above 5°</span>'}</div>
@@ -2261,7 +2261,7 @@
                 const timeStr = (pass.aosTime || pass.startTime || '').split('T')[1]?.substring(0, 5) || pass.startTime?.split(' ')[1] || '--:--';
                 const isWeatherSat = WEATHER_SAT_KEYS.has(pass.satellite);
                 const captureBtn = isWeatherSat
-                    ? `<button class="pass-capture-btn" onclick="event.stopPropagation(); handoffToWeatherSat(${idx})" title="Switch to Weather Satellite mode for this pass">→ Capture</button>`
+                    ? `<button class="pass-capture-btn" onclick="event.stopPropagation(); handoffToWeatherSat(${idx})" data-explain-text="Switch to Weather Satellite mode for this pass">→ Capture</button>`
                     : '';
 
                 return `
@@ -2275,9 +2275,9 @@
                             <span>${tcaEl} · ${pass.duration} min</span>
                         </div>
                         <div class="pass-event-row">
-                            <span title="AOS azimuth">↑ ${aosAz}</span>
-                            <span title="TCA azimuth">⊙ ${tcaAz}</span>
-                            <span title="LOS azimuth">↓ ${losAz}</span>
+                            <span data-explain-text="AOS azimuth">↑ ${aosAz}</span>
+                            <span data-explain-text="TCA azimuth">⊙ ${tcaAz}</span>
+                            <span data-explain-text="LOS azimuth">↓ ${losAz}</span>
                             ${captureBtn}
                         </div>
                     </div>
@@ -2896,7 +2896,7 @@
                             <span class="drawer-sat-meta">#${_esc(String(sat.norad_id))}${sat.builtin ? ' • builtin' : ''}</span>
                         </span>
                     </label>
-                    ${sat.builtin ? '' : `<button class="drawer-sat-remove" onclick="removeTrackedSatellite(${idx})" title="Remove tracked satellite">×</button>`}
+                    ${sat.builtin ? '' : `<button class="drawer-sat-remove" onclick="removeTrackedSatellite(${idx})" data-explain-text="Remove tracked satellite">×</button>`}
                 </div>
             `).join('');
         }
@@ -3294,7 +3294,7 @@
                 const enCls = p.enabled ? 'gs-profile-enabled' : '';
                 const taskSummary = _formatTaskSummary(p.tasks || []);
                 return `<div class="gs-profile-item">
-                    <span class="prof-name ${enCls}" title="NORAD ${p.norad_id}${taskSummary ? ' • ' + taskSummary : ''}">${_esc(p.name)}</span>
+                    <span class="prof-name ${enCls}" data-explain-text="NORAD ${p.norad_id}${taskSummary ? ' • ' + taskSummary : ''}">${_esc(p.name)}</span>
                     <span class="prof-freq">${(+p.frequency_mhz).toFixed(3)}</span>
                     <div class="prof-actions">
                         <button onclick="gsEditProfile(${p.norad_id})">EDIT</button>
@@ -3515,7 +3515,7 @@
                         const kb = Math.round((r.size_bytes || 0) / 1024);
                         const fname = (r.sigmf_data_path || '').split('/').pop();
                         return `<div class="gs-recording-item">
-                            <a href="/ground_station/recordings/${r.id}/download/data" title="${_esc(fname)}">${_esc(fname.slice(0, 22))}</a>
+                            <a href="/ground_station/recordings/${r.id}/download/data" data-explain-text="${_esc(fname)}">${_esc(fname.slice(0, 22))}</a>
                             <span style="color:var(--text-secondary);font-size:9px;">${kb} KB</span>
                         </div>`;
                     }).join('');
@@ -3546,7 +3546,7 @@
                         const filename = (o.file_path || '').split('/').pop() || `output-${o.id}`;
                         const product = meta.product ? _esc(String(meta.product)) : 'Image';
                         return `<div class="gs-recording-item">
-                            <a href="/ground_station/outputs/${o.id}/download" title="${_esc(filename)}">${_esc(filename.slice(0, 24))}</a>
+                            <a href="/ground_station/outputs/${o.id}/download" data-explain-text="${_esc(filename)}">${_esc(filename.slice(0, 24))}</a>
                             <span style="color:var(--text-secondary);font-size:9px;">${product}</span>
                         </div>`;
                     }).join('');

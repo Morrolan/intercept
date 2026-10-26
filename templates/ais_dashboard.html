@@ -48,11 +48,11 @@
         <div class="status-bar">
             <!-- Agent Selector -->
             <div class="agent-selector-compact" id="agentSection">
-                <select id="agentSelect" class="agent-select-sm" title="Select signal source">
+                <select id="agentSelect" class="agent-select-sm" data-explain-text="Select signal source">
                     <option value="local">Local</option>
                 </select>
                 <span class="agent-status-dot online" id="agentStatusDot"></span>
-                <label class="show-all-label" title="Show vessels from all agents on map">
+                <label class="show-all-label" data-explain-text="Show vessels from all agents on map">
                     <input type="checkbox" id="showAllAgents" onchange="toggleShowAllAgents()"> All
                 </label>
             </div>
@@ -87,7 +87,7 @@
                 <span class="strip-label">NEAR NM</span>
             </div>
             <div class="strip-divider"></div>
-            <div class="strip-stat signal-stat" title="Signal quality (messages/sec)">
+            <div class="strip-stat signal-stat" data-explain-text="Signal quality (messages/sec)">
                 <span class="strip-value" id="stripSignal">--</span>
                 <span class="strip-label">SIGNAL</span>
             </div>
@@ -101,7 +101,7 @@
                 <span id="trackingStatus">STANDBY</span>
             </div>
             <div class="strip-time" id="utcTime">--:--:-- UTC</div>
-            <span id="gpsIndicator" class="gps-indicator" style="display: none;" title="GPS connected via gpsd"><span class="gps-dot"></span> GPS</span>
+            <span id="gpsIndicator" class="gps-indicator" style="display: none;" data-explain-text="GPS connected via gpsd"><span class="gps-dot"></span> GPS</span>
         </div>
     </div>
 
@@ -147,8 +147,8 @@
                     <div class="panel-indicator" id="dscIndicator"></div>
                 </div>
                 <div class="dsc-alert-summary" id="dscAlertSummary">
-                    <span class="dsc-alert-count distress" id="dscDistressCount" title="Distress alerts">0 DISTRESS</span>
-                    <span class="dsc-alert-count urgency" id="dscUrgencyCount" title="Urgency alerts">0 URGENCY</span>
+                    <span class="dsc-alert-count distress" id="dscDistressCount" data-explain-text="Distress alerts">0 DISTRESS</span>
+                    <span class="dsc-alert-count urgency" id="dscUrgencyCount" data-explain-text="Urgency alerts">0 URGENCY</span>
                 </div>
                 <div class="dsc-list-content" id="dscMessageList">
                     <div class="no-messages">
@@ -163,12 +163,12 @@
             <div class="control-group">
                 <span class="control-group-label">DISPLAY</span>
                 <div class="control-group-items">
-                    <label title="Show vessel trails"><input type="checkbox" id="showTrails" onchange="toggleTrails()"> Trails</label>
-                    <label title="Show range rings"><input type="checkbox" id="showRangeRings" checked onchange="drawRangeRings()"> Rings</label>
-                    <label title="Name and speed beside each vessel, when zoomed in"><input type="checkbox" id="showLabels" checked onchange="setMapLabels(this.checked)"> Labels</label>
-                    <label title="Outline of the furthest contact heard in each direction"><input type="checkbox" id="showReach" checked onchange="receptionOutline && receptionOutline.setVisible(this.checked)"> Reach</label>
-                    <button type="button" class="reach-reset" title="Forget the reception outline for this location" onclick="receptionOutline && receptionOutline.reset()">&#8634;</button>
-                    <select id="rangeSelect" onchange="updateRange()" title="Range rings distance">
+                    <label data-explain-text="Show vessel trails"><input type="checkbox" id="showTrails" onchange="toggleTrails()"> Trails</label>
+                    <label data-explain-text="Show range rings"><input type="checkbox" id="showRangeRings" checked onchange="drawRangeRings()"> Rings</label>
+                    <label data-explain-text="Name and speed beside each vessel, when zoomed in"><input type="checkbox" id="showLabels" checked onchange="setMapLabels(this.checked)"> Labels</label>
+                    <label data-explain-text="Outline of the furthest contact heard in each direction"><input type="checkbox" id="showReach" checked onchange="receptionOutline && receptionOutline.setVisible(this.checked)"> Reach</label>
+                    <button type="button" class="reach-reset" data-explain-text="Forget the reception outline for this location" onclick="receptionOutline && receptionOutline.reset()">&#8634;</button>
+                    <select id="rangeSelect" onchange="updateRange()" data-explain-text="Range rings distance">
                         <option value="10">10nm</option>
                         <option value="25">25nm</option>
                         <option value="50" selected>50nm</option>
@@ -180,18 +180,18 @@
             <div class="control-group">
                 <span class="control-group-label">LOCATION</span>
                 <div class="control-group-items">
-                    <input type="text" id="obsLat" value="{{ default_latitude }}" onchange="updateObserverLoc()" style="width: 70px;" title="Latitude" placeholder="Lat">
-                    <input type="text" id="obsLon" value="{{ default_longitude }}" onchange="updateObserverLoc()" style="width: 70px;" title="Longitude" placeholder="Lon">
+                    <input type="text" id="obsLat" value="{{ default_latitude }}" onchange="updateObserverLoc()" style="width: 70px;" data-explain-text="Latitude" placeholder="Lat">
+                    <input type="text" id="obsLon" value="{{ default_longitude }}" onchange="updateObserverLoc()" style="width: 70px;" data-explain-text="Longitude" placeholder="Lon">
                 </div>
             </div>
 
             <div class="control-group tracking-group">
                 <span class="control-group-label">AIS TRACKING</span>
                 <div class="control-group-items">
-                    <select id="aisDeviceSelect" title="SDR device">
+                    <select id="aisDeviceSelect" data-explain-text="SDR device">
                         <option value="0">SDR 0</option>
                     </select>
-                    <input type="number" id="aisGain" value="40" min="0" max="50" style="width: 50px;" title="Gain">
+                    <input type="number" id="aisGain" value="40" min="0" max="50" style="width: 50px;" data-explain-text="Gain">
                     <button class="start-btn" id="startBtn" onclick="toggleTracking()">START</button>
                 </div>
             </div>
@@ -199,10 +199,10 @@
             <div class="control-group dsc-group">
                 <span class="control-group-label">VHF DSC</span>
                 <div class="control-group-items">
-                    <select id="dscDeviceSelect" title="DSC SDR device (secondary)">
+                    <select id="dscDeviceSelect" data-explain-text="DSC SDR device (secondary)">
                         <option value="0">SDR 0</option>
                     </select>
-                    <input type="number" id="dscGain" value="40" min="0" max="50" style="width: 50px;" title="Gain">
+                    <input type="number" id="dscGain" value="40" min="0" max="50" style="width: 50px;" data-explain-text="Gain">
                     <button class="start-btn dsc-btn" id="dscStartBtn" onclick="toggleDscTracking()">START DSC</button>
                 </div>
             </div>

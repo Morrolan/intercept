@@ -731,7 +731,7 @@ function renderReceiverList(receivers) {
                 <span class="wsdr-rx-dist">${escapeHtmlWebsdr(websdrDistanceText(rx))}</span>
             </div>
             ${sub ? `<div class="wsdr-rx-sub">${sub}</div>` : ''}
-            <div class="wsdr-rx-slots" title="${rx.users} of ${rx.users_max} listener slots in use">
+            <div class="wsdr-rx-slots" data-explain-text="${rx.users} of ${rx.users_max} listener slots in use">
                 <span class="wsdr-rx-bar"><i style="width: ${usedPct.toFixed(0)}%"></i></span>
                 <span>${Math.max(0, free(rx))} of ${max} free</span>
             </div>

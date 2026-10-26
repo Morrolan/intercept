@@ -1241,7 +1241,7 @@ const WiFiMode = (function() {
                     <div class="row-badges">
                         <span class="badge ${badgeClass}">${escapeHtml(security)}</span>
                         ${hiddenTag}
-                        <button type="button" class="locate-action" title="Locate this network"
+                        <button type="button" class="locate-action" data-explain-text="Locate this network"
                                 onclick="event.stopPropagation(); WiFiMode.locateNetwork(this.closest('.network-row').dataset.bssid)">${LOCATE_ICON}Locate</button>
                     </div>
                 </div>

@@ -57,11 +57,11 @@
         <div class="status-bar">
             <!-- Agent Selector -->
             <div class="agent-selector-compact" id="agentSection">
-                <select id="agentSelect" class="agent-select-sm" title="Select signal source">
+                <select id="agentSelect" class="agent-select-sm" data-explain-text="Select signal source">
                     <option value="local">Local</option>
                 </select>
                 <span class="agent-status-dot online" id="agentStatusDot"></span>
-                <label class="show-all-label" title="Show aircraft from all agents on map">
+                <label class="show-all-label" data-explain-text="Show aircraft from all agents on map">
                     <input type="checkbox" id="showAllAgents" onchange="toggleShowAllAgents()"> All
                 </label>
             </div>
@@ -112,11 +112,11 @@
                 <span class="strip-value" id="stripVdl2">0</span>
                 <span class="strip-label">VDL2</span>
             </div>
-            <div class="strip-stat source-stat" title="Data source (Local or Agent name)">
+            <div class="strip-stat source-stat" data-explain-text="Data source (Local or Agent name)">
                 <span class="strip-value" id="stripSource">Local</span>
                 <span class="strip-label">SOURCE</span>
             </div>
-            <div class="strip-stat signal-stat" title="Signal quality (messages/errors)">
+            <div class="strip-stat signal-stat" data-explain-text="Signal quality (messages/errors)">
                 <span class="strip-value" id="stripSignal">--</span>
                 <span class="strip-label">SIGNAL</span>
             </div>
@@ -125,31 +125,31 @@
                 <span class="strip-label">SESSION</span>
             </div>
             <div class="strip-divider"></div>
-            <button type="button" class="strip-btn" onclick="showSquawkInfo(null)" title="Squawk Code Reference">
+            <button type="button" class="strip-btn" onclick="showSquawkInfo(null)" data-explain-text="Squawk Code Reference">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="10" x2="10" y2="14"/><line x1="14" y1="10" x2="14" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg>
                 Squawk
             </button>
-            <button type="button" class="strip-btn" onclick="lookupSelectedFlight()" title="Lookup selected aircraft on FlightAware" id="flightLookupBtn" disabled>
+            <button type="button" class="strip-btn" onclick="lookupSelectedFlight()" data-explain-text="Lookup selected aircraft on FlightAware" id="flightLookupBtn" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                 Lookup
             </button>
-            <button type="button" class="strip-btn" onclick="tuneNearestAtc()" title="Tune the airband receiver to the nearest airport's ATC frequency for the selected aircraft" id="tuneAtcBtn" disabled>
+            <button type="button" class="strip-btn" onclick="tuneNearestAtc()" data-explain-text="Tune the airband receiver to the nearest airport's ATC frequency for the selected aircraft" id="tuneAtcBtn" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4M18 12h4M12 2v4M12 18v4"/><circle cx="12" cy="12" r="4"/></svg>
                 Tune ATC
             </button>
-            <button type="button" class="strip-btn" onclick="openInstruments()" title="Open a pop-out instrument panel for the selected aircraft" id="instrumentsBtn" disabled>
+            <button type="button" class="strip-btn" onclick="openInstruments()" data-explain-text="Open a pop-out instrument panel for the selected aircraft" id="instrumentsBtn" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-3"/><circle cx="12" cy="12" r="1.5"/></svg>
                 Instruments
             </button>
-            <button type="button" class="strip-btn primary" onclick="generateReport()" title="Generate Session Report">
+            <button type="button" class="strip-btn primary" onclick="generateReport()" data-explain-text="Generate Session Report">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                 Report
             </button>
-            <a class="strip-btn" href="/adsb/history" title="Open History Reporting">
+            <a class="strip-btn" href="/adsb/history" data-explain-text="Open History Reporting">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 History
             </a>
-            <button type="button" class="strip-btn" onclick="toggleAntennaGuide()" title="1090 MHz Antenna Guide">
+            <button type="button" class="strip-btn" onclick="toggleAntennaGuide()" data-explain-text="1090 MHz Antenna Guide">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 L12 2 L22 12"/><line x1="12" y1="2" x2="12" y2="22"/><path d="M4.93 4.93 L12 12"/><path d="M19.07 4.93 L12 12"/></svg>
                 Antenna
             </button>
@@ -181,7 +181,7 @@
                             <span style="color: var(--accent-yellow);">⚠</span> Requires separate SDR (VHF ~131 MHz)
                         </div>
                         <div class="acars-controls" style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                            <select id="acarsSourceSelect" title="Where ACARS runs: with ADS-B, on this machine, or on an agent" aria-label="ACARS source" onfocus="fillPanelSourceSelect(this)" onchange="onPanelSourceChange('acars')" style="width: 100%; font-size: 10px; margin-bottom: 5px;">
+                            <select id="acarsSourceSelect" data-explain-text="Where ACARS runs: with ADS-B, on this machine, or on an agent" aria-label="ACARS source" onfocus="fillPanelSourceSelect(this)" onchange="onPanelSourceChange('acars')" style="width: 100%; font-size: 10px; margin-bottom: 5px;">
                                 <option value="">Source: same as ADS-B</option>
                             </select>
                             <div style="display: flex; gap: 5px; margin-bottom: 5px;">
@@ -202,7 +202,7 @@
                                 <button class="acars-btn" id="acarsToggleBtn" onclick="toggleAcars()" style="flex: 1;">
                                     ▶ START ACARS
                                 </button>
-                                <button class="acars-btn" id="acarsClearBtn" onclick="clearAcarsMessages()" title="Clear messages" style="padding: 4px 8px; font-size: 9px; opacity: 0.7;">
+                                <button class="acars-btn" id="acarsClearBtn" onclick="clearAcarsMessages()" data-explain-text="Clear messages" style="padding: 4px 8px; font-size: 9px; opacity: 0.7;">
                                     CLEAR
                                 </button>
                             </div>
@@ -216,7 +216,7 @@
                     </div>
                 </div>
             </div>
-            <button class="acars-collapse-btn" id="acarsCollapseBtn" onclick="toggleAcarsSidebar()" title="Toggle ACARS Panel">
+            <button class="acars-collapse-btn" id="acarsCollapseBtn" onclick="toggleAcarsSidebar()" data-explain-text="Toggle ACARS Panel">
                 <span id="acarsCollapseIcon">◀</span>
                 <span class="acars-collapse-label">ACARS</span>
             </button>
@@ -230,7 +230,7 @@
                         <span>VDL2 MESSAGES</span>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span id="vdl2Count" style="font-size: 10px; color: var(--accent-cyan);">0</span>
-                            <button onclick="exportVdl2Csv()" title="Export VDL2 to CSV" style="background: none; border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono);">CSV</button>
+                            <button onclick="exportVdl2Csv()" data-explain-text="Export VDL2 to CSV" style="background: none; border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono);">CSV</button>
                             <div class="panel-indicator" id="vdl2PanelIndicator"></div>
                         </div>
                     </div>
@@ -239,7 +239,7 @@
                             <span style="color: var(--accent-yellow);">&#9888;</span> Requires separate SDR (VHF ~137 MHz)
                         </div>
                         <div class="vdl2-controls" style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                            <select id="vdl2SourceSelect" title="Where VDL2 runs: with ADS-B, on this machine, or on an agent" aria-label="VDL2 source" onfocus="fillPanelSourceSelect(this)" onchange="onPanelSourceChange('vdl2')" style="width: 100%; font-size: 10px; margin-bottom: 5px;">
+                            <select id="vdl2SourceSelect" data-explain-text="Where VDL2 runs: with ADS-B, on this machine, or on an agent" aria-label="VDL2 source" onfocus="fillPanelSourceSelect(this)" onchange="onPanelSourceChange('vdl2')" style="width: 100%; font-size: 10px; margin-bottom: 5px;">
                                 <option value="">Source: same as ADS-B</option>
                             </select>
                             <div style="display: flex; gap: 5px; margin-bottom: 5px;">
@@ -260,7 +260,7 @@
                                 <button class="vdl2-btn" id="vdl2ToggleBtn" onclick="toggleVdl2()" style="flex: 1;">
                                     &#9654; START VDL2
                                 </button>
-                                <button class="vdl2-btn" id="vdl2ClearBtn" onclick="clearVdl2Messages()" title="Clear messages" style="padding: 4px 8px; font-size: 9px; opacity: 0.7;">
+                                <button class="vdl2-btn" id="vdl2ClearBtn" onclick="clearVdl2Messages()" data-explain-text="Clear messages" style="padding: 4px 8px; font-size: 9px; opacity: 0.7;">
                                     CLEAR
                                 </button>
                             </div>
@@ -274,7 +274,7 @@
                     </div>
                 </div>
             </div>
-            <button class="vdl2-collapse-btn" id="vdl2CollapseBtn" onclick="toggleVdl2Sidebar()" title="Toggle VDL2 Panel">
+            <button class="vdl2-collapse-btn" id="vdl2CollapseBtn" onclick="toggleVdl2Sidebar()" data-explain-text="Toggle VDL2 Panel">
                 <span id="vdl2CollapseIcon">&#9664;</span>
                 <span class="vdl2-collapse-label">VDL2</span>
             </button>
@@ -330,29 +330,29 @@
             <div class="control-group">
                 <span class="control-group-label">DISPLAY</span>
                 <div class="control-group-items">
-                    <label title="Show aircraft trails"><input type="checkbox" id="showTrails" checked onchange="toggleTrails()"> Trails</label>
-                    <label title="Show range rings"><input type="checkbox" id="showRangeRings" checked onchange="drawRangeRings()"> Rings</label>
-                    <label title="Callsign and flight level beside each aircraft, when zoomed in"><input type="checkbox" id="showLabels" checked onchange="setMapLabels(this.checked)"> Labels</label>
-                    <label title="Outline of the furthest contact heard in each direction"><input type="checkbox" id="showReach" checked onchange="receptionOutline && receptionOutline.setVisible(this.checked)"> Reach</label>
-                    <button type="button" class="reach-reset" title="Forget the reception outline for this location" onclick="receptionOutline && receptionOutline.reset()">&#8634;</button>
-                    <label title="Audio alerts for military/emergency"><input type="checkbox" id="alertToggle" checked onchange="toggleAlerts()"> Alerts</label>
-                    <label title="Sound when new aircraft detected"><input type="checkbox" id="detectionSoundToggle" onchange="toggleDetectionSound()"> Ping</label>
-                    <select id="aircraftFilter" onchange="applyFilter()" title="Filter aircraft">
+                    <label data-explain-text="Show aircraft trails"><input type="checkbox" id="showTrails" checked onchange="toggleTrails()"> Trails</label>
+                    <label data-explain-text="Show range rings"><input type="checkbox" id="showRangeRings" checked onchange="drawRangeRings()"> Rings</label>
+                    <label data-explain-text="Callsign and flight level beside each aircraft, when zoomed in"><input type="checkbox" id="showLabels" checked onchange="setMapLabels(this.checked)"> Labels</label>
+                    <label data-explain-text="Outline of the furthest contact heard in each direction"><input type="checkbox" id="showReach" checked onchange="receptionOutline && receptionOutline.setVisible(this.checked)"> Reach</label>
+                    <button type="button" class="reach-reset" data-explain-text="Forget the reception outline for this location" onclick="receptionOutline && receptionOutline.reset()">&#8634;</button>
+                    <label data-explain-text="Audio alerts for military/emergency"><input type="checkbox" id="alertToggle" checked onchange="toggleAlerts()"> Alerts</label>
+                    <label data-explain-text="Sound when new aircraft detected"><input type="checkbox" id="detectionSoundToggle" onchange="toggleDetectionSound()"> Ping</label>
+                    <select id="aircraftFilter" onchange="applyFilter()" data-explain-text="Filter aircraft">
                         <option value="all">All Aircraft</option>
                         <option value="military">Military</option>
                         <option value="civil">Civil</option>
                         <option value="emergency">Emergency</option>
                         <option value="watchlist">Watchlist</option>
                     </select>
-                    <button class="watchlist-btn" onclick="showWatchlistModal()" title="Manage Watchlist">★</button>
-                    <select id="rangeSelect" onchange="updateRange()" title="Range rings distance">
+                    <button class="watchlist-btn" onclick="showWatchlistModal()" data-explain-text="Manage Watchlist">★</button>
+                    <select id="rangeSelect" onchange="updateRange()" data-explain-text="Range rings distance">
                         <option value="50" selected>50nm</option>
                         <option value="100">100nm</option>
                         <option value="200">200nm</option>
                         <option value="300">300nm</option>
                     </select>
-                    <label title="Only show aircraft within the range distance above (useful for busy remote/aggregated feeds)"><input type="checkbox" id="limitRange" onchange="toggleRangeLimit()"> In range</label>
-                    <select id="retentionSelect" onchange="setRetention()" title="Drop aircraft not heard from for this long">
+                    <label data-explain-text="Only show aircraft within the range distance above (useful for busy remote/aggregated feeds)"><input type="checkbox" id="limitRange" onchange="toggleRangeLimit()"> In range</label>
+                    <select id="retentionSelect" onchange="setRetention()" data-explain-text="Drop aircraft not heard from for this long">
                         <option value="30000">Keep 30s</option>
                         <option value="60000" selected>Keep 1m</option>
                         <option value="120000">Keep 2m</option>
@@ -367,9 +367,9 @@
             <div class="control-group">
                 <span class="control-group-label">LOCATION</span>
                 <div class="control-group-items">
-                    <input type="text" id="obsLat" value="{{ default_latitude }}" onchange="updateObserverLoc()" style="width: 70px;" title="Latitude" placeholder="Lat">
-                    <input type="text" id="obsLon" value="{{ default_longitude }}" onchange="updateObserverLoc()" style="width: 70px;" title="Longitude" placeholder="Lon">
-                    <span id="gpsIndicator" class="gps-indicator" style="display: none;" title="GPS connected via gpsd"><span class="gps-dot"></span> GPS</span>
+                    <input type="text" id="obsLat" value="{{ default_latitude }}" onchange="updateObserverLoc()" style="width: 70px;" data-explain-text="Latitude" placeholder="Lat">
+                    <input type="text" id="obsLon" value="{{ default_longitude }}" onchange="updateObserverLoc()" style="width: 70px;" data-explain-text="Longitude" placeholder="Lon">
+                    <span id="gpsIndicator" class="gps-indicator" style="display: none;" data-explain-text="GPS connected via gpsd"><span class="gps-dot"></span> GPS</span>
                 </div>
             </div>
 
@@ -377,25 +377,25 @@
             <div class="control-group tracking-group">
                 <span class="control-group-label">ADS-B TRACKING</span>
                 <div class="control-group-items">
-                    <label title="Use remote dump1090"><input type="checkbox" id="useRemoteDump1090" onchange="toggleRemoteDump1090()"> Remote</label>
+                    <label data-explain-text="Use remote dump1090"><input type="checkbox" id="useRemoteDump1090" onchange="toggleRemoteDump1090()"> Remote</label>
                     <span class="remote-dump1090-controls" style="display: none;">
                         <input type="text" id="remoteSbsHost" placeholder="Host" style="width: 70px;">
                         <input type="number" id="remoteSbsPort" value="30003" min="1" max="65535" style="width: 70px;">
                     </span>
-                    <select id="adsbDeviceSelect" title="SDR device for ADS-B (1090 MHz)">
+                    <select id="adsbDeviceSelect" data-explain-text="SDR device for ADS-B (1090 MHz)">
                         <option value="0">SDR 0</option>
                     </select>
-                    <label title="SDR gain in dB (0 = auto)" style="display:flex;align-items:center;gap:3px;font-size:11px;">
-                        Gain <input type="number" id="adsbGainInput" value="40" min="0" max="50" step="1" style="width:46px;" title="SDR gain in dB">
+                    <label data-explain-text="SDR gain in dB (0 = auto)" style="display:flex;align-items:center;gap:3px;font-size:11px;">
+                        Gain <input type="number" id="adsbGainInput" value="40" min="0" max="50" step="1" style="width:46px;" data-explain-text="SDR gain in dB">
                     </label>
-                    <label class="bias-t-label" title="Enable Bias-T power for external LNA/preamp"><input type="checkbox" id="adsbBiasT" onchange="saveAdsbBiasTSetting()"> Bias-T</label>
+                    <label class="bias-t-label" data-explain-text="Enable Bias-T power for external LNA/preamp"><input type="checkbox" id="adsbBiasT" onchange="saveAdsbBiasTSetting()"> Bias-T</label>
                     <button class="start-btn" id="startBtn" onclick="toggleTracking()">START</button>
                 </div>
             </div>
 
             <!-- Airband Listening Group (compact chip + popover) -->
             <div class="control-group airband-group">
-                <button type="button" class="airband-chip" id="airbandChip" onclick="toggleAirbandPanel()" aria-expanded="false" title="Airband receiver">
+                <button type="button" class="airband-chip" id="airbandChip" onclick="toggleAirbandPanel()" aria-expanded="false" data-explain-text="Airband receiver">
                     <span class="airband-chip-dot" id="airbandChipDot"></span>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 16a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2z"/><path d="M3 16a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2z"/></svg>
                     <span class="airband-chip-label">Airband</span>
@@ -405,7 +405,7 @@
                 <div class="airband-panel" id="airbandPanel" hidden>
                     <div class="airband-panel-title">AIRBAND RECEIVER</div>
                     <div class="control-group-items">
-                    <select id="airbandFreqSelect" onchange="updateAirbandFreq()" class="airband-controls" title="Airband frequency">
+                    <select id="airbandFreqSelect" onchange="updateAirbandFreq()" class="airband-controls" data-explain-text="Airband frequency">
                         <option value="121.5">121.5 Guard</option>
                         <option value="118.0">118.0</option>
                         <option value="119.1">119.1</option>
@@ -418,18 +418,18 @@
                         <option value="custom">Custom...</option>
                     </select>
                     <input type="number" id="airbandCustomFreq" step="0.025" placeholder="MHz" class="airband-controls" style="width: 65px; display: none;">
-                    <select id="airbandSpacing" class="airband-controls" title="Channel spacing" style="width: 55px; display: none;" onchange="updateAirbandSpacing()">
+                    <select id="airbandSpacing" class="airband-controls" data-explain-text="Channel spacing" style="width: 55px; display: none;" onchange="updateAirbandSpacing()">
                         <option value="25">25 kHz</option>
                         <option value="8.33">8.33 kHz</option>
                     </select>
-                    <select id="airbandDeviceSelect" class="airband-controls" title="SDR for airband">
+                    <select id="airbandDeviceSelect" class="airband-controls" data-explain-text="SDR for airband">
                         <option value="0">SDR 0</option>
                     </select>
                     <div class="airband-sliders">
-                        <span title="Squelch">SQ</span>
-                        <input type="range" id="airbandSquelch" min="0" max="100" value="0" class="airband-controls" title="Squelch" onchange="updateAirbandSquelch()">
-                        <span title="Volume">VOL</span>
-                        <input type="range" id="airbandVolume" min="0" max="100" value="80" class="airband-controls" oninput="updateAirbandVolume()" title="Volume">
+                        <span data-explain-text="Squelch">SQ</span>
+                        <input type="range" id="airbandSquelch" min="0" max="100" value="0" class="airband-controls" data-explain-text="Squelch" onchange="updateAirbandSquelch()">
+                        <span data-explain-text="Volume">VOL</span>
+                        <input type="range" id="airbandVolume" min="0" max="100" value="80" class="airband-controls" oninput="updateAirbandVolume()" data-explain-text="Volume">
                     </div>
                     <button class="airband-btn" id="airbandBtn" onclick="toggleAirband()">▶ LISTEN</button>
                     <span id="airbandStatus" class="airband-status">OFF</span>
@@ -935,7 +935,7 @@
                         <span class="watchlist-type">${entry.type}</span>
                         ${entry.note ? `<span class="watchlist-note">${entry.note}</span>` : ''}
                     </div>
-                    <button class="watchlist-remove" onclick="removeFromWatchlist(${i})" title="Remove">&times;</button>
+                    <button class="watchlist-remove" onclick="removeFromWatchlist(${i})" data-explain-text="Remove">&times;</button>
                 </div>
             `).join('');
         }
@@ -3139,7 +3139,7 @@ ACARS: ${r.statistics.acarsMessages} messages`;
                 `<span class="agent-badge">${ac._agent}</span>` : '';
             // ACARS indicator if this aircraft has datalink messages
             const acarsIndicator = (typeof acarsAircraftIcaos !== 'undefined' && acarsAircraftIcaos.has(ac.icao)) ?
-                `<span style="background:var(--accent-cyan);color:#000;padding:1px 4px;border-radius:2px;font-size:7px;font-weight:700;margin-left:4px;" title="Has ACARS messages">DLK</span>` : '';
+                `<span style="background:var(--accent-cyan);color:#000;padding:1px 4px;border-radius:2px;font-size:7px;font-weight:700;margin-left:4px;" data-explain-text="Has ACARS messages">DLK</span>` : '';
             // Vertical rate indicator: arrow up (climbing), arrow down (descending), or dash (level)
             let vsIndicator = '-';
             let vsColor = '';
@@ -3413,7 +3413,7 @@ ACARS: ${r.statistics.acarsMessages} messages`;
                     </div>
                     <div class="telemetry-item">
                         <div class="telemetry-label">Squawk</div>
-                        <div class="telemetry-value squawk-clickable" onclick="showSquawkInfo('${squawk}')" title="Click for squawk info">${squawk}</div>
+                        <div class="telemetry-value squawk-clickable" onclick="showSquawkInfo('${squawk}')" data-explain-text="Click for squawk info">${squawk}</div>
                     </div>
                     <div class="telemetry-item">
                         <div class="telemetry-label">Lat</div>
@@ -3447,7 +3447,7 @@ ACARS: ${r.statistics.acarsMessages} messages`;
                 <div id="aircraftAcarsSection" style="margin-top:12px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:600;color:var(--accent-cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;border-top:1px solid var(--border-color);padding-top:8px;">
                         <span>Datalink Messages</span>
-                        <button onclick="clearAircraftMessages()" title="Clear datalink messages" style="background:none;border:1px solid var(--border-color);color:var(--text-muted);cursor:pointer;font-size:9px;padding:1px 5px;border-radius:3px;font-family:var(--font-mono);line-height:1;">&#10005;</button>
+                        <button onclick="clearAircraftMessages()" data-explain-text="Clear datalink messages" style="background:none;border:1px solid var(--border-color);color:var(--text-muted);cursor:pointer;font-size:9px;padding:1px 5px;border-radius:3px;font-family:var(--font-mono);line-height:1;">&#10005;</button>
                     </div>
                     <div id="aircraftAcarsMessages" style="font-size:10px;color:var(--text-dim);transition:opacity 0.15s ease;">Loading...</div>
                 </div>`;
@@ -4553,7 +4553,7 @@ ACARS: ${r.statistics.acarsMessages} messages`;
             }
 
             const typeBadge = typeof getAcarsTypeBadge === 'function' ? getAcarsTypeBadge(msgType) : '';
-            const linkIcon = matchedIcao ? '<span style="color:var(--accent-green);font-size:9px;margin-left:3px;" title="Tracked on map">&#9992;</span>' : '';
+            const linkIcon = matchedIcao ? '<span style="color:var(--accent-green);font-size:9px;margin-left:3px;" data-explain-text="Tracked on map">&#9992;</span>' : '';
 
             msg.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
@@ -4999,7 +4999,7 @@ ACARS: ${r.statistics.acarsMessages} messages`;
                             <div class="vdl2-modal-title">${escapeHtml(title)}</div>
                             <div class="vdl2-modal-time">${escapeHtml(tsStr || timeStr)}${freq ? ' · ' + escapeHtml(freq) : ''}</div>
                         </div>
-                        <button class="vdl2-modal-close" title="Close">&times;</button>
+                        <button class="vdl2-modal-close" data-explain-text="Close">&times;</button>
                     </div>
                     <div class="vdl2-modal-body">
                         ${radioHtml}
@@ -5086,7 +5086,7 @@ ACARS: ${r.statistics.acarsMessages} messages`;
 
             msg.style.cssText = 'padding: 6px 8px; border-bottom: 1px solid var(--border-color); font-size: 10px;' +
                 (matchedIcao ? ' cursor: pointer;' : '');
-            const linkIcon = matchedIcao ? '<span style="color:var(--accent-green);font-size:9px;margin-left:3px;" title="Tracked on map">&#9992;</span>' : '';
+            const linkIcon = matchedIcao ? '<span style="color:var(--accent-green);font-size:9px;margin-left:3px;" data-explain-text="Tracked on map">&#9992;</span>' : '';
 
             const acarsLabelDesc = acars.label_description || '';
             const acarsMsgType = acars.message_type || 'other';

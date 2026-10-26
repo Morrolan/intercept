@@ -200,3 +200,15 @@ html.ami-embedded .ami-voice-note { display: block; color: var(--text-secondary)
   .aprs-dashboard, .meshcore-dashboard, .mesh-dashboard { height: calc(var(--intercept-min-h) - 52px) !important; }
   .dashboard-layout { height: var(--intercept-min-h) !important; }
 }
+
+/* Shared explanation component token aliases, scoped to avoid changing app styles. */
+.sig-tip {
+  --explain-z: 100100;
+  --text: var(--text-primary);
+  --dim: var(--text-secondary);
+  --accent: var(--accent-cyan);
+  --border: var(--border-color);
+  --border-bright: var(--border-light);
+  --mono: var(--font-mono);
+  background: var(--bg-elevated);
+}

@@ -951,7 +951,7 @@ function loadSettingsTools() {
                                 <span style="font-weight: 500;">${toolName}${requiredBadge}</span>
                                 <div style="font-size: 10px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${tool.description}</div>
                                 ${!installed && installCmd ? `
-                                    <code style="display: block; margin-top: 4px; font-size: 10px; background: var(--bg-tertiary); padding: 3px 6px; border-radius: 3px; overflow-wrap: anywhere; user-select: all;" title="Click to select">${installCmd}</code>
+                                    <code style="display: block; margin-top: 4px; font-size: 10px; background: var(--bg-tertiary); padding: 3px 6px; border-radius: 3px; overflow-wrap: anywhere; user-select: all;" data-explain-text="Click to select">${installCmd}</code>
                                 ` : ''}
                             </div>
                             <span style="font-size: 10px; color: ${dotColor}; font-weight: bold; min-width: 45px; text-align: right;">${installed ? 'OK' : 'MISSING'}</span>

@@ -256,7 +256,7 @@ const TimelineHeatmap = (function() {
                 const color = rssi !== null ? getRssiColor(rssi) : CONFIG.noDataColor;
                 const title = rssi !== null ? `${rssi} dBm` : 'No data';
 
-                cells.push(`<div class="heatmap-cell" style="width: ${CONFIG.cellWidth}px; height: ${CONFIG.cellHeight}px; background: ${color};" title="${title}"></div>`);
+                cells.push(`<div class="heatmap-cell" style="width: ${CONFIG.cellWidth}px; height: ${CONFIG.cellHeight}px; background: ${color};" data-explain-text="${title}"></div>`);
             }
 
             const displayName = device.name || formatAddress(device.address) || device.device_key.substring(0, 12);
@@ -264,7 +264,7 @@ const TimelineHeatmap = (function() {
 
             html += `
                 <div class="${rowClass}" data-device-key="${escapeAttr(device.device_key)}">
-                    <div class="heatmap-label" title="${escapeHtml(device.name || device.address || '')}">
+                    <div class="heatmap-label" data-explain-text="${escapeHtml(device.name || device.address || '')}">
                         <span class="device-name">${escapeHtml(displayName)}</span>
                         <span class="device-rssi">${rssiDisplay}</span>
                     </div>

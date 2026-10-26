@@ -13,7 +13,7 @@
 <div class="stats-strip">
     <div class="stats-strip-inner">
         {% for stat in stats %}
-        <div class="strip-stat" {% if stat.title %}title="{{ stat.title }}"{% endif %}>
+        <div class="strip-stat" {% if stat.title %}data-explain-text="{{ stat.title }}"{% endif %}>
             <span class="strip-value" id="{{ stat.id }}">{{ stat.value|default('0') }}</span>
             <span class="strip-label">{{ stat.label }}</span>
         </div>

@@ -1541,7 +1541,7 @@ const BluetoothMode = (function() {
                 + '</div>'
                 + '<div class="bt-row-top-right">'
                     + flagBadges + statusDot
-                    + '<button type="button" class="locate-action bt-row-locate" title="Locate this device">'
+                    + '<button type="button" class="locate-action bt-row-locate" data-explain-text="Locate this device">'
                         + LOCATE_ICON + 'Locate</button>'
                 + '</div>'
             + '</div>'

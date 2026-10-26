@@ -103,7 +103,7 @@ const DeviceCard = (function() {
             return `
                 <span class="device-heuristic-badge ${flag}"
                       style="--badge-color: ${config.color}"
-                      title="${escapeHtml(config.description)}">
+                      data-explain-text="${escapeHtml(config.description)}">
                     ${escapeHtml(config.label)}
                 </span>
             `;
@@ -121,7 +121,7 @@ const DeviceCard = (function() {
             <div class="device-range-band" style="--range-color: ${config.color}">
                 <span class="range-label">${escapeHtml(config.label)}</span>
                 <span class="range-estimate">${escapeHtml(config.description)}</span>
-                ${confidence > 0 ? `<span class="range-confidence" title="Confidence">${confidencePercent}%</span>` : ''}
+                ${confidence > 0 ? `<span class="range-confidence" data-explain-text="Confidence">${confidencePercent}%</span>` : ''}
             </div>
         `;
     }
@@ -200,7 +200,7 @@ const DeviceCard = (function() {
 
         const signalHtml = '<div class="device-signal-row">' +
             '<div class="rssi-display">' +
-            '<span class="rssi-current" title="Current RSSI">' + rssiDisplay + '</span>' +
+            '<span class="rssi-current" data-explain-text="Current RSSI">' + rssiDisplay + '</span>' +
             sparkline + '</div>' + rangeBand + '</div>';
 
         const mfrHtml = mfrName ?
@@ -209,7 +209,7 @@ const DeviceCard = (function() {
             '<span class="mfr-name">' + escapeHtml(mfrName) + '</span></div>' : '';
 
         const metaHtml = '<div class="device-meta-row">' +
-            '<span class="device-seen-count" title="Observation count">' +
+            '<span class="device-seen-count" data-explain-text="Observation count">' +
             '<span class="seen-icon"><svg width="1em" height="1em" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>' + seenCount + '×</span>' +
             '<span class="device-timestamp" data-timestamp="' + escapeHtml(device.last_seen || '') + '">' +
             escapeHtml(relativeTime) + '</span></div>';

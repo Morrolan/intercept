@@ -212,7 +212,7 @@ const ConsumptionSparkline = (function() {
         return `
             <div class="consumption-sparkline-wrapper">
                 ${svg}
-                <span class="consumption-trend" style="color: ${trendColor}" title="Recent trend">
+                <span class="consumption-trend" style="color: ${trendColor}" data-explain-text="Recent trend">
                     ${trendIcon}
                 </span>
             </div>

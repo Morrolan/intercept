@@ -206,7 +206,7 @@ const SpyStations = (function() {
         }).join('');
         return `
             <table class="spy-table">
-                <thead><tr><th>Station</th><th>Type</th><th>Origin</th><th>Mode</th><th title="Frequencies">Freqs</th><th>Tune</th><th></th></tr></thead>
+                <thead><tr><th>Station</th><th>Type</th><th>Origin</th><th>Mode</th><th data-explain-text="Frequencies">Freqs</th><th>Tune</th><th></th></tr></thead>
                 <tbody>${rows}</tbody>
             </table>`;
     }
