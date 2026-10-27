@@ -2444,27 +2444,34 @@
   // object everywhere; no additional localStorage key or server setting is needed.
   const pane = document.getElementById('settings-display');
   if (pane) {
-    const section = document.createElement('div'); section.className = 'settings-section';
-    const heading = document.createElement('h3'); heading.textContent = 'Explanations';
-    const label = document.createElement('label');
-    const toggle = document.createElement('input'); toggle.type = 'checkbox'; toggle.checked = enabled();
-    label.append(toggle, document.createTextNode(' Explain readings and controls'));
-    const timingLabel = document.createElement('label'); timingLabel.textContent = ' Hover delay ';
-    const timing = document.createElement('select'); timing.setAttribute('aria-label', 'Explanation hover delay');
-    for (const [value, text] of [[300, 'Quick (0.3 seconds)'], [1000, 'Normal (1 second)'], [2000, 'Slow (2 seconds)']]) {
-      const option = document.createElement('option'); option.value = String(value); option.textContent = text; timing.append(option);
+    // Settings → Display → Explanations, as in VIGIL: Tooltips ON/OFF and Tooltip delay
+    const group = document.createElement('div'); group.className = 'settings-group';
+    const title = document.createElement('div'); title.className = 'settings-group-title'; title.textContent = 'Explanations';
+    function row(label, desc, choices, current, choose) {
+      const r = document.createElement('div'); r.className = 'settings-row';
+      const l = document.createElement('div'); l.className = 'settings-label';
+      const t = document.createElement('span'); t.className = 'settings-label-text'; t.textContent = label;
+      const d = document.createElement('span'); d.className = 'settings-label-desc'; d.textContent = desc;
+      l.append(t, d);
+      const seg = document.createElement('div'); seg.className = 'settings-seg'; seg.setAttribute('role', 'group'); seg.setAttribute('aria-label', label);
+      const buttons = choices.map(([value, text]) => {
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = text; b.dataset.value = String(value);
+        b.addEventListener('click', () => { choose(value); mark(value); });
+        return b;
+      });
+      function mark(value) { for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.value === String(value))); }
+      mark(current); seg.append(...buttons); r.append(l, seg);
+      return r;
     }
-    timing.value = String(delay()); timingLabel.append(timing);
-    function save() {
-      const value = prefs(); value['explain.enabled'] = toggle.checked; value['explain.delay'] = Number(timing.value);
-      if (typeof Settings !== 'undefined') {
-        Settings._cache['explain.enabled'] = toggle.checked;
-        Settings._cache['explain.delay'] = Number(timing.value);
-      }
-      try { localStorage.setItem('intercept_settings', JSON.stringify(value)); } catch { /* Storage unavailable. */ }
+    function save(key, value) {
+      const all = prefs(); all[key] = value;
+      if (typeof Settings !== 'undefined') Settings._cache[key] = value;
+      try { localStorage.setItem('intercept_settings', JSON.stringify(all)); } catch { /* Storage unavailable. */ }
       engine.hide();
     }
-    toggle.addEventListener('change', save); timing.addEventListener('change', save);
-    section.append(heading, label, timingLabel); pane.prepend(section);
+    group.append(title,
+      row('Tooltips', 'Explain readings and controls on hover or tap', [[true, 'On'], [false, 'Off']], enabled(), v => save('explain.enabled', v)),
+      row('Tooltip delay', 'How long to hover before an explanation appears', [[300, 'Short'], [1000, '1s'], [2000, '2s']], delay(), v => save('explain.delay', v)));
+    pane.prepend(group);
   }
 })();

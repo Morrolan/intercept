@@ -639,3 +639,36 @@ html[data-ui-tier="enhanced"]:not([data-theme="light"]).map-cyber-enabled .leafl
 .leaflet-container.map-tint-cyber .leaflet-tile-pane .leaflet-tile {
     filter: sepia(0.74) hue-rotate(176deg) saturate(1.72) brightness(1.05) contrast(1.08) !important;
 }
+
+/* ON/OFF and other small choices as one row of buttons (Explanations: Tooltips, Tooltip delay), as in VIGIL */
+.settings-seg {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+.settings-seg button {
+    margin: 0;
+    padding: 5px 12px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+
+.settings-seg button + button {
+    margin-left: -1px;
+}
+
+.settings-seg button:hover {
+    color: var(--text-primary);
+}
+
+.settings-seg button[aria-pressed="true"] {
+    position: relative;
+    border-color: var(--accent-cyan);
+    background: var(--accent-cyan-dim);
+    color: var(--accent-cyan);
+}
