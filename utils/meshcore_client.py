@@ -148,7 +148,7 @@ class AsyncWorker:
                     await asyncio.sleep(1.0)
                 except Exception:
                     pass
-            self._mc = await MeshCore.create_ble(address=cfg.device_address, debug=True)
+            self._mc = await MeshCore.create_ble(address=cfg.device_address, debug=False)
             transport, device = "ble", cfg.device_address or "auto"
         else:
             raise RuntimeError(f"Unknown connection config type: {type(cfg)}")
