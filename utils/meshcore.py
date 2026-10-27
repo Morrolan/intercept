@@ -11,7 +11,6 @@ from __future__ import annotations
 import contextlib
 import enum
 import glob
-import os
 import queue
 import threading
 from dataclasses import dataclass
@@ -219,11 +218,6 @@ def list_serial_ports() -> list[str]:
     return sorted(set(ports))
 
 
-def _is_docker() -> bool:
-    """Return True when running inside a Docker container."""
-    return os.path.exists("/.dockerenv") or os.environ.get("INTERCEPT_DOCKER") == "1"
-
-
 # ---------------------------------------------------------------------------
 # MeshcoreClient — singleton
 # ---------------------------------------------------------------------------
@@ -291,19 +285,8 @@ class MeshcoreClient:
             self._state = ConnectionState.CONNECTING
         # Push status event outside the lock
         self._push({"type": "status", "data": {"state": ConnectionState.CONNECTING.value}})
-        if isinstance(config, BLEConfig) and _is_docker():
-            with self._lock:
-                self._state = ConnectionState.ERROR
-            self._push(
-                {
-                    "type": "status",
-                    "data": {
-                        "state": ConnectionState.ERROR.value,
-                        "message": "BLE unavailable in Docker. Run meshcore-proxy on the host and connect via TCP.",
-                    },
-                }
-            )
-            return
+        # BLE capability depends on access to the host Bluetooth service, not
+        # the container runtime. Let the worker report actual transport errors.
         self._config = config
         from utils.meshcore_client import AsyncWorker  # imported lazily (Task 3)
 

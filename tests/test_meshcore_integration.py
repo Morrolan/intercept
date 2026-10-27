@@ -141,20 +141,20 @@ class TestTracerouteRoundTrip:
         assert event["data"]["hops"] == ["A", "R1", "B"]
 
 
-class TestBLEDockerBlock:
-    def test_ble_blocked_in_docker(self, monkeypatch):
+class TestBLEInDocker:
+    def test_ble_starts_worker_in_docker(self, monkeypatch):
+        # A container can reach BlueZ through the existing filtered D-Bus
+        # socket. Its runtime must not be treated as a capability failure.
         monkeypatch.setenv("INTERCEPT_DOCKER", "1")
-        from utils.meshcore import BLEConfig, MeshcoreClient
+        from utils.meshcore import BLEConfig, ConnectionState, MeshcoreClient
 
         client = MeshcoreClient()
-        client.connect(BLEConfig())
-
-        events = []
-        while not client.get_queue().empty():
-            events.append(client.get_queue().get_nowait())
-        error_events = [e for e in events if e.get("data", {}).get("state") == "error"]
-        assert error_events
-        assert "Docker" in error_events[0]["data"]["message"]
+        config = BLEConfig(device_address="AA:BB:CC:DD:EE:FF")
+        with patch("utils.meshcore_client.AsyncWorker") as worker:
+            client.connect(config)
+        worker.assert_called_once_with(config, client)
+        worker.return_value.start.assert_called_once()
+        assert client.get_state()[0] == ConnectionState.CONNECTING
 
 
 class TestConnectionStateTransitions:
