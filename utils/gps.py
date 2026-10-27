@@ -548,7 +548,7 @@ _gpsd_process: subprocess.Popen | None = None
 _gpsd_process_lock = threading.RLock()
 
 
-def detect_gps_devices() -> list[dict]:
+def detect_gps_devices(*, gps_only: bool = False) -> list[dict]:
     """
     Detect connected GPS serial devices.
 
@@ -596,6 +596,10 @@ def detect_gps_devices() -> list[dict]:
     gps_keywords = ("gps", "gnss", "u-blox", "ublox", "nmea", "sirf", "navigation")
     devices.sort(key=lambda d: 0 if any(k in d["description"].lower() for k in gps_keywords) else 1)
 
+    if gps_only:
+        # Generic serial bridges also serve mesh radios and other peripherals.
+        # Never let automatic GPS startup probe or claim an unidentified port.
+        devices = [d for d in devices if any(k in d["description"].lower() for k in gps_keywords)]
     return devices
 
 

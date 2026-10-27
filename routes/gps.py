@@ -88,7 +88,7 @@ def auto_connect_gps():
 
     # If gpsd isn't running, try to detect a device and start it
     if not is_gpsd_running(host, port):
-        devices = detect_gps_devices()
+        devices = detect_gps_devices(gps_only=True)
         if not devices:
             return jsonify({"status": "unavailable", "message": "No GPS device detected"})
 
@@ -108,7 +108,7 @@ def auto_connect_gps():
         # A gpsd with no receiver: systemd's gpsd.socket starts one at boot,
         # before anything tells it where the GPS is. Connecting to it would
         # wait for ever, so give it the receiver we can see, or say why not.
-        devices = detect_gps_devices()
+        devices = detect_gps_devices(gps_only=True)
         if not devices:
             return jsonify({"status": "unavailable", "message": "gpsd is running but no GPS receiver is attached"})
         device_path = devices[0]["path"]

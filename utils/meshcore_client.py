@@ -61,7 +61,26 @@ class AsyncWorker:
         except Exception as exc:
             logger.exception("Meshcore asyncio thread crashed: %s", exc)
         finally:
-            self._loop.close()
+            try:
+                self._loop.run_until_complete(self._shutdown())
+                self._loop.run_until_complete(self._loop.shutdown_asyncgens())
+            finally:
+                self._loop.close()
+
+    async def _shutdown(self) -> None:
+        # serial_asyncio_fast closes descriptors in an async task. Give that
+        # task time to finish before cancelling long-lived library readers.
+        if self._mc is not None:
+            try:
+                await self._mc.disconnect()
+            except Exception:
+                logger.exception("Meshcore disconnect during shutdown failed")
+        pending = asyncio.all_tasks() - {asyncio.current_task()}
+        if pending:
+            _, pending = await asyncio.wait(pending, timeout=1.0)
+            for task in pending:
+                task.cancel()
+            await asyncio.gather(*pending, return_exceptions=True)
 
     async def _wait_or_stop(self, seconds: float) -> bool:
         """Wait for seconds; return True if stop was signalled early."""
