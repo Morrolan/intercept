@@ -377,9 +377,18 @@ class MeshcoreClient:
             return [t.to_dict() for t in self._telemetry.get(node_id, [])]
 
     def send_text(self, recipient_id: str, text: str) -> None:
-        """Request the AsyncWorker to send a text message."""
-        if self._worker:
-            self._worker.send_text(recipient_id, text)
+        """Wait for the radio to accept a message; this is not a delivery ACK."""
+        with self._lock:
+            worker = self._worker
+            connected = self._state == ConnectionState.CONNECTED
+        if not connected or worker is None:
+            raise ConnectionError("MeshCore is not connected")
+        future = worker.send_text(recipient_id, text)
+        try:
+            future.result(timeout=20)
+        except TimeoutError:
+            future.cancel()
+            raise TimeoutError("Radio confirmation timed out; delivery is unknown") from None
 
     def request_traceroute(self, node_id: str) -> None:
         """Request the AsyncWorker to initiate a traceroute."""

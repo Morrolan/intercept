@@ -89,6 +89,7 @@ class TestSend:
     def test_sends_text(self, client, mock_meshcore_client):
         r = client.post("/meshcore/send", json={"text": "hello", "recipient_id": "NODE1"})
         assert r.status_code == 200
+        assert r.get_json()["status"] == "accepted"
         mock_meshcore_client.send_text.assert_called_once_with("NODE1", "hello")
 
     def test_empty_text_returns_400(self, client):
@@ -279,3 +280,16 @@ class TestRepeaters:
         r = client.get("/meshcore/repeaters")
         assert r.status_code == 200
         assert len(r.get_json()["repeaters"]) == 1
+
+
+@pytest.mark.parametrize('exception,code', [
+    (ConnectionError('Not connected'), 409),
+    (RuntimeError('Radio rejected message'), 502),
+    (TimeoutError('No confirmation'), 504),
+])
+def test_send_failure_is_not_reported_as_queued(client, mock_meshcore_client, exception, code):
+    mock_meshcore_client.send_text.side_effect = exception
+    response = client.post('/meshcore/send', json={'text': 'synthetic'})
+    assert response.status_code == code
+    assert response.get_json()['status'] == 'error'
+    assert response.get_json()['message']

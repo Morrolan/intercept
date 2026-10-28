@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import threading
 import uuid
+from concurrent.futures import Future
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
@@ -164,8 +165,6 @@ class AsyncWorker:
         self._mc.subscribe(EventType.TRACE_DATA, self._on_trace_data)
         self._mc.subscribe(EventType.DISCONNECTED, self._on_disconnected)
 
-        self._client.on_connected(transport=transport, device=device)
-
         # Fetch initial contacts
         try:
             await self._mc.commands.get_contacts(lastmod=0, timeout=5)
@@ -173,6 +172,19 @@ class AsyncWorker:
                 self._client.on_node(self._contact_to_node(contact))
         except Exception as exc:
             logger.warning("Failed to fetch initial contacts: %s", exc)
+
+        # Firmware queues inbound messages until the companion fetches them.
+        # This also drains messages already waiting when we connect.
+        if self._stop_event.is_set():
+            return
+        if not self._mc.is_connected or (self._asyncio_stop and self._asyncio_stop.is_set()):
+            raise ConnectionError("Device disconnected during initialization")
+        await self._mc.start_auto_message_fetching()
+        if self._stop_event.is_set():
+            return
+        if not self._mc.is_connected or (self._asyncio_stop and self._asyncio_stop.is_set()):
+            raise ConnectionError("Device disconnected during initialization")
+        self._client.on_connected(transport=transport, device=device)
 
         # Keep the loop alive until stop is signalled.
         # Poll _stop_event every second so stop() is honoured even if
@@ -291,19 +303,36 @@ class AsyncWorker:
 
     # -- Commands (called from Flask thread) --
 
-    def _submit(self, coro) -> None:
+    def _submit(self, coro) -> Future | None:
         if self._loop and self._loop.is_running():
-            asyncio.run_coroutine_threadsafe(coro, self._loop)
+            return asyncio.run_coroutine_threadsafe(coro, self._loop)
         else:
             coro.close()
             logger.debug("Command dropped: worker not running")
 
-    def send_text(self, recipient_id: str, text: str) -> None:
+    def send_text(self, recipient_id: str, text: str) -> Future:
         async def _send():
-            if self._mc:
-                await self._mc.commands.send_msg(recipient_id, text)
+            from meshcore import EventType
 
-        self._submit(_send())
+            if not self._mc or not self._mc.is_connected:
+                raise ConnectionError("MeshCore is not connected")
+            if recipient_id == "BROADCAST":
+                result = await self._mc.commands.send_chan_msg(0, text)
+                expected = EventType.OK
+            else:
+                result = await self._mc.commands.send_msg(recipient_id, text)
+                expected = EventType.MSG_SENT
+            payload = getattr(result, "payload", {}) or {}
+            if result is None or (result.type == EventType.ERROR and
+                                  (payload.get("reason") or payload.get("error"))):
+                raise TimeoutError("Radio did not confirm the message; delivery is unknown")
+            if result.type != expected:
+                raise RuntimeError("Radio did not accept the message")
+
+        future = self._submit(_send())
+        if future is None:
+            raise ConnectionError("MeshCore connection worker is not running")
+        return future
 
     def request_traceroute(self, node_id: str) -> None:
         async def _trace():

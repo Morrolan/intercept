@@ -244,19 +244,32 @@ const MeshCore = (function () {
         _appendMessage({ id: tempId, sender_id: 'Me', recipient_id, text, timestamp: new Date().toISOString(), is_direct: recipient_id !== 'BROADCAST', snr: null, pending: true });
         if (input) input.value = '';
 
+        function reportFailure(message) {
+            _removePending(tempId);
+            if (input && !input.value) input.value = text;
+            alert(message);
+        }
+
         try {
             const r = await fetch('/meshcore/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, recipient_id }),
             });
-            if (!r.ok) {
-                const d = await r.json();
-                _removePending(tempId);
-                alert(d.error || 'Send failed');
+            const d = await r.json();
+            if (!r.ok || d.status !== 'accepted') {
+                reportFailure(d.message || d.error || 'Send not confirmed; delivery is unknown');
+                return;
+            }
+            const pending = document.querySelector(`[data-msg-id="${tempId}"]`);
+            if (pending) {
+                pending.classList.remove('pending');
+                const status = document.createElement('span');
+                status.textContent = 'Accepted by radio';
+                pending.querySelector('.meshcore-message-header')?.appendChild(status);
             }
         } catch (e) {
-            _removePending(tempId);
+            reportFailure('Send not confirmed; delivery is unknown');
             console.error('Send failed:', e);
         }
     }

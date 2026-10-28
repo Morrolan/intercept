@@ -157,8 +157,17 @@ def send():
         return api_error("text is required", 400)
     if len(text) > 237:
         return api_error("text exceeds 237-character Meshcore limit", 400)
-    _client().send_text(recipient_id, text)
-    return jsonify({"status": "queued"})
+    try:
+        _client().send_text(recipient_id, text)
+    except ConnectionError as exc:
+        return api_error(str(exc), 409)
+    except TimeoutError as exc:
+        return api_error(str(exc), 504)
+    except ValueError:
+        return api_error("Invalid message recipient", 400)
+    except Exception:
+        return api_error("Radio did not accept the message", 502)
+    return jsonify({"status": "accepted"})
 
 
 # ---------------------------------------------------------------------------

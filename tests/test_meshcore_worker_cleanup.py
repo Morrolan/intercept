@@ -2,6 +2,8 @@
 import asyncio
 from unittest.mock import Mock
 
+import pytest
+
 from utils.meshcore import SerialConfig
 from utils.meshcore_client import AsyncWorker
 
@@ -46,11 +48,50 @@ def test_ble_connection_keeps_protocol_debug_logging_disabled():
     mc.contacts = {}
     mc.commands.get_contacts = AsyncMock()
     mc.disconnect = AsyncMock()
+    mc.start_auto_message_fetching = AsyncMock()
     factory = Mock()
     factory.create_ble = AsyncMock(return_value=mc)
     library = SimpleNamespace(MeshCore=factory, EventType=Mock())
-    worker = AsyncWorker(BLEConfig(), Mock())
-    worker._stop_event.set()  # Exercise setup, then exit without a live reader.
+    client = Mock()
+    worker = AsyncWorker(BLEConfig(), client)
+    client.on_connected.side_effect = lambda **kwargs: worker._stop_event.set()
     with patch.dict(sys.modules, {'meshcore': library}):
         asyncio.run(worker._do_connect())
     factory.create_ble.assert_awaited_once_with(address=None, debug=False)
+
+    mc.start_auto_message_fetching.assert_awaited_once()
+
+
+@pytest.mark.parametrize('phase', ['contacts', 'receive'])
+def test_disconnect_during_setup_is_not_overwritten_by_connected(phase):
+    import sys
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock, patch
+
+    from utils.meshcore import BLEConfig
+
+    client = Mock()
+    worker = AsyncWorker(BLEConfig(), client)
+    worker._asyncio_stop = asyncio.Event()
+    mc = Mock()
+    mc.is_connected = True
+    mc.contacts = {}
+    mc.commands.get_contacts = AsyncMock()
+    mc.start_auto_message_fetching = AsyncMock()
+    mc.disconnect = AsyncMock()
+
+    async def disconnect_during_setup(*args, **kwargs):
+        mc.is_connected = False
+        worker._on_disconnected(None)
+
+    if phase == 'contacts':
+        mc.commands.get_contacts.side_effect = disconnect_during_setup
+    else:
+        mc.start_auto_message_fetching.side_effect = disconnect_during_setup
+    factory = Mock()
+    factory.create_ble = AsyncMock(return_value=mc)
+    with patch.dict(sys.modules, {'meshcore': SimpleNamespace(MeshCore=factory, EventType=Mock())}):
+        with pytest.raises(ConnectionError):
+            asyncio.run(worker._do_connect())
+    client.on_connected.assert_not_called()
+    client.on_error.assert_called_once()
