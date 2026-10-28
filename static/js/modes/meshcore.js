@@ -12,6 +12,7 @@ const MeshCore = (function () {
     let _markers = {};
     let _telemetryChart = null;
     let _connected = false;
+    let _statusRequest = 0;
     let _nodeCount = 0;
     let _msgCount = 0;
     let _nodes = {};          // node_id -> latest node data, for search and click-to-locate
@@ -40,9 +41,11 @@ const MeshCore = (function () {
 
     // ── Status ─────────────────────────────────────────────────────────────
     async function _checkStatus() {
+        const request = ++_statusRequest;
         try {
             const r = await fetch('/meshcore/status');
             const d = await r.json();
+            if (request !== _statusRequest) return;
             _updateStatusUI(d.state || 'disconnected', d.message);
         } catch (e) { /* ignore */ }
     }
@@ -195,7 +198,9 @@ const MeshCore = (function () {
 
     function _routeEvent(event) {
         switch (event.type) {
-            case 'status':    _updateStatusUI(event.data.state, event.data.message); break;
+            // The stream may contain status events queued by an earlier
+            // connection. Use them as notifications, then read current state.
+            case 'status':    _checkStatus(); break;
             case 'message':   _appendMessage(event.data); break;
             case 'node':      _updateNode(event.data); break;
             case 'telemetry': _storeTelemetry(event.data); break;
