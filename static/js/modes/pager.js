@@ -392,6 +392,11 @@ function killAll() {
     fetch('/killall', { method: 'POST' })
         .then(r => r.json())
         .then(data => {
+            if (data.status !== 'killed') {
+                showInfo(data.message || 'Stop all could not be confirmed');
+                if (window.FlipperSensor?.isActive()) FlipperSensor.refresh();
+                return;
+            }
             // Release all devices
             Object.keys(sdrDeviceUsage).forEach(idx => delete sdrDeviceUsage[idx]);
             updateDeviceSelectStatus();

@@ -239,6 +239,7 @@
         })();
     </script>
 {% include 'partials/ami_head.html' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modes/flipper-sensor.css') }}">
 </head>
 
 <body data-mode="pager">
@@ -3376,6 +3377,11 @@
                     <div class="pdir-header">Sources — <span id="pagerDirCount">0</span> active</div>
                     <div id="pagerDirEntries" class="pdir-entries"></div>
                 </div>
+                <section id="flipperSensorView" hidden>
+                    <h3>Flipper OOK observations</h3>
+                    <div id="flipperSensorNotice" role="status">Ready</div>
+                    <div id="flipperSensorOutput" role="log" aria-live="polite"></div>
+                </section>
                 <div id="sensorDashboardView" class="sdb-view" style="display:none;">
                     <div id="sensorDashboardGrid" class="sdb-grid"></div>
                 </div>
@@ -3461,6 +3467,7 @@
     <script src="{{ url_for('static', filename='js/modes/satellite-gps-drone.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modes/wifi-dashboard.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modes/feeds-sensor-meters.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modes/flipper-sensor.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modes/device-recon.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modes/tscm.js') }}"></script>
 

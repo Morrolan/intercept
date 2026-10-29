@@ -1233,6 +1233,12 @@ def _record_mode_lifecycle(response: Response) -> Response:
     return response
 
 
+def _get_flipper_active() -> bool:
+    from routes.sensor import flipper_receiver
+
+    return flipper_receiver.snapshot()["running"]
+
+
 def _get_drone_running() -> bool:
     try:
         from routes import drone
@@ -1289,7 +1295,7 @@ def health_check() -> Response:
             "rate_limiting": _has_limiter,
             "processes": {
                 "pager": current_process is not None and (current_process.poll() is None if current_process else False),
-                "sensor": sensor_process is not None and (sensor_process.poll() is None if sensor_process else False),
+                "sensor": _get_flipper_active() or (sensor_process is not None and sensor_process.poll() is None),
                 "adsb": adsb_process is not None and (adsb_process.poll() is None if adsb_process else False),
                 "ais": ais_process is not None and (ais_process.poll() is None if ais_process else False),
                 "acars": acars_process is not None and (acars_process.poll() is None if acars_process else False),
@@ -1341,7 +1347,14 @@ def kill_all() -> Response:
     from routes import adsb as adsb_module
     from routes import ais as ais_module
     from routes import radiosonde as radiosonde_module
+    from routes import sensor as sensor_module
     from utils.bluetooth import reset_bluetooth_scanner
+
+    if sensor_module.flipper_receiver.snapshot()["running"]:
+        if not sensor_module._flipper_admin():
+            return jsonify({"status": "error", "message": "An administrator must stop the Flipper receiver"}), 403
+        if not sensor_module.flipper_receiver.stop():
+            return jsonify({"status": "error", "message": "Flipper stop is unconfirmed; other decoders left running"}), 503
 
     killed = []
     processes_to_kill = [

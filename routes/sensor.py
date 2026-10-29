@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import atexit
 import contextlib
 import json
 import queue
@@ -10,10 +11,12 @@ import threading
 import time
 from datetime import datetime
 
-from flask import Blueprint, Response, jsonify, request
+from flask import Blueprint, Response, jsonify, request, session
 
 import app as app_module
+from utils.ami_access import enabled_account
 from utils.dependencies import install_hint
+from utils.flipper_receiver import FlipperClient, FlipperError, FlipperReceiver
 from utils.logging import sensor_logger as logger
 from utils.observations import emit_observation
 from utils.process import register_process, terminate_together, unregister_process
@@ -32,6 +35,46 @@ from utils.validation import (
 )
 
 sensor_bp = Blueprint("sensor", __name__)
+
+
+def _publish_flipper_status(event):
+    # Shared SSE, recording and MQTT consumers must never receive private payloads.
+    # Observations are retained by the receiver and read through the admin endpoint.
+    if event.get("type") == "status":
+        app_module.sensor_queue.put_nowait(event)
+
+
+flipper_receiver = FlipperReceiver(_publish_flipper_status)
+atexit.register(flipper_receiver.stop)
+
+
+def _flipper_admin():
+    account = enabled_account(session.get("username")) if session.get("logged_in") else None
+    return bool(account and account["role"] == "admin")
+
+
+@sensor_bp.get("/sensor/flipper")
+def flipper_capabilities():
+    try:
+        FlipperClient.from_environment()
+        configured = True
+    except FlipperError:
+        configured = False
+    return jsonify({"configured": configured, "can_receive": _flipper_admin(),
+                    "preset": "OOK650", "max_duration_s": 30})
+
+
+@sensor_bp.get("/sensor/flipper/observations")
+def flipper_observations():
+    if not _flipper_admin():
+        return api_error("Flipper reception requires an administrator", 403)
+    try:
+        after = int(request.args.get("after", "0"))
+        if not 0 <= after <= 200:
+            raise ValueError()
+    except ValueError:
+        return api_error("Invalid observation cursor", 400)
+    return jsonify(flipper_receiver.snapshot(after))
 
 # Track which device is being used
 sensor_active_device: int | None = None
@@ -118,7 +161,10 @@ def sensor_status() -> Response:
     """Check if sensor decoder is currently running."""
     with app_module.sensor_lock:
         running = app_module.sensor_process is not None and app_module.sensor_process.poll() is None
-    return jsonify({"running": running})
+    remote = flipper_receiver.snapshot()
+    if remote["running"] or (not running and remote["state"] != "idle"):
+        return jsonify({"running": remote["running"], "source": "flipper", "state": remote["state"]})
+    return jsonify({"running": running, "source": "rtl"})
 
 
 @sensor_bp.route("/start_sensor", methods=["POST"])
@@ -130,6 +176,21 @@ def start_sensor() -> Response:
             return api_error("Sensor already running", 409)
 
         data = request.json or {}
+        source = data.get("source", "rtl")
+        if source not in ("rtl", "rtlsdr", "flipper"):
+            return api_error("Unknown sensor source", 400)
+        if flipper_receiver.snapshot()["running"]:
+            return api_error("Flipper receiver is already running or stopping", 409)
+        if source == "flipper":
+            if not _flipper_admin():
+                return api_error("Flipper reception requires an administrator", 403)
+            try:
+                flipper_receiver.start(data.get("frequency", "433.92"), data.get("duration_s", 10))
+            except ValueError as exc:
+                return api_error(str(exc), 400)
+            except FlipperError as exc:
+                return api_error(str(exc), 503)
+            return jsonify({"status": "started", "source": "flipper"})
         data = apply_device_defaults(data)
 
         # Validate inputs
@@ -258,6 +319,13 @@ def start_sensor() -> Response:
 @sensor_bp.route("/stop_sensor", methods=["POST"])
 def stop_sensor() -> Response:
     global sensor_active_device, sensor_active_sdr_type
+
+    if flipper_receiver.snapshot()["running"]:
+        if not _flipper_admin():
+            return api_error("Flipper reception requires an administrator", 403)
+        if not flipper_receiver.stop():
+            return api_error("Flipper stop is not yet confirmed", 503)
+        return jsonify({"status": "stopped", "source": "flipper"})
 
     with app_module.sensor_lock:
         if app_module.sensor_process:

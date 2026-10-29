@@ -150,3 +150,32 @@ SDR access: without this profile, both recordings could segfault during timestam
 filtering after writing images. With the image-only profile, HRPT completed with
 35 PNGs and LRPT with nine, both exit code zero. The HRPT recording is only 4.75
 seconds long, so expect a narrow image strip rather than a complete pass.
+
+## Flipper receive-only source
+
+The 433 MHz panel can use an admin-only **Flipper (OOK receive)** source through
+an optional Flipper module. Configure `INTERCEPT_FLIPPER_URL=http://flipper:3303`
+and `INTERCEPT_FLIPPER_TOKEN` in Intercept's private server environment. The token
+is never sent to the browser. The Flipper module stores only its SHA-256 digest,
+requires `FLIPPER_RECEIVE_ENABLED=1`, explicit Momentum `mntm-012` acceptance and
+its own selected serial device. Close qFlipper while the service owns that port.
+
+Choose a frequency in 300–348, 387–464 or 779–928 MHz and a 1–30 second duration.
+These are bounded internal-CC1101/OOK650 receive sessions. Observations are decoded
+CLI text, explicitly separate from rtl_433 sensor cards. There is no IQ,
+waterfall, RSSI, arbitrary preset, transmit, replay or saved-file-content access.
+Metadata monitoring and receiving share one serial lease in the module.
+
+Stopping, Stop All and shutdown request cancellation. A transport failure is
+reported as unconfirmed rather than as stopped; the module also enforces its
+own deadline. Observation replay stays bounded and requires a currently enabled
+admin account. Payloads stay out of shared sensor SSE, recording and MQTT;
+only lifecycle status enters the shared sensor stream. HTTP redirects, ambient proxies and oversized/slow responses are
+refused by the server-side bridge. Short captures remain visible after stopping.
+
+Before moving the Flipper to Tyr, replace Intercept's broad USB-bus mapping with
+an explicitly verified RTL-SDR USB node. Map the Flipper's by-id serial device
+only to the Flipper service, with its actual host device GID. See the sibling
+ami-deploy Flipper rollout instructions. A replug can change USB paths; verify
+identity and refresh mappings before restarting. Feature branches are not a
+claim of live hardware validation or deployment.

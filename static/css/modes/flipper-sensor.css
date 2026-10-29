@@ -1,0 +1,16 @@
+/* Receive observations use the same square, outlined surface as AMI panels. */
+#flipperSensorView {
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-top: 2px solid var(--accent-cyan);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    width: 100%;
+}
+#flipperSensorView[hidden], body:not([data-mode="sensor"]) #flipperSensorView { display: none !important; }
+body[data-mode="sensor"][data-sensor-source="flipper"] #sensorDashboardView,
+body[data-mode="sensor"][data-sensor-source="flipper"] .pdir-feed-col { display: none !important; }
+#flipperSensorView h3 { margin: 0 0 12px; font-family: var(--font-mono, monospace); text-transform: uppercase; }
+#flipperSensorNotice { color: var(--text-secondary); margin-bottom: 12px; }
+#flipperSensorOutput { max-height: 60vh; overflow: auto; }
+.flipper-observation { white-space: pre-wrap; overflow-wrap: anywhere; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-family: var(--font-mono, monospace); }

@@ -39,6 +39,7 @@ function stopSensorScope() {
 
 // Start sensor decoding
 async function startSensorDecoding() {
+    if (window.FlipperSensor?.selected()) return FlipperSensor.start();
     const freq = document.getElementById('sensorFrequency').value;
     const gain = document.getElementById('sensorGain').value;
     const ppm = document.getElementById('sensorPpm').value;
@@ -145,6 +146,7 @@ async function startSensorDecoding() {
 
 // Stop sensor decoding
 function stopSensorDecoding() {
+    if (window.FlipperSensor?.isActive()) return FlipperSensor.stop();
     const isAgentMode = typeof currentAgent !== 'undefined' && currentAgent !== 'local';
     const endpoint = isAgentMode
         ? `/controller/agents/${currentAgent}/sensor/stop`

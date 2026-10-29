@@ -1,6 +1,24 @@
 <!-- 433MHz SENSOR MODE -->
 <div id="sensorMode" class="mode-content">
     <div class="section">
+        <h3>Receiver</h3>
+        <div class="form-group">
+            <label for="sensorSource">Source</label>
+            <select id="sensorSource" onchange="FlipperSensor.selectSource()">
+                <option value="rtl">SDR / rtl_433</option>
+                <option id="sensorFlipperOption" value="flipper" disabled>Flipper (OOK receive)</option>
+            </select>
+        </div>
+        <div id="flipperSensorSettings" hidden>
+            <div class="form-group">
+                <label for="flipperSensorDuration">Receive duration (seconds)</label>
+                <input id="flipperSensorDuration" type="number" min="1" max="30" step="1" value="10">
+            </div>
+            <p class="info-text">Decoded OOK650 observations from the internal antenna. No IQ, RSSI or waterfall.</p>
+            <div id="flipperSensorCount" class="info-text">Observations: 0</div>
+        </div>
+    </div>
+    <div class="section">
         <h3>Frequency</h3>
         <div class="form-group">
             <label for="sensorFrequency">Frequency (MHz)</label>
@@ -14,7 +32,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="sensorRtlSettings">
         <h3>Settings</h3>
         <div class="form-group">
             <label for="sensorGain">Gain (dB, 0 = auto)</label>
@@ -34,7 +52,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="sensorRtlProtocols">
         <h3>Protocols</h3>
         <div class="info-text" style="margin-bottom: 10px;">
             rtl_433 auto-detects 200+ device protocols including weather stations, TPMS, doorbells, and more.
@@ -48,7 +66,7 @@
     </div>
 
     <!-- Antenna Guide -->
-    <div class="section">
+    <div class="section" id="sensorAntennaGuide">
         <h3>Antenna Guide</h3>
         <div style="font-size: 11px; color: var(--text-dim); line-height: 1.5;">
             <p style="margin-bottom: 8px; color: var(--accent-cyan); font-weight: 600;">
